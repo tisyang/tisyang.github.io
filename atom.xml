@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://tisyang.github.io/"/>
-  <updated>2016-04-12T15:05:33.021Z</updated>
+  <updated>2016-04-28T16:25:05.659Z</updated>
   <id>https://tisyang.github.io/</id>
   
   <author>
@@ -14,6 +14,34 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>添加可执行程序到 Path 中</title>
+    <link href="https://tisyang.github.io/2016/04/add-exe-to-path/"/>
+    <id>https://tisyang.github.io/2016/04/add-exe-to-path/</id>
+    <published>2016-04-27T16:00:00.000Z</published>
+    <updated>2016-04-28T16:25:05.659Z</updated>
+    
+    <content type="html">&lt;p&gt;将一个程序加入到环境 Path 中，通常做法是将程序文件所在目录附加到系统或者用户的 Path 变量中，这样我们在任何路径下的命令行中，都可以调用该程序工作。大部分应用程序安装过程中的做法也是如此。&lt;/p&gt;
+&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
+&lt;p&gt;但是这样会将目录中的所有文件暴露到 Path 中，其中大部分是我们不需要用到的。这样做也增加了潜在 &lt;a href=&quot;https://zh.wikipedia.org/zh-cn/DLL%E5%9C%B0%E7%8D%84&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;DLL Hell&lt;/a&gt; 隐患，比如同名不同版本 DLL 暴露到 Path 中低版本覆盖了高版本导致程序运行时异常。&lt;/p&gt;
+&lt;p&gt;最好的做法是，只将我们需要用到的 exe 文件加入到 Path 中，Windows 上也的确有这样的解决方法。&lt;/p&gt;
+&lt;p&gt;以 vim 为例。我们新建一个 &lt;code&gt;vim.bat&lt;/code&gt; 文件，编辑文件加入以下代码：&lt;/p&gt;
+&lt;figure class=&quot;highlight bat&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;@&quot;C:\Program Files (x86)\Vim\vim74\gvim.exe&quot; %*&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;将该文件保存到一个目录中，然后再&lt;strong&gt;将该目录加入到用户或系统 Path 变量中&lt;/strong&gt;。这样，这个 &lt;code&gt;vim.bat&lt;/code&gt; 就暴露到 Path 中，可以在命令行中随时调用了，调用名为 &lt;code&gt;vim&lt;/code&gt;，即 &lt;code&gt;.bat&lt;/code&gt; 文件的文件名。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;@&lt;/code&gt; 表示禁止调用的回显，&lt;code&gt;&amp;quot;&amp;quot;&lt;/code&gt; 引号包含目标程序的完整路径（这样路径中允许有空白符），&lt;code&gt;%*&lt;/code&gt; 表示将传递给 &lt;code&gt;.bat&lt;/code&gt; 文件的参数原封不动的传递给目标程序。&lt;/p&gt;
+&lt;p&gt;我们可以在此目录下新建其他 &lt;code&gt;bat&lt;/code&gt; 文件，来向 Path 中加入各种所需的程序（同时也可以自定义名称）。&lt;/p&gt;
+&lt;p&gt;PS: 其实如果打开 Ruby 的安装目录，我们就会发现，irb 和 gem 都使用了这种方法。&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;将一个程序加入到环境 Path 中，通常做法是将程序文件所在目录附加到系统或者用户的 Path 变量中，这样我们在任何路径下的命令行中，都可以调用该程序工作。大部分应用程序安装过程中的做法也是如此。&lt;/p&gt;
+    
+    </summary>
+    
+    
+  </entry>
   
   <entry>
     <title>NDK 实例</title>
