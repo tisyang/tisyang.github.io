@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://tisyang.github.io/"/>
-  <updated>2016-04-28T16:25:05.659Z</updated>
+  <updated>2016-05-23T15:31:13.394Z</updated>
   <id>https://tisyang.github.io/</id>
   
   <author>
@@ -14,6 +14,64 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>中软统一终端加密文件解密</title>
+    <link href="https://tisyang.github.io/2016/05/how-to-break-cs-uem-encrypt/"/>
+    <id>https://tisyang.github.io/2016/05/how-to-break-cs-uem-encrypt/</id>
+    <published>2016-05-22T16:00:00.000Z</published>
+    <updated>2016-05-23T15:31:13.394Z</updated>
+    
+    <content type="html">&lt;p&gt;背景不提，通过搜索能看到这篇文章的，请彼此保持同情。&lt;/p&gt;
+&lt;p&gt;中软统一终端这个软件通过网内文件加密存储，使用时自解密，保证一个局部网络的资料安全性，防止泄漏，主要用于密级文档、源代码和工程图纸的管控。&lt;/p&gt;
+&lt;p&gt;听起来很高大上，但是在文件加密解密这条策略链上，漏洞是很多的，在具体部署上，漏洞就更多了。下面介绍一下如何利用策略漏洞解密被加密的文件，这里主要针对源代码，其他文档类似。&lt;/p&gt;
+&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
+&lt;p&gt;首先讲一下中软终端的文件加密解密过程。&lt;/p&gt;
+&lt;h2 id=&quot;加密解密过程&quot;&gt;&lt;a href=&quot;#加密解密过程&quot; class=&quot;headerlink&quot; title=&quot;加密解密过程&quot;&gt;&lt;/a&gt;加密解密过程&lt;/h2&gt;&lt;p&gt; 安装统一终端后，如果有加密策略部署，程序后台会扫描所有文件，判断文件后缀名或文件类型是否与策略一致来进行加密操作。&lt;/p&gt;
+&lt;p&gt; 策略中通常会有针对加密文件类型相关软件的白名单，在这个名单中的程序，去处理加密的文件时，会&lt;strong&gt;透明地&lt;/strong&gt;读取到解密后的文件，然后再保存该类型的文件时，文件又自动被加密了。如果白名单程序新生成该类型文件，那么文件保存时会自动被加密。&lt;/p&gt;
+&lt;p&gt;白名单程序的存在是为了保证日常操作，否则都不能用了岂不是因噎废食。&lt;/p&gt;
+&lt;p&gt;当某类文件被白名单程序读取时，中软终端会自动把加密的文件解密，然后提供给程序。中软是通过文件驱动来实现了这一中间人角色，来桥接加密文件和程序，对于非白名单程序则不提供解密，这样打开就会乱码报错。&lt;/p&gt;
+&lt;h2 id=&quot;策略的漏洞&quot;&gt;&lt;a href=&quot;#策略的漏洞&quot; class=&quot;headerlink&quot; title=&quot;策略的漏洞&quot;&gt;&lt;/a&gt;策略的漏洞&lt;/h2&gt;&lt;p&gt;这一套“透明地”加密解密的确很不错，但是停下想一想，尤其想一想互联网安全相关的实例，是不是有什么漏洞可破？&lt;/p&gt;
+&lt;p&gt;互联网安全相关通常都是这个问题：Can I trust you?&lt;/p&gt;
+&lt;p&gt;白名单是策略的关键，一个程序加入其中就表示对其可信，程序可以读取被加密的文件，这时候鉴权就很重要了。我们来根据实际来分析一下可能的鉴权策略：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;最简单的，根据进程名来判定程序是否归属白名单中。这个方法最简单，也最灵活，部署也很方便，但是，只根据进程名会不会不大可靠？&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;进阶一点的，根据程序文件 Hash。在部署策略时，将可执行程序文件的 Hash 也加入其中，只有 Hash 匹配才认定程序是归属白名单中。这个是一个不错的方法，但是维护就很麻烦，因为很多程序经常会升级，这时候文件变了 Hash 也变了，策略就不得不更新，而对于一些离线机器得不到策略更新就更悲剧了。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;在2的基础上，继续完善，使用程序数字签名验证。程序文件的 Hash 会变，但是经过数字签名那么就可以认定这的确是谁谁谁家的程序。这个方法在终端中应该是被用到的，但肯定不是全部，毕竟只有大公司软件产品才会进行数字签名，比如 word/ppt/excel，可执行程序都是签名过的。而在软件开发中，有相当多开源工具是不可能进行签名的。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;通过上述分析，我们可以猜测中软终端使用了方法1和3，而方法1中，只根据进程名判定是一个漏洞，我们可以编写克隆程序来读取加密文件。&lt;/p&gt;
+&lt;p&gt;读取这边解决了，还需要考虑输出这环节。白名单程序保存文件时会进行加密，但是并不会加密所有文件。因为工具也可能用来处理不重要的事情，或者其他必须不能加密的地方，比如编译代码最终生成可执行程序，可执行程序不能被加密。而这部分通常是根据文件后缀名来判断是否需要被加密的。&lt;/p&gt;
+&lt;p&gt;所以我们写一个与白名单中同名的程序，读取文件内容并输出到一个不会被加密的格式即可。&lt;/p&gt;
+&lt;h2 id=&quot;例子代码&quot;&gt;&lt;a href=&quot;#例子代码&quot; class=&quot;headerlink&quot; title=&quot;例子代码&quot;&gt;&lt;/a&gt;例子代码&lt;/h2&gt;&lt;p&gt;因为依赖程序进程名，所以用脚本在这里不合适，最简单可以用 C，一个简单的文件拷贝就可以&lt;/p&gt;
+&lt;figure class=&quot;highlight c&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;18&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;19&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;20&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;21&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;22&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;23&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;24&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;25&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;26&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;27&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;28&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;29&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;30&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;31&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;32&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;33&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;34&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;35&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;36&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;37&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;#&lt;span class=&quot;meta-keyword&quot;&gt;include&lt;/span&gt; &lt;span class=&quot;meta-string&quot;&gt;&amp;lt;stdio.h&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;#&lt;span class=&quot;meta-keyword&quot;&gt;include&lt;/span&gt; &lt;span class=&quot;meta-string&quot;&gt;&amp;lt;stdlib.h&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(&lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; argc, &lt;span class=&quot;keyword&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;char&lt;/span&gt; *argv[])&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    FILE *fp;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    FILE *nfp;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;char&lt;/span&gt; buf[&lt;span class=&quot;number&quot;&gt;512&lt;/span&gt;];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;unsigned&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;long&lt;/span&gt; read;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt;(argc != &lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;) &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;built_in&quot;&gt;fputs&lt;/span&gt;(&lt;span class=&quot;string&quot;&gt;&quot;Invalid args count!\n&quot;&lt;/span&gt;, &lt;span class=&quot;built_in&quot;&gt;stderr&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;built_in&quot;&gt;exit&lt;/span&gt;(&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    fp = fopen(argv[&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;], &lt;span class=&quot;string&quot;&gt;&quot;rb&quot;&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;built_in&quot;&gt;snprintf&lt;/span&gt;(buf, &lt;span class=&quot;keyword&quot;&gt;sizeof&lt;/span&gt;(buf), &lt;span class=&quot;string&quot;&gt;&quot;%s.xxx&quot;&lt;/span&gt;, argv[&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;]);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    nfp = fopen(buf, &lt;span class=&quot;string&quot;&gt;&quot;wb&quot;&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt;(fp == &lt;span class=&quot;literal&quot;&gt;NULL&lt;/span&gt;) &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;built_in&quot;&gt;fputs&lt;/span&gt;(&lt;span class=&quot;string&quot;&gt;&quot;File not exists!\n&quot;&lt;/span&gt;, &lt;span class=&quot;built_in&quot;&gt;stderr&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;built_in&quot;&gt;exit&lt;/span&gt;(&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt;(nfp == &lt;span class=&quot;literal&quot;&gt;NULL&lt;/span&gt;) &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;built_in&quot;&gt;fputs&lt;/span&gt;(&lt;span class=&quot;string&quot;&gt;&quot;Can&#39;t create file!\n&quot;&lt;/span&gt;, &lt;span class=&quot;built_in&quot;&gt;stderr&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;built_in&quot;&gt;exit&lt;/span&gt;(&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;while&lt;/span&gt;((read = fread(buf, &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;, sizeof(buf), fp)) != &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;) &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        fwrite(buf, &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;, read, nfp);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    fclose(fp);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    fclose(nfp);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    return &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;这个程序接收一个参数，参数为文件名，然后输出一个源文件的拷贝，命名为原文件名 + “.xxx”，这里 “.xxx” 可以选别的易于识别而且不会被加密的就行。&lt;/p&gt;
+&lt;p&gt;然后根据我们要解密的文件类型（这里以源代码为例），我们可以知道白名单程序中会有哪些程序，比如 IDE 中的 Visual Studio(&lt;code&gt;devenv.exe&lt;/code&gt;)， Android Studio(&lt;code&gt;androidstudio.exe&lt;/code&gt;)，代码管理程序的 SVN(&lt;code&gt;svn.exe&lt;/code&gt;)，等等。&lt;/p&gt;
+&lt;p&gt;这里以 SVN 作为例子，我们编译程序 &lt;code&gt;gcc -o svn xxx.c&lt;/code&gt;，然后就生成了 &lt;code&gt;svn.exe&lt;/code&gt; 程序。&lt;/p&gt;
+&lt;p&gt;在一台安装了统一终端并启用加密的机器上，拷贝 &lt;code&gt;svn.exe&lt;/code&gt; 到被加密代码的根目录。现在我们需要批量来解密我们需要的文件。&lt;/p&gt;
+&lt;p&gt;用 Shift + 右键打开目录的命令行，然后输入 &lt;code&gt;powershell&lt;/code&gt; 进入 PowerShell 执行环境，然后输入如下代码&lt;/p&gt;
+&lt;figure class=&quot;highlight powershell&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;foreach&lt;/span&gt;(&lt;span class=&quot;variable&quot;&gt;$i&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;built_in&quot;&gt;Get-ChildItem&lt;/span&gt; -Recurse -Include *.c) &amp;#123; .\svn &lt;span class=&quot;variable&quot;&gt;$i&lt;/span&gt;.FullName &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;该代码表示遍历目录下所有（包括子目录，子子目录）以 &lt;code&gt;.c&lt;/code&gt; 结尾的文件，然后对其执行 &lt;code&gt;svn&lt;/code&gt;，也就是我们写的 &lt;code&gt;svn.exe&lt;/code&gt; 程序，&lt;code&gt;FullName&lt;/code&gt; 表示使用绝对路径。&lt;/p&gt;
+&lt;p&gt;该代码只是解密了所有 C 文件，如果需要解密其他文件，则需要再次输入并修改后缀名即可。&lt;/p&gt;
+&lt;p&gt;PS: 因为 Windows 对于 Powershell 脚本的安全限制，这里并不能写入脚本中用 Powershell 执行，必须手动输入执行。&lt;/p&gt;
+&lt;p&gt;最后，我们需要把解密的文件的文件名复原，这里使用脚本语言就比较容易了，例如 Ruby， 写一个 &lt;code&gt;rename.rb&lt;/code&gt; 放根目录然后执行即可：&lt;/p&gt;
+&lt;figure class=&quot;highlight ruby&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;Dir.glob(&lt;span class=&quot;string&quot;&gt;&quot;**/*.xxx&quot;&lt;/span&gt;) &lt;span class=&quot;keyword&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;params&quot;&gt;|fname|&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  File.rename(fname, fname.chomp(&lt;span class=&quot;string&quot;&gt;&quot;.xxx&quot;&lt;/span&gt;))&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;end&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;h2 id=&quot;结束&quot;&gt;&lt;a href=&quot;#结束&quot; class=&quot;headerlink&quot; title=&quot;结束&quot;&gt;&lt;/a&gt;结束&lt;/h2&gt;&lt;p&gt;找出这种漏洞并不是有意为之，而是某些时候这样做反而效率干脆，臃肿的官僚管理和流程太折磨人了，本来这个系统被利用多数也是懒政造就，系统本身带来的负面影响已经盖过了积极意义。机器运行缓慢，加密导致的奇怪问题，开发部署环境不一致的 bug 等等等，而这其中，这个系统部署和维护不够专业及时也加重了消耗。&lt;/p&gt;
+&lt;p&gt;多点真诚，少点套路。机械依赖工具而不改变思维通常都是徒劳。&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;背景不提，通过搜索能看到这篇文章的，请彼此保持同情。&lt;/p&gt;
+&lt;p&gt;中软统一终端这个软件通过网内文件加密存储，使用时自解密，保证一个局部网络的资料安全性，防止泄漏，主要用于密级文档、源代码和工程图纸的管控。&lt;/p&gt;
+&lt;p&gt;听起来很高大上，但是在文件加密解密这条策略链上，漏洞是很多的，在具体部署上，漏洞就更多了。下面介绍一下如何利用策略漏洞解密被加密的文件，这里主要针对源代码，其他文档类似。&lt;/p&gt;
+    
+    </summary>
+    
+    
+  </entry>
   
   <entry>
     <title>添加可执行程序到 Path 中</title>

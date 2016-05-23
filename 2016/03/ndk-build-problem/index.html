@@ -2,4 +2,4 @@
 <p>这个并不是因为ndk-build不在 <code>path</code> 路径中，而是NDK自己的问题。观察 <code>ndk-build</code> 命令输出详细，调用 <code>gcc</code> 的路径实际上并不对。</p>
 <p>在命令中使用的是 <code>&lt;ndk_dir&gt;/toolchains/arm-linux-androideabi-4.9/prebuilt/windows-x86/</code> 路径，但实际在x86版本的NDK目录中对比，其中只有 <code>&lt;ndk_dir&gt;/toolchains/arm-linux-androideabi-4.9/prebuilt/windows</code> 目录，不是 <code>windows-x86</code> ，将其重命名为 <code>windows-x86</code> 即可。</p>
 <p>这可能是r11b-x86版本NDK的一个bug。</p>
-</div></article></div></section><footer><div class="paginator"><a href="/2016/04/ndk-sample/" class="prev">PREV</a></div><div class="copyright"><p>© 2016 <a href="https://tisyang.github.io">tisyang</a>, unless otherwise noted.</p></div></footer></div><script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script></body></html>
+</div></article></div></section><footer><div class="paginator"><a href="/2016/04/ndk-sample/" class="prev">上一篇</a></div><div class="copyright"><p>© 2016 <a href="https://tisyang.github.io">tisyang</a>, unless otherwise noted.</p></div></footer></div><script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script></body></html>
