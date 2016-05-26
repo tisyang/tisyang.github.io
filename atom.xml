@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://tisyang.github.io/"/>
-  <updated>2016-05-23T15:31:13.394Z</updated>
+  <updated>2016-05-26T15:05:18.575Z</updated>
   <id>https://tisyang.github.io/</id>
   
   <author>
@@ -16,11 +16,62 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>远程调试C#程序环境的配置</title>
+    <link href="https://tisyang.github.io/2016/05/using-visual-studio-remote-debugger/"/>
+    <id>https://tisyang.github.io/2016/05/using-visual-studio-remote-debugger/</id>
+    <published>2016-05-25T16:00:00.000Z</published>
+    <updated>2016-05-26T15:05:18.575Z</updated>
+    
+    <content type="html">&lt;p&gt;远程调试适用于需要在本机调试在其他 Windows 设备上运行的程序，典型的比如调试 Surface 上的程序。&lt;/p&gt;
+&lt;p&gt;目标 Windows 主机不具备安装 Visual Studio 开发环境条件的，也可以用远程调试来进行调试。&lt;/p&gt;
+&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
+&lt;p&gt;微软MSDN官方有文章讲解如何进行远程调试，链接：&lt;a href=&quot;https://msdn.microsoft.com/en-us/library/y7f5zaaa.aspx&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Remote Debugging&lt;/a&gt;。&lt;/p&gt;
+&lt;h2 id=&quot;下载安装远程调试工具&quot;&gt;&lt;a href=&quot;#下载安装远程调试工具&quot; class=&quot;headerlink&quot; title=&quot;下载安装远程调试工具&quot;&gt;&lt;/a&gt;下载安装远程调试工具&lt;/h2&gt;&lt;p&gt;根据所使用的 Visual Studio 版本下载对应的远程调试工具，VS2015 版本的下载链接在此：&lt;a href=&quot;https://www.microsoft.com/en-us/download/details.aspx?id=48155&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Remote Tools for Visual Studio 2015&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;远程调试工具根据架构分别有 x86，x64 和 ARM 版本，根据开发主机和调试目标设备的架构进行下载，注意下载版本需要与机器架构一致，即 x64 的机器必须安装 x64 版本的远程调试工具，不能使用 x86 版本的（在安装过程中会提示不支持）。&lt;/p&gt;
+&lt;p&gt;在开发主机上和调试目标设备上分别安装远程调试工具。&lt;/p&gt;
+&lt;h2 id=&quot;远程调试工具配置&quot;&gt;&lt;a href=&quot;#远程调试工具配置&quot; class=&quot;headerlink&quot; title=&quot;远程调试工具配置&quot;&gt;&lt;/a&gt;远程调试工具配置&lt;/h2&gt;&lt;p&gt;远程调试需要开发主机和目标设备处于同一局域网、工作组或者家庭组。远程调试不能通过 Internet 连接。&lt;/p&gt;
+&lt;h3 id=&quot;1-目标设备配置&quot;&gt;&lt;a href=&quot;#1-目标设备配置&quot; class=&quot;headerlink&quot; title=&quot;1. 目标设备配置&quot;&gt;&lt;/a&gt;1. 目标设备配置&lt;/h3&gt;&lt;p&gt;首先，需要设置目标设备上的远程调试器。&lt;/p&gt;
+&lt;p&gt;运行目标设备上安装好的 Remote Debugger，首次运行会提示进行配置，按照默认配置就好，主要是添加防火墙例外，另外一点是是否将远程调试配置成服务，根据需要或者参照官方文章进行配置。&lt;/p&gt;
+&lt;p&gt;另外，我们需要在目标设备上添加一个账户，用于开发主机连接到目标主机上的 Remote Debugger。打开控制面板的用户帐户，新建一个普通账户，用户名为 &lt;code&gt;debug&lt;/code&gt;，同时设置一个密码。&lt;/p&gt;
+&lt;p&gt;点击 Remote Debugger 的菜单项 Tools/Options，默认选中了 “Windows Authentication”，点击右侧的 “Permissions…” 按钮，进入权限设置对话框。点击 “Add” 手动输入 &lt;code&gt;debug&lt;/code&gt; 账户名，添加 &lt;code&gt;debug&lt;/code&gt; 账户的调试权限。同时需要设置一下 “Maximum idle time” ，这个是指 Remote Debugger 运行时的最大空闲时间，如果超过这个时间，Debugger 就会自动关闭，建议设置较长时间，比如 &lt;code&gt;3600&lt;/code&gt; (1小时)，否则可能需要频繁手动启动 Remote Debugger。&lt;/p&gt;
+&lt;p&gt;这样目标设备上的配置完成。&lt;/p&gt;
+&lt;p&gt;PS:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;调试 .NET 程序只能使用 “Windows Authentication”，不支持 “No Authentication” 选项。&lt;/li&gt;
+&lt;li&gt;可能每次启动 Remote Debugger 都需要重新添加 “Permissions…” 账户。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&quot;2-开发主机配置&quot;&gt;&lt;a href=&quot;#2-开发主机配置&quot; class=&quot;headerlink&quot; title=&quot;2. 开发主机配置&quot;&gt;&lt;/a&gt;2. 开发主机配置&lt;/h3&gt;&lt;p&gt;然后，需要配置开发主机上的调试环境。&lt;/p&gt;
+&lt;p&gt;打开需要进行远程调试的工程，打开工程的 &lt;code&gt;Properties&lt;/code&gt; 页面，选择 &lt;code&gt;Debug&lt;/code&gt; 标签，勾选其中的 &lt;code&gt;Use remote machine&lt;/code&gt; 选项，然后填写入目标设备的名称，这个名称可以打开目标设备的系统信息看到，VS 会自动在其后添加端口号。这里同样可以填写目标设备IP。此外确保 &lt;code&gt;Working directiory&lt;/code&gt; 为空，下方 &lt;code&gt;Enable native code debugging&lt;/code&gt; 未被选中。&lt;/p&gt;
+&lt;p&gt;这时候基本的远程调试就可以用了，但是我们需要在项目编译后将文件手动复制到远程主机上才能调试，这样很不方便（每次重新编译都需要重新复制）。官方文章中也没有提到如何实现自动部署。&lt;/p&gt;
+&lt;p&gt;我们可以使用 Windows 文件共享来解决这个问题。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;启用开发主机上的 Guest 账户。进入控制面板/用户帐户，启用 Guest 账户，同时，进入 控制面板/系统和安全/管理工具/本地安全策略，从左侧打开 本地策略/用户权限分配，右侧找到&lt;em&gt;拒绝从网络访问这台计算机&lt;/em&gt;，打开，然后删除掉 Guest 账户并保存。这样目标设备就可以通过局域网共享访问这台计算机的文件了。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;在开发主机上新建一个 &lt;code&gt;Shared&lt;/code&gt; 目录，右键设置共享，添加 &lt;code&gt;Guest&lt;/code&gt; 账户为读取权限。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;修改工程 &lt;code&gt;Properties&lt;/code&gt; 页面，选择 &lt;code&gt;Build&lt;/code&gt; 标签，修改下面 &lt;code&gt;Output&lt;/code&gt; 的 &lt;code&gt;Output path&lt;/code&gt; 路径为共享目录路径，注意这里的应该为 &lt;code&gt;\\XXX\Shared\project_name\bin\Debug\&lt;/code&gt;， &lt;code&gt;XXX&lt;/code&gt; 部分是开发主机的名称。这里不能直接使用本机的目录路径，否则目标设备无法访问。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;启动项目调试，VS 会自动搜索目标设备名，如果找到则会提示输入认证用的用户名和密码，这里输入 &lt;code&gt;debug&lt;/code&gt; 和 用户密码即可。&lt;/p&gt;
+&lt;p&gt;这样就可以开始程序调试了。&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;远程调试适用于需要在本机调试在其他 Windows 设备上运行的程序，典型的比如调试 Surface 上的程序。&lt;/p&gt;
+&lt;p&gt;目标 Windows 主机不具备安装 Visual Studio 开发环境条件的，也可以用远程调试来进行调试。&lt;/p&gt;
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
     <title>中软统一终端加密文件解密</title>
     <link href="https://tisyang.github.io/2016/05/how-to-break-cs-uem-encrypt/"/>
     <id>https://tisyang.github.io/2016/05/how-to-break-cs-uem-encrypt/</id>
     <published>2016-05-22T16:00:00.000Z</published>
-    <updated>2016-05-23T15:31:13.394Z</updated>
+    <updated>2016-05-26T15:07:54.346Z</updated>
     
     <content type="html">&lt;p&gt;背景不提，通过搜索能看到这篇文章的，请彼此保持同情。&lt;/p&gt;
 &lt;p&gt;中软统一终端这个软件通过网内文件加密存储，使用时自解密，保证一个局部网络的资料安全性，防止泄漏，主要用于密级文档、源代码和工程图纸的管控。&lt;/p&gt;
@@ -42,7 +93,7 @@
 &lt;li&gt;&lt;p&gt;在2的基础上，继续完善，使用程序数字签名验证。程序文件的 Hash 会变，但是经过数字签名那么就可以认定这的确是谁谁谁家的程序。这个方法在终端中应该是被用到的，但肯定不是全部，毕竟只有大公司软件产品才会进行数字签名，比如 word/ppt/excel，可执行程序都是签名过的。而在软件开发中，有相当多开源工具是不可能进行签名的。&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;通过上述分析，我们可以猜测中软终端使用了方法1和3，而方法1中，只根据进程名判定是一个漏洞，我们可以编写克隆程序来读取加密文件。&lt;/p&gt;
+&lt;p&gt;通过上述分析，可以猜测中软终端使用了方法1和3，而方法1只根据进程名判定是一个可以被利用的漏洞，我们可以编写克隆程序来读取加密文件。&lt;/p&gt;
 &lt;p&gt;读取这边解决了，还需要考虑输出这环节。白名单程序保存文件时会进行加密，但是并不会加密所有文件。因为工具也可能用来处理不重要的事情，或者其他必须不能加密的地方，比如编译代码最终生成可执行程序，可执行程序不能被加密。而这部分通常是根据文件后缀名来判断是否需要被加密的。&lt;/p&gt;
 &lt;p&gt;所以我们写一个与白名单中同名的程序，读取文件内容并输出到一个不会被加密的格式即可。&lt;/p&gt;
 &lt;h2 id=&quot;例子代码&quot;&gt;&lt;a href=&quot;#例子代码&quot; class=&quot;headerlink&quot; title=&quot;例子代码&quot;&gt;&lt;/a&gt;例子代码&lt;/h2&gt;&lt;p&gt;因为依赖程序进程名，所以用脚本在这里不合适，最简单可以用 C，一个简单的文件拷贝就可以&lt;/p&gt;
