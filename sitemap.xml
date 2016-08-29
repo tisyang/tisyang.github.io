@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://tisyang.github.io/2016/08/freescale-yocto-custom-linux-image/</loc>
+    
+    <lastmod>2016-08-29T15:24:50.135Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://tisyang.github.io/2016/04/ndk-sample/</loc>
     
     <lastmod>2016-07-23T00:06:14.789Z</lastmod>
