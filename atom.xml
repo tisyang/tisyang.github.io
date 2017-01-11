@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://tisyang.github.io/"/>
-  <updated>2017-01-11T15:22:48.333Z</updated>
+  <updated>2017-01-11T15:25:19.453Z</updated>
   <id>https://tisyang.github.io/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="https://tisyang.github.io/2017/01/split-string-in-shell/"/>
     <id>https://tisyang.github.io/2017/01/split-string-in-shell/</id>
     <published>2017-01-10T16:00:00.000Z</published>
-    <updated>2017-01-11T15:22:48.333Z</updated>
+    <updated>2017-01-11T15:25:19.453Z</updated>
     
     <content type="html">&lt;p&gt;通常来说，使用 shell 脚本时候不需要太顾及程序的效率性，能完成任务，只要不是太慢，都可以接受。&lt;/p&gt;
 &lt;p&gt;但在一些特定应用场合，脚本效率也是一个硬性限制，不能耗时太久，比如说，用 shell 来编写一些处理 HTTP 请求的 CGI 程序，脚本的执行效率直接影响了 HTTP 的响应速度。&lt;/p&gt;
@@ -31,7 +31,7 @@
 &lt;p&gt;用 awk 工具分割字符串类似：&lt;/p&gt;
 &lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;# $1 代表第一列 以此类推&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;# -F 指定分割符号&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;built_in&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;variable&quot;&gt;$line&lt;/span&gt; | awk -F &lt;span class=&quot;string&quot;&gt;&#39; &#39;&lt;/span&gt; &amp;#123;&lt;span class=&quot;string&quot;&gt;&#39;print $1&#39;&lt;/span&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 &lt;p&gt;内部方法分割字符串，用的是 &lt;code&gt;IFS&lt;/code&gt; 变量和 &lt;code&gt;set&lt;/code&gt; 命令：&lt;/p&gt;
-&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;# 设置分隔符&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;IFS=&lt;span class=&quot;string&quot;&gt;&quot; &quot;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;# 分割 line&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;built_in&quot;&gt;set&lt;/span&gt; -- &lt;span class=&quot;variable&quot;&gt;$lin&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;# $1 代表第一列，以此类推&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;built_in&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;variable&quot;&gt;$1&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;# 设置分隔符&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;IFS=&lt;span class=&quot;string&quot;&gt;&quot; &quot;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;# 分割 line&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;built_in&quot;&gt;set&lt;/span&gt; -- &lt;span class=&quot;variable&quot;&gt;$line&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;# $1 代表第一列，以此类推&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;built_in&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;variable&quot;&gt;$1&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 &lt;p&gt;在 shell 脚本中，使用 awk/cut 这些工具在运行时会创建 sub-shell 来运行，相当于 C 语言中的 &lt;code&gt;system&lt;/code&gt;/&lt;code&gt;popen&lt;/code&gt; 调用，当需要使用的次数比较多时，这种调用会显著降低脚本的执行速度（创建进程是比较昂贵的）。&lt;/p&gt;
 &lt;p&gt;而使用内置方法则无需调用外部工具，执行起来效率更高，没有额外开销。&lt;/p&gt;
 &lt;p&gt;以处理 1000 行的空格分割的数字并分别累加为例，其文件内容大概如下：&lt;/p&gt;
