@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://tisyang.github.io/2017/08/cmake-project-layout/</loc>
+    
+    <lastmod>2017-08-06T06:08:31.588Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://tisyang.github.io/2017/01/split-string-in-shell/</loc>
     
     <lastmod>2017-01-11T15:25:19.453Z</lastmod>
