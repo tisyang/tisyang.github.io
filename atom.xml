@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://tisyang.github.io/"/>
-  <updated>2017-08-06T06:08:31.588Z</updated>
+  <updated>2017-08-06T06:13:13.389Z</updated>
   <id>https://tisyang.github.io/</id>
   
   <author>
@@ -20,10 +20,11 @@
     <link href="https://tisyang.github.io/2017/08/cmake-project-layout/"/>
     <id>https://tisyang.github.io/2017/08/cmake-project-layout/</id>
     <published>2017-08-05T16:00:00.000Z</published>
-    <updated>2017-08-06T06:08:31.588Z</updated>
+    <updated>2017-08-06T06:13:13.389Z</updated>
     
     <content type="html">&lt;p&gt;在 C\C++ 项目中，通常会有不止一个可执行程序，或者需要将一些调用封装成动态或静态库，来实现项目的模块化，本文就讲解一种支持这种项目布局的方法。&lt;/p&gt;
 &lt;p&gt;CMake 支持子目录构建（&lt;code&gt;add_subdirectory&lt;/code&gt; 指令），本文介绍的布局方法就是基于这个功能来实现。&lt;/p&gt;
+&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
 &lt;h2 id=&quot;项目&quot;&gt;&lt;a href=&quot;#项目&quot; class=&quot;headerlink&quot; title=&quot;项目&quot;&gt;&lt;/a&gt;项目&lt;/h2&gt;&lt;p&gt;项目根目录编写一个 &lt;code&gt;CMakeLists.txt&lt;/code&gt;，主要描述项目名称，也可以将一些项目级别的配置写入，来影响所有项目构建目标。比如编译的警告级别设置，如果要在项目级别上统一，可以写入，如果要针对不同构建目标来设置，可以留到构建目标 &lt;code&gt;CMakeLists.txt&lt;/code&gt; 文件中写入。&lt;/p&gt;
 &lt;p&gt;项目的各个构建目标作为子目录存放在项目根目录下，每个子目录均包含相应的构建 &lt;code&gt;CMakeLists.txt&lt;/code&gt; 文件。使用 &lt;code&gt;add_subdirectory&lt;/code&gt; 指令将构建目标子目录添加到项目 &lt;code&gt;CMakeLists.txt&lt;/code&gt; 中，构建目标间可以相互引用，只要在添加子目录到项目 &lt;code&gt;CMakeLists.txt&lt;/code&gt; 时保持依赖顺序即可。&lt;/p&gt;
 &lt;p&gt;项目 &lt;code&gt;CMakeLists.txt&lt;/code&gt; 示例：&lt;/p&gt;
@@ -46,7 +47,7 @@
     <summary type="html">
     
       &lt;p&gt;在 C\C++ 项目中，通常会有不止一个可执行程序，或者需要将一些调用封装成动态或静态库，来实现项目的模块化，本文就讲解一种支持这种项目布局的方法。&lt;/p&gt;
-&lt;p&gt;CMake 支持子目录构建（&lt;code&gt;add_subdirectory&lt;/code&gt; 指令），本文介绍的布局
+&lt;p&gt;CMake 支持子目录构建（&lt;code&gt;add_subdirectory&lt;/code&gt; 指令），本文介绍的布局方法就是基于这个功能来实现。&lt;/p&gt;
     
     </summary>
     
