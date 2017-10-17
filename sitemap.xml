@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://tisyang.github.io/2017/10/linux-shell-tips/</loc>
+    
+    <lastmod>2017-10-17T13:11:41.546Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://tisyang.github.io/2017/09/notes-about-using-apt-package-cross-gcc-arm/</loc>
     
     <lastmod>2017-09-13T12:18:59.432Z</lastmod>
