@@ -1,81 +1,115 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml-stylesheet type="text/xsl" href="https://tisyang.github.io/sitemap.xsl"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://tisyang.github.io/2017/10/linux-shell-tips/</loc>
-    
-    <lastmod>2017-10-17T13:11:41.546Z</lastmod>
-    
+    <loc>https://tisyang.github.io/post/2018-07-05-use-git-version-in-cmake-project/</loc>
+    <lastmod>2018-07-05T00:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
   </url>
   
   <url>
-    <loc>https://tisyang.github.io/2017/09/notes-about-using-apt-package-cross-gcc-arm/</loc>
-    
-    <lastmod>2017-09-13T12:18:59.432Z</lastmod>
-    
+    <loc>https://tisyang.github.io/post/2017-10-16-linux-shell-tips/</loc>
+    <lastmod>2017-10-16T00:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
   </url>
   
   <url>
-    <loc>https://tisyang.github.io/2017/08/cmake-project-layout/</loc>
-    
-    <lastmod>2017-08-06T06:13:13.389Z</lastmod>
-    
+    <loc>https://tisyang.github.io/post/2017-09-13-notes-about-using-apt-package-cross-gcc-arm/</loc>
+    <lastmod>2017-09-13T00:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
   </url>
   
   <url>
-    <loc>https://tisyang.github.io/2017/01/split-string-in-shell/</loc>
-    
-    <lastmod>2017-01-11T15:25:19.453Z</lastmod>
-    
+    <loc>https://tisyang.github.io/post/2017-08-06-cmake-project-layout/</loc>
+    <lastmod>2017-08-06T00:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
   </url>
   
   <url>
-    <loc>https://tisyang.github.io/2016/08/freescale-yocto-custom-linux-image/</loc>
-    
-    <lastmod>2016-08-29T15:24:50.135Z</lastmod>
-    
+    <loc>https://tisyang.github.io/post/2017-01-11-split-string-in-shell/</loc>
+    <lastmod>2017-01-11T00:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
   </url>
   
   <url>
-    <loc>https://tisyang.github.io/2016/04/ndk-sample/</loc>
-    
-    <lastmod>2016-07-23T00:06:14.789Z</lastmod>
-    
+    <loc>https://tisyang.github.io/post/2016-08-29-freescale-yocto-custom-linux-image/</loc>
+    <lastmod>2016-08-29T00:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
   </url>
   
   <url>
-    <loc>https://tisyang.github.io/2016/05/bluetooth-serialport-with-32feet-net-library/</loc>
-    
-    <lastmod>2016-05-28T00:54:56.164Z</lastmod>
-    
+    <loc>https://tisyang.github.io/post/2016-05-27-bluetooth-serialport-with-32feet-net-library/</loc>
+    <lastmod>2016-05-27T00:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
   </url>
   
   <url>
-    <loc>https://tisyang.github.io/2016/05/how-to-break-cs-uem-encrypt/</loc>
-    
-    <lastmod>2016-05-26T15:07:54.346Z</lastmod>
-    
+    <loc>https://tisyang.github.io/post/2016-05-26-using-visual-studio-remote-debugger/</loc>
+    <lastmod>2016-05-26T00:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
   </url>
   
   <url>
-    <loc>https://tisyang.github.io/2016/05/using-visual-studio-remote-debugger/</loc>
-    
-    <lastmod>2016-05-26T15:05:18.575Z</lastmod>
-    
+    <loc>https://tisyang.github.io/post/2016-05-23-how-to-break-cs-uem-encrypt/</loc>
+    <lastmod>2016-05-23T00:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
   </url>
   
   <url>
-    <loc>https://tisyang.github.io/2016/04/add-exe-to-path/</loc>
-    
-    <lastmod>2016-04-28T16:25:05.659Z</lastmod>
-    
+    <loc>https://tisyang.github.io/post/2016-04-28-add-exe-to-path/</loc>
+    <lastmod>2016-04-28T00:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
   </url>
   
   <url>
-    <loc>https://tisyang.github.io/2016/03/ndk-build-problem/</loc>
-    
-    <lastmod>2016-04-12T14:45:50.008Z</lastmod>
-    
+    <loc>https://tisyang.github.io/post/2016-04-12-ndk-sample/</loc>
+    <lastmod>2016-04-12T00:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://tisyang.github.io/post/2016-03-28-ndk-build-problem/</loc>
+    <lastmod>2016-03-28T00:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://tisyang.github.io/categories/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://tisyang.github.io/post/</loc>
+    <lastmod>2018-07-05T00:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://tisyang.github.io/tags/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://tisyang.github.io/</loc>
+    <lastmod>2018-07-05T00:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0</priority>
   </url>
   
 </urlset>

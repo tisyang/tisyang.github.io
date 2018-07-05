@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>apt源arm gcc交叉编译器注意事项 - 碎片</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="TyK" />
+  <meta name="description" content="做嵌入式 Linux 开发时候都需要使用交叉编译工具，这些一般是方案厂商提供，但我们通常也可以使用那些打包好的通用交叉编译工具，比如 Debian 上 apt 也有打包好的 arm 交叉编译工具： gcc-arm-linux-gnueabi 和 gcc-arm-linux-gnueabihf，对应 c&#43;&#43; 版本以 g&#43;&#43; 开头，这两类主要区别在于 CPU 对于浮点的处理上，涉及到 armel 和 armhf 架构的区别，详情参照这里，你只需要选择对应开发板的架构工具即可。
+由于是 Debian 自己维护更新的包，上述的两个交叉编译工具通常都会更新比较频繁，会支持最新的标准和特性，但是我们的开发板上系统通常都不是最新的，所以在使用时需要注意，否则会出现编译后的程序无法在开发板上运行。
+最近在将 mruby 应用到嵌入式环境时就遇到这个问题。
+
+" />
+
+  <meta name="keywords" content="程序员, 博客, blog, programming" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.42.2" />
+
+
+<link rel="canonical" href="https://tisyang.github.io/post/2017-09-13-notes-about-using-apt-package-cross-gcc-arm/" />
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+<link href="/dist/even.min.css?v=3.1.1" rel="stylesheet">
+<link href="/lib/fancybox/jquery.fancybox-3.1.20.min.css" rel="stylesheet">
+
+
+
+
+<meta property="og:title" content="apt源arm gcc交叉编译器注意事项" />
+<meta property="og:description" content="做嵌入式 Linux 开发时候都需要使用交叉编译工具，这些一般是方案厂商提供，但我们通常也可以使用那些打包好的通用交叉编译工具，比如 Debian 上 apt 也有打包好的 arm 交叉编译工具： gcc-arm-linux-gnueabi 和 gcc-arm-linux-gnueabihf，对应 c&#43;&#43; 版本以 g&#43;&#43; 开头，这两类主要区别在于 CPU 对于浮点的处理上，涉及到 armel 和 armhf 架构的区别，详情参照这里，你只需要选择对应开发板的架构工具即可。
+
+由于是 Debian 自己维护更新的包，上述的两个交叉编译工具通常都会更新比较频繁，会支持最新的标准和特性，但是我们的开发板上系统通常都不是最新的，所以在使用时需要注意，否则会出现编译后的程序无法在开发板上运行。
+
+最近在将 mruby 应用到嵌入式环境时就遇到这个问题。
+
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://tisyang.github.io/post/2017-09-13-notes-about-using-apt-package-cross-gcc-arm/" />
+
+
+
+<meta property="article:published_time" content="2017-09-13T00:00:00&#43;00:00"/>
+
+<meta property="article:modified_time" content="2017-09-13T00:00:00&#43;00:00"/>
+
+
+
+
+
+
+
+
+
+
+
+<meta itemprop="name" content="apt源arm gcc交叉编译器注意事项">
+<meta itemprop="description" content="做嵌入式 Linux 开发时候都需要使用交叉编译工具，这些一般是方案厂商提供，但我们通常也可以使用那些打包好的通用交叉编译工具，比如 Debian 上 apt 也有打包好的 arm 交叉编译工具： gcc-arm-linux-gnueabi 和 gcc-arm-linux-gnueabihf，对应 c&#43;&#43; 版本以 g&#43;&#43; 开头，这两类主要区别在于 CPU 对于浮点的处理上，涉及到 armel 和 armhf 架构的区别，详情参照这里，你只需要选择对应开发板的架构工具即可。
+
+由于是 Debian 自己维护更新的包，上述的两个交叉编译工具通常都会更新比较频繁，会支持最新的标准和特性，但是我们的开发板上系统通常都不是最新的，所以在使用时需要注意，否则会出现编译后的程序无法在开发板上运行。
+
+最近在将 mruby 应用到嵌入式环境时就遇到这个问题。
+
+">
+
+
+<meta itemprop="datePublished" content="2017-09-13T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2017-09-13T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="257">
+
+
+
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="apt源arm gcc交叉编译器注意事项"/>
+<meta name="twitter:description" content="做嵌入式 Linux 开发时候都需要使用交叉编译工具，这些一般是方案厂商提供，但我们通常也可以使用那些打包好的通用交叉编译工具，比如 Debian 上 apt 也有打包好的 arm 交叉编译工具： gcc-arm-linux-gnueabi 和 gcc-arm-linux-gnueabihf，对应 c&#43;&#43; 版本以 g&#43;&#43; 开头，这两类主要区别在于 CPU 对于浮点的处理上，涉及到 armel 和 armhf 架构的区别，详情参照这里，你只需要选择对应开发板的架构工具即可。
+
+由于是 Debian 自己维护更新的包，上述的两个交叉编译工具通常都会更新比较频繁，会支持最新的标准和特性，但是我们的开发板上系统通常都不是最新的，所以在使用时需要注意，否则会出现编译后的程序无法在开发板上运行。
+
+最近在将 mruby 应用到嵌入式环境时就遇到这个问题。
+
+"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">碎片</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/index.xml">
+        <li class="mobile-menu-item">RSS</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">碎片</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/index.xml">RSS</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">apt源arm gcc交叉编译器注意事项</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2017-09-13 </span>
+        
+        
+        
+      </div>
+    </header>
+
+    
+    
+<div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title"></h2>
+  
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#问题和溯因">问题和溯因</a></li>
+<li><a href="#解决方法">解决方法</a></li>
+<li><a href="#结语">结语</a></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+</div>
+
+    
+    
+
+    
+    <div class="post-content">
+      <p>做嵌入式 Linux 开发时候都需要使用交叉编译工具，这些一般是方案厂商提供，但我们通常也可以使用那些打包好的通用交叉编译工具，比如 Debian 上 apt 也有打包好的 arm 交叉编译工具： <code>gcc-arm-linux-gnueabi</code> 和 <code>gcc-arm-linux-gnueabihf</code>，对应 c++ 版本以 g++ 开头，这两类主要区别在于 CPU 对于浮点的处理上，涉及到 <code>armel</code> 和 <code>armhf</code> 架构的区别，详情参照<a href="https://blogs.oracle.com/jtc/is-it-armhf-or-armel">这里</a>，你只需要选择对应开发板的架构工具即可。</p>
+
+<p>由于是 Debian 自己维护更新的包，上述的两个交叉编译工具通常都会更新比较频繁，会支持最新的标准和特性，但是我们的开发板上系统通常都不是最新的，所以在使用时需要注意，否则会出现编译后的程序无法在开发板上运行。</p>
+
+<p>最近在将 <a href="https://github.com/mruby/mruby">mruby</a> 应用到嵌入式环境时就遇到这个问题。</p>
+
+<p></p>
+
+<h2 id="问题和溯因">问题和溯因</h2>
+
+<p>将静态链接了 <code>mruby</code> 库的测试程序 mirb 放入嵌入式环境上运行时，提示</p>
+
+<pre><code class="language-bash">./mirb: /lib/libc.so.6: version `GLIBC_2.16' not found (required by ./mirb)
+</code></pre>
+
+<p>嵌入式环境没有 2.16 版本以上的 glibc 库，但是理论上测试程序不需要这么高版本的 glibc 库。在嵌入式命令行上用 <code>ldd</code> （有些嵌入式环境可能没有附带这个工具）查看一下可执行文件信息：</p>
+
+<pre><code class="language-bash">#ldd -v mirb
+./mirb: /lib/libc.so.6: version `GLIBC_2.16' not found (required by ./mirb)
+        libm.so.6 =&gt; /lib/libm.so.6 (0x401ed000)
+        libc.so.6 =&gt; /lib/libc.so.6 (0x40293000)
+        /lib/ld-linux.so.3 (0x401c4000)
+
+        Version information:
+        ./mirb:
+                libm.so.6 (GLIBC_2.4) =&gt; /lib/libm.so.6
+                libc.so.6 (GLIBC_2.7) =&gt; /lib/libc.so.6
+                libc.so.6 (GLIBC_2.16) =&gt; not found
+
+                libc.so.6 (GLIBC_2.4) =&gt; /lib/libc.so.6
+        /lib/libm.so.6:
+                ld-linux.so.3 (GLIBC_PRIVATE) =&gt; /lib/ld-linux.so.3
+                libc.so.6 (GLIBC_2.4) =&gt; /lib/libc.so.6
+        /lib/libc.so.6:
+                ld-linux.so.3 (GLIBC_2.4) =&gt; /lib/ld-linux.so.3
+                ld-linux.so.3 (GLIBC_PRIVATE) =&gt; /lib/ld-linux.so.3
+</code></pre>
+
+<p>可执行程序 mirb 的确引用 2.16 版本的 glibc 库，那就继续查一下引用了 2.16 版本 glibc 库的哪些符号。</p>
+
+<p>在开发主机（不需要在嵌入式主机中）上可以使用 objdump 工具查看可执行程序的符号表（参数 <code>-t</code>）：</p>
+
+<pre><code class="language-bash">$ objdump -t mirb | grep 2.16
+00000000       F *UND*	00000000              timespec_get@@GLIBC_2.16
+</code></pre>
+
+<p>可以看出是 <code>timespec_get</code> 这个函数符号需要 2.16 版本的 glibc 库，那么就得在代码中查一下哪个地方调用了这个函数。</p>
+
+<p>在<a href="https://github.com/mruby/mruby/blob/stable/mrbgems/mruby-time/src/time.c#L285">这里</a> 可以看出 <code>mruby</code> 源码的 <code>time.c</code> 文件中使用了 <code>timespec_get</code> 函数：</p>
+
+<pre><code class="language-c">  tm = (struct mrb_time *)mrb_malloc(mrb, sizeof(*tm));
+#if defined(TIME_UTC)
+  {
+    struct timespec ts;
+    if (timespec_get(&amp;ts, TIME_UTC) == 0) {
+      mrb_free(mrb, tm);
+      mrb_raise(mrb, E_RUNTIME_ERROR, &quot;timespec_get() failed for unknown reasons&quot;);
+    }
+    tm-&gt;sec = ts.tv_sec;
+    tm-&gt;usec = ts.tv_nsec / 1000;
+  }
+#elif defined(NO_GETTIMEOFDAY)
+</code></pre>
+
+<p>宏定义 <code>TIME_UTC</code> 控制着代码是否调用 <code>timespec_get</code> 函数。</p>
+
+<p>通过<a href="http://en.cppreference.com/w/c/chrono/timespec_get">搜索</a>了解到，<code>TIME_UTC</code> 和 <code>timespec_get</code> 都是 C11 标准里定义的。由于在编译 <code>mruby</code> 时没有指定编译参数，交叉编译工具使用了默认参数导致 C11 标准也被支持，<code>mruby</code> 库也就使用了最新的 C11 标准，引用了新函数 <code>timespec_get</code>，产生了 glibc 2.16 版本的依赖。</p>
+
+<h2 id="解决方法">解决方法</h2>
+
+<p>在知晓原因后，解决方法就简单了。就是在交叉编译 <code>mruby</code> 库时，去指定编译标准（c标准），修改 <code>mruby</code> 的编译配置文件 <code>build_config.rb</code> ：</p>
+
+<pre><code class="language-ruby">conf.cc do |cc|
+    cc.command = &quot;arm-linux-gnueabi-gcc&quot;
+    cc.flags &lt;&lt; &quot;-std=gnu99&quot;
+end
+</code></pre>
+
+<p>将编译 c 标准指定为 gnu99（<code>-std=gnu99</code>），这里也可以使用 c99 标准（<code>-std=c99</code>）。</p>
+
+<p>然后重新编译测试程序，放到嵌入式环境上运行，OK。</p>
+
+<h2 id="结语">结语</h2>
+
+<p>使用编译器尤其是交叉编译器时，最好要指定编译参数，确定编译标准，否则目标平台可能不支持，导致程序无法运行。在向第三方提供开发库而不是源码的情况下， 需要特别注意，尽量使用统一的编译参数标准，推荐 c99 或者 gnu99。</p>
+
+<p>在遇到类似 <code>/lib/libc.so.6: version GLIBC_X.XX not found</code> 问题时，可以借助 <code>ldd</code> 和 <code>objdump</code> 工具来确定依赖的符号源，寻找解决方法。</p>
+    </div>
+
+    
+    
+
+    
+    
+
+    <footer class="post-footer">
+      
+
+      
+      <nav class="post-nav">
+        
+          <a class="prev" href="/post/2017-10-16-linux-shell-tips/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Linux Shell Tips</span>
+            <span class="prev-text nav-mobile"></span>
+          </a>
+        
+          <a class="next" href="/post/2017-08-06-cmake-project-layout/">
+            <span class="next-text nav-default">CMake 项目模块化布局</span>
+            <span class="next-text nav-mobile"></span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="https://github.com/tisyang" class="iconfont icon-github" title="github"></a>
+  <a href="https://tisyang.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    %!(EXTRA string=<a class="hexo-link" href="https://gohugo.io">Hugo</a>)
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+     - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    
+      2016 - 
+    2018
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">TyK</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+<script src="/lib/highlight/highlight.pack.js?v=20171001"></script><script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  <script type="text/javascript" src="/lib/fancybox/jquery.fancybox-3.1.20.min.js"></script>
+
+
+<script type="text/javascript" src="/dist/even.min.js?v=3.1.1"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

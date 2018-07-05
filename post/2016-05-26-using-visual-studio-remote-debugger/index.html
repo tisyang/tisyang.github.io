@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>远程调试C#程序环境的配置 - 碎片</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="TyK" />
+  <meta name="description" content="远程调试适用于需要在本机调试在其他 Windows 设备上运行的程序，典型的比如调试 Surface 上的程序。
+目标 Windows 主机不具备安装 Visual Studio 开发环境条件的，也可以用远程调试来进行调试。
+
+" />
+
+  <meta name="keywords" content="程序员, 博客, blog, programming" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.42.2" />
+
+
+<link rel="canonical" href="https://tisyang.github.io/post/2016-05-26-using-visual-studio-remote-debugger/" />
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+<link href="/dist/even.min.css?v=3.1.1" rel="stylesheet">
+<link href="/lib/fancybox/jquery.fancybox-3.1.20.min.css" rel="stylesheet">
+
+
+
+
+<meta property="og:title" content="远程调试C#程序环境的配置" />
+<meta property="og:description" content="远程调试适用于需要在本机调试在其他 Windows 设备上运行的程序，典型的比如调试 Surface 上的程序。
+
+目标 Windows 主机不具备安装 Visual Studio 开发环境条件的，也可以用远程调试来进行调试。
+
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://tisyang.github.io/post/2016-05-26-using-visual-studio-remote-debugger/" />
+
+
+
+<meta property="article:published_time" content="2016-05-26T00:00:00&#43;00:00"/>
+
+<meta property="article:modified_time" content="2016-05-26T00:00:00&#43;00:00"/>
+
+
+
+
+
+
+
+
+
+
+
+<meta itemprop="name" content="远程调试C#程序环境的配置">
+<meta itemprop="description" content="远程调试适用于需要在本机调试在其他 Windows 设备上运行的程序，典型的比如调试 Surface 上的程序。
+
+目标 Windows 主机不具备安装 Visual Studio 开发环境条件的，也可以用远程调试来进行调试。
+
+">
+
+
+<meta itemprop="datePublished" content="2016-05-26T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2016-05-26T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="153">
+
+
+
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="远程调试C#程序环境的配置"/>
+<meta name="twitter:description" content="远程调试适用于需要在本机调试在其他 Windows 设备上运行的程序，典型的比如调试 Surface 上的程序。
+
+目标 Windows 主机不具备安装 Visual Studio 开发环境条件的，也可以用远程调试来进行调试。
+
+"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">碎片</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/index.xml">
+        <li class="mobile-menu-item">RSS</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">碎片</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/index.xml">RSS</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">远程调试C#程序环境的配置</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2016-05-26 </span>
+        
+        
+        
+      </div>
+    </header>
+
+    
+    
+<div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title"></h2>
+  
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#下载安装远程调试工具">下载安装远程调试工具</a></li>
+<li><a href="#远程调试工具配置">远程调试工具配置</a>
+<ul>
+<li><a href="#1-目标设备配置">1. 目标设备配置</a></li>
+<li><a href="#2-开发主机配置">2. 开发主机配置</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+</div>
+
+    
+    
+
+    
+    <div class="post-content">
+      <p>远程调试适用于需要在本机调试在其他 Windows 设备上运行的程序，典型的比如调试 Surface 上的程序。</p>
+
+<p>目标 Windows 主机不具备安装 Visual Studio 开发环境条件的，也可以用远程调试来进行调试。</p>
+
+<p></p>
+
+<p>微软MSDN官方有文章讲解如何进行远程调试，链接：<a href="https://msdn.microsoft.com/en-us/library/y7f5zaaa.aspx">Remote Debugging</a>。</p>
+
+<h2 id="下载安装远程调试工具">下载安装远程调试工具</h2>
+
+<p>根据所使用的 Visual Studio 版本下载对应的远程调试工具，VS2015 版本的下载链接在此：<a href="https://www.microsoft.com/en-us/download/details.aspx?id=48155">Remote Tools for Visual Studio 2015</a>。</p>
+
+<p>远程调试工具根据架构分别有 x86，x64 和 ARM 版本，根据开发主机和调试目标设备的架构进行下载，注意下载版本需要与机器架构一致，即 x64 的机器必须安装 x64 版本的远程调试工具，不能使用 x86 版本的（在安装过程中会提示不支持）。</p>
+
+<p>在开发主机上和调试目标设备上分别安装远程调试工具。</p>
+
+<h2 id="远程调试工具配置">远程调试工具配置</h2>
+
+<p>远程调试需要开发主机和目标设备处于同一局域网、工作组或者家庭组。远程调试不能通过 Internet 连接。</p>
+
+<h3 id="1-目标设备配置">1. 目标设备配置</h3>
+
+<p>首先，需要设置目标设备上的远程调试器。</p>
+
+<p>运行目标设备上安装好的 Remote Debugger，首次运行会提示进行配置，按照默认配置就好，主要是添加防火墙例外，另外一点是是否将远程调试配置成服务，根据需要或者参照官方文章进行配置。</p>
+
+<p>另外，我们需要在目标设备上添加一个账户，用于开发主机连接到目标主机上的 Remote Debugger。打开控制面板的用户帐户，新建一个普通账户，用户名为 <code>debug</code>，同时设置一个密码。</p>
+
+<p>点击 Remote Debugger 的菜单项 Tools/Options，默认选中了 &ldquo;Windows Authentication&rdquo;，点击右侧的 &ldquo;Permissions&hellip;&rdquo; 按钮，进入权限设置对话框。点击 &ldquo;Add&rdquo; 手动输入 <code>debug</code> 账户名，添加 <code>debug</code> 账户的调试权限。同时需要设置一下 &ldquo;Maximum idle time&rdquo; ，这个是指 Remote Debugger 运行时的最大空闲时间，如果超过这个时间，Debugger 就会自动关闭，建议设置较长时间，比如 <code>3600</code> (1小时)，否则可能需要频繁手动启动 Remote Debugger。</p>
+
+<p>这样目标设备上的配置完成。</p>
+
+<p>PS:
+*  调试 .NET 程序只能使用 &ldquo;Windows Authentication&rdquo;，不支持 &ldquo;No Authentication&rdquo; 选项。
+*  可能每次启动 Remote Debugger 都需要重新添加 &ldquo;Permissions&hellip;&rdquo; 账户。</p>
+
+<h3 id="2-开发主机配置">2. 开发主机配置</h3>
+
+<p>然后，需要配置开发主机上的调试环境。</p>
+
+<p>打开需要进行远程调试的工程，打开工程的 <code>Properties</code> 页面，选择 <code>Debug</code> 标签，勾选其中的 <code>Use remote machine</code> 选项，然后填写入目标设备的名称，这个名称可以打开目标设备的系统信息看到，VS 会自动在其后添加端口号。这里同样可以填写目标设备IP。此外确保 <code>Working directiory</code> 为空，下方 <code>Enable native code debugging</code> 未被选中。</p>
+
+<p>这时候基本的远程调试就可以用了，但是我们需要在项目编译后将文件手动复制到远程主机上才能调试，这样很不方便（每次重新编译都需要重新复制）。官方文章中也没有提到如何实现自动部署。</p>
+
+<p>我们可以使用 Windows 文件共享来解决这个问题。</p>
+
+<ol>
+<li><p>启用开发主机上的 Guest 账户。进入控制面板/用户帐户，启用 Guest 账户，同时，进入 控制面板/系统和安全/管理工具/本地安全策略，从左侧打开 本地策略/用户权限分配，右侧找到*拒绝从网络访问这台计算机*，打开，然后删除掉 Guest 账户并保存。这样目标设备就可以通过局域网共享访问这台计算机的文件了。</p></li>
+
+<li><p>在开发主机上新建一个 <code>Shared</code> 目录，右键设置共享，添加 <code>Guest</code> 账户为读取权限。</p></li>
+
+<li><p>修改工程 <code>Properties</code> 页面，选择 <code>Build</code> 标签，修改下面 <code>Output</code> 的 <code>Output path</code> 路径为共享目录路径，注意这里的应该为 <code>\\XXX\Shared\project_name\bin\Debug\</code>， <code>XXX</code> 部分是开发主机的名称。这里不能直接使用本机的目录路径，否则目标设备无法访问。</p></li>
+</ol>
+
+<p>启动项目调试，VS 会自动搜索目标设备名，如果找到则会提示输入认证用的用户名和密码，这里输入 <code>debug</code> 和 用户密码即可。</p>
+
+<p>这样就可以开始程序调试了。</p>
+    </div>
+
+    
+    
+
+    
+    
+
+    <footer class="post-footer">
+      
+
+      
+      <nav class="post-nav">
+        
+          <a class="prev" href="/post/2016-05-27-bluetooth-serialport-with-32feet-net-library/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">32feet.net 蓝牙虚拟串口编程</span>
+            <span class="prev-text nav-mobile"></span>
+          </a>
+        
+          <a class="next" href="/post/2016-05-23-how-to-break-cs-uem-encrypt/">
+            <span class="next-text nav-default">中软统一终端加密文件解密</span>
+            <span class="next-text nav-mobile"></span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="https://github.com/tisyang" class="iconfont icon-github" title="github"></a>
+  <a href="https://tisyang.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    %!(EXTRA string=<a class="hexo-link" href="https://gohugo.io">Hugo</a>)
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+     - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    
+      2016 - 
+    2018
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">TyK</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+<script src="/lib/highlight/highlight.pack.js?v=20171001"></script><script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  <script type="text/javascript" src="/lib/fancybox/jquery.fancybox-3.1.20.min.js"></script>
+
+
+<script type="text/javascript" src="/dist/even.min.js?v=3.1.1"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

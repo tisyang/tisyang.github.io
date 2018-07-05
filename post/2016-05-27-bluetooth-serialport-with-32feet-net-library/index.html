@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>32feet.net 蓝牙虚拟串口编程 - 碎片</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="TyK" />
+  <meta name="description" content="Windows 上的蓝牙编程并不方便，由于操作系统并没有提供统一的蓝牙操作接口，通常是由各个蓝牙设备商提供蓝牙栈，所以要想编程兼容这些不同的厂商蓝牙是一个问题。好在有个软件项目 32feet.NET 针对主流蓝牙协议栈提供了支持，包括 Microsfot, Widcomm, BlueSolei 等，同时还支持红外传输协议。
+蓝牙虚拟串口是一个较为常见的需求，为了兼容已有使用串口设备的程序，需要将蓝牙连接转为系统上的虚拟串口，然后提供给其他程序或库使用。32feet.NET 对此也提供了支持。
+
+" />
+
+  <meta name="keywords" content="程序员, 博客, blog, programming" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.42.2" />
+
+
+<link rel="canonical" href="https://tisyang.github.io/post/2016-05-27-bluetooth-serialport-with-32feet-net-library/" />
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+<link href="/dist/even.min.css?v=3.1.1" rel="stylesheet">
+<link href="/lib/fancybox/jquery.fancybox-3.1.20.min.css" rel="stylesheet">
+
+
+
+
+<meta property="og:title" content="32feet.net 蓝牙虚拟串口编程" />
+<meta property="og:description" content="Windows 上的蓝牙编程并不方便，由于操作系统并没有提供统一的蓝牙操作接口，通常是由各个蓝牙设备商提供蓝牙栈，所以要想编程兼容这些不同的厂商蓝牙是一个问题。好在有个软件项目 32feet.NET 针对主流蓝牙协议栈提供了支持，包括 Microsfot, Widcomm, BlueSolei 等，同时还支持红外传输协议。
+
+蓝牙虚拟串口是一个较为常见的需求，为了兼容已有使用串口设备的程序，需要将蓝牙连接转为系统上的虚拟串口，然后提供给其他程序或库使用。32feet.NET 对此也提供了支持。
+
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://tisyang.github.io/post/2016-05-27-bluetooth-serialport-with-32feet-net-library/" />
+
+
+
+<meta property="article:published_time" content="2016-05-27T00:00:00&#43;00:00"/>
+
+<meta property="article:modified_time" content="2016-05-27T00:00:00&#43;00:00"/>
+
+
+
+
+
+
+
+
+
+
+
+<meta itemprop="name" content="32feet.net 蓝牙虚拟串口编程">
+<meta itemprop="description" content="Windows 上的蓝牙编程并不方便，由于操作系统并没有提供统一的蓝牙操作接口，通常是由各个蓝牙设备商提供蓝牙栈，所以要想编程兼容这些不同的厂商蓝牙是一个问题。好在有个软件项目 32feet.NET 针对主流蓝牙协议栈提供了支持，包括 Microsfot, Widcomm, BlueSolei 等，同时还支持红外传输协议。
+
+蓝牙虚拟串口是一个较为常见的需求，为了兼容已有使用串口设备的程序，需要将蓝牙连接转为系统上的虚拟串口，然后提供给其他程序或库使用。32feet.NET 对此也提供了支持。
+
+">
+
+
+<meta itemprop="datePublished" content="2016-05-27T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2016-05-27T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="883">
+
+
+
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="32feet.net 蓝牙虚拟串口编程"/>
+<meta name="twitter:description" content="Windows 上的蓝牙编程并不方便，由于操作系统并没有提供统一的蓝牙操作接口，通常是由各个蓝牙设备商提供蓝牙栈，所以要想编程兼容这些不同的厂商蓝牙是一个问题。好在有个软件项目 32feet.NET 针对主流蓝牙协议栈提供了支持，包括 Microsfot, Widcomm, BlueSolei 等，同时还支持红外传输协议。
+
+蓝牙虚拟串口是一个较为常见的需求，为了兼容已有使用串口设备的程序，需要将蓝牙连接转为系统上的虚拟串口，然后提供给其他程序或库使用。32feet.NET 对此也提供了支持。
+
+"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">碎片</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/index.xml">
+        <li class="mobile-menu-item">RSS</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">碎片</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/index.xml">RSS</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">32feet.net 蓝牙虚拟串口编程</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2016-05-27 </span>
+        
+        
+        
+      </div>
+    </header>
+
+    
+    
+<div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title"></h2>
+  
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#安装">安装</a></li>
+<li><a href="#使用">使用</a>
+<ul>
+<li><a href="#1-检测系统蓝牙可用性">1. 检测系统蓝牙可用性</a></li>
+<li><a href="#2-蓝牙搜索">2. 蓝牙搜索</a></li>
+<li><a href="#3-检测蓝牙设备是否在范围内">3. 检测蓝牙设备是否在范围内</a></li>
+<li><a href="#4-蓝牙设备配对">4. 蓝牙设备配对</a></li>
+<li><a href="#5-蓝牙直接连接">5. 蓝牙直接连接</a></li>
+<li><a href="#6-蓝牙虚拟串口">6. 蓝牙虚拟串口</a>
+<ul>
+<li><a href="#获取蓝牙虚拟串口名">获取蓝牙虚拟串口名</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#样例代码">样例代码</a></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+</div>
+
+    
+    
+
+    
+    <div class="post-content">
+      <p>Windows 上的蓝牙编程并不方便，由于操作系统并没有提供统一的蓝牙操作接口，通常是由各个蓝牙设备商提供蓝牙栈，所以要想编程兼容这些不同的厂商蓝牙是一个问题。好在有个软件项目 <a href="http://32feet.codeplex.com/" title="32feet.NET">32feet.NET</a> 针对主流蓝牙协议栈提供了支持，包括 Microsfot, Widcomm, BlueSolei 等，同时还支持红外传输协议。</p>
+
+<p>蓝牙虚拟串口是一个较为常见的需求，为了兼容已有使用串口设备的程序，需要将蓝牙连接转为系统上的虚拟串口，然后提供给其他程序或库使用。<a href="http://32feet.codeplex.com/" title="32feet.NET">32feet.NET</a> 对此也提供了支持。</p>
+
+<p></p>
+
+<p><a href="http://32feet.codeplex.com/" title="32feet.NET">32feet.NET</a> 依赖 .NET 3.5 版本以上框架，支持 Windows 桌面版本、Wndows CE 以及 Windows Phone。</p>
+
+<h2 id="安装">安装</h2>
+
+<p>如果使用 Visual Studio 2015 或者 安装有 NuGet 工具的，可以直接通过 NuGet 安装。在 NuGet 命令行中输入</p>
+
+<pre><code class="language-PowerShell">Install-Package 32feet.NET
+</code></pre>
+
+<p>这样 NuGet 会自动下载安装并添加到当前 .NET 项目中。可以检查项目 <code>References</code> 项，如果存在 <code>InTheHand.Net.Personal</code> 则表明已成功加入到项目中，如果没有，可以手动添加引用，NuGet 下载存放在 <code>SolutionName\packages\32feet.NET.x.x.x.x\</code> 路径下。</p>
+
+<h2 id="使用">使用</h2>
+
+<p>下面主要讲解 <a href="http://32feet.codeplex.com/" title="32feet.NET">32feet.NET</a> 的使用，覆盖蓝牙搜索、配对、直接连接以及虚拟串口服务。</p>
+
+<h3 id="1-检测系统蓝牙可用性">1. 检测系统蓝牙可用性</h3>
+
+<p>如果系统没有蓝牙设备或者蓝牙设备被禁用，那么可以通过以下函数来进行检查：</p>
+
+<pre><code class="language-cs">/* 定义于类 BTHelper 中 */
+public static bool IsPlatformSupportBT()
+{
+    BluetoothClient bc;
+    try
+    {
+        bc = new BluetoothClient();
+    }
+    catch (PlatformNotSupportedException)
+    {
+        return false;
+    }
+    bc.Close();
+    return true;
+}
+</code></pre>
+
+<p>如果系统不支持蓝牙设备，那么 <code>new BluetoothClient</code> 会抛出 <code>PlatformNotSupportedException</code> 异常，通过捕获这个异常，来检测系统蓝牙设备可用性。</p>
+
+<h3 id="2-蓝牙搜索">2. 蓝牙搜索</h3>
+
+<p><code>BluetoothClient</code> 对象有个方法 <code>DiscoverDevices</code> 用于搜索蓝牙设备，该方法有多个重载版本，最终都是调用如下这个接口：</p>
+
+<pre><code class="language-cs">public BluetoothDeviceInfo[] DiscoverDevices(int maxDevices, bool authenticated, bool remembered, bool unknown, bool discoverableOnly);
+</code></pre>
+
+<p>第一个参数表明搜索的最大设备数，第二个参数表示是否搜索已配对设备，第三个表示是否搜索记住的设备，第四个表示是否搜索未知设备，第五个参数表示是搜索范围内可被发现的设备。</p>
+
+<p>这里面重要的是第二和第五个参数，第二个代表搜索系统中已配对列表中的设备，即使它们现在并不在线。第五个参数 XP 系统上不支持，表示搜索范围内可被发现的设备。</p>
+
+<p>如果我们需要获得系统中已配对列表中的蓝牙设备，可以这样调用 <code>DiscoverDevices(255, true, false, false)</code>，这里使用了4个参数的重载版本，只将第二个参数置为 <code>true</code>。</p>
+
+<p>如果我们需要搜索周围环境中可用的蓝牙设备，可以这样调用 <code>DiscoverDevices(255, false, false, false, true)</code>，这个调用等同于 <code>DiscoverDevicesInRange()</code>。</p>
+
+<p>需要注意的是，这个调用是同步阻塞的，在搜索没有结束之前函数不会返回。所以通常我们需要将这个调用放入工作线程中。例外的是，如果只是获取系统中已配对列表中的设备，这个调用会很快完成，不会占用当前线程太多时间。</p>
+
+<p>库中同时提供了一个异步搜索方法，由类 <code>BluetoothComponent</code> 提供，由事件 <code>DiscoverDevicesProgress</code> 和 事件 <code>DiscoverDevicesComplete</code> 以及方法 <code>DiscoverDevicesAsync</code> 来实现。这个和用 <code>BackgroundWorker</code> 来实现 <code>DiscoverDevices()</code> 异步查找是一样的。</p>
+
+<p>PS: 可以通过 VS 的 Object Browser 查看 <code>InTheHand.Net.Personal</code> 库中的函数接口说明，说明非常翔实。</p>
+
+<h3 id="3-检测蓝牙设备是否在范围内">3. 检测蓝牙设备是否在范围内</h3>
+
+<p>当需要检查一个蓝牙设备是否在有效范围内，可以通过查询一个 Fake Service ID 来实现。</p>
+
+<p>如果蓝牙设备在范围内可访问，那么查询的结果是返回的服务记录为空，表示不支持此服务；如果蓝牙设备不在范围内，那么会抛出套接字异常。</p>
+
+<p>以下为检测代码：</p>
+
+<pre><code class="language-cs">/* 定义于类 BTHelper 中 */
+public static bool TestingIfInRange(BluetoothAddress addr)
+{
+    bool inRange = false;
+    Guid fakeUuid = new Guid(&quot;{F13F471D-47CB-41d6-9609-BAD0690BF891}&quot;);
+    BluetoothDeviceInfo device = new BluetoothDeviceInfo(addr);
+
+    try
+    {
+        ServiceRecord[] records = device.GetServiceRecords(fakeUuid);
+        Debug.Assert(records.Length == 0, &quot;Why are we getting any records? len: &quot; + records.Length);
+        inRange = true;
+    }
+    catch (SocketException)
+    {
+        inRange = false;
+    }
+    return inRange;
+}
+</code></pre>
+
+<p>需要注意的是，因为蓝牙设备通信需要时间，所以这个调用也需要较长时间才能完成，未完成之前进入阻塞不返回，所以这个方法也需要放入工作线程中执行。</p>
+
+<p>这部分内容可以参考官方文档： <a href="http://32feet.codeplex.com/wikipage?title=Testing%20if%20a%20device%20is%20in%20range" title="Testing if a device is in range">Tesing if a device is in rage</a>.</p>
+
+<h3 id="4-蓝牙设备配对">4. 蓝牙设备配对</h3>
+
+<p>蓝牙配对功能由类 <code>BluetoothSecurity</code> 的静态方法 <code>PairRequest(BluetoothAddress device, string pin)</code> 提供，其中第一个参数是目标设备地址，第二个参数是用于配对的 Pin 码。配对成功返回 <code>true</code>，失败返回 <code>false</code>。</p>
+
+<p>解除配对是 <code>BluetoothSecurity.RemoveDevice(BluetoothAddress device)</code> 。</p>
+
+<p>配对操作也需要将长时间完成，所以这个方法也需要放入工作线程中执行。</p>
+
+<h3 id="5-蓝牙直接连接">5. 蓝牙直接连接</h3>
+
+<p>如果不需要蓝牙虚拟串口而直接读写蓝牙数据，那么可以使用直接连接，这个可以参照官方文档：<a href="http://32feet.codeplex.com/wikipage?title=General%20Bluetooth%20Data%20Connections" title="General Bluetooth Data Connections">General Bluetooth Data Connections</a>.</p>
+
+<p>通过直接连接获取一个可读写的 <code>System.IO.Stream</code> 流对象，就可以直接对蓝牙进行读写数据操作了。以下为官方样例中的代码</p>
+
+<pre><code class="language-cs">BluetoothAddress addr = BluetoothAddress.Parse(&quot;001122334455&quot;);
+Guid serviceClass;
+serviceClass = BluetoothService.SerialPort;
+// - or - etc
+// serviceClass = MyConsts.MyServiceUuid
+//
+var ep = new BluetoothEndPoint(addr, serviceClass);
+var cli = new BluetoothClient();
+cli.Connect(ep);
+Stream peerStream = cli.GetStream();
+// peerStream.Write/Read ...
+</code></pre>
+
+<h3 id="6-蓝牙虚拟串口">6. 蓝牙虚拟串口</h3>
+
+<p>这部分讲解如何实现将蓝牙连接转为系统上的虚拟串口并获取串口名，还可以参阅官方文档： <a href="http://32feet.codeplex.com/wikipage?title=Bluetooth%20Serial%20Ports" title="Bluetooth Seiral Ports">Bluetooth Serial Ports</a>.</p>
+
+<p>首先需要说明的是，虚拟串口和直接连接数据读写不能同时使用，如果已经使用了其中一个方法进行读写，那么另外的一个方法会失败。</p>
+
+<p>生成虚拟串口需要将蓝牙设备服务设置为 <code>BluetoothService.SerialPort</code>，官方样例代码如下：</p>
+
+<pre><code class="language-cs">BluetoothAddress addr = BluetoothAddress.Parse(&quot;123456789012&quot;);
+BluetoothDeviceInfo device = new BluetoothDeviceInfo(addr);  // Or from discovery etc
+bool state = true;
+device.SetServiceState(BluetoothService.SerialPort, state, true);
+</code></pre>
+
+<p><code>SetServiceState</code> 的第一个函数表示服务标识，第二个表示要设置的服务状态，<code>true</code> 为启用， <code>false</code> 为禁用，第三个参数表示如果设置失败是否抛出异常。</p>
+
+<p>但在实际使用中，某些双模蓝牙在设置时，虽然设置成功但是依然会抛出 <code>Win32Exception</code> 异常，所以这里建议调用此函数的重载版本 <code>SetServiceState(System.Guid service, bool state)</code>，而想要知道是否设置成功，下面会介绍其他方法来获得。</p>
+
+<p>这个方法调用并不会告诉我们新生成的串口名，官方文档中的建议是通过设置前后的系统串口列表差异来获取新生成的串口名，而获取系统串口列表则可以调用静态方法 <code>SerialPort.GetPortNames</code>。</p>
+
+<p>但是不建议用这个方法来获取虚拟串口名，因为这个不可靠而且容易出错，下面介绍另外一个可靠方法，而且这个方法也可以同时告诉我们设置虚拟串口服务是否成功。</p>
+
+<h4 id="获取蓝牙虚拟串口名">获取蓝牙虚拟串口名</h4>
+
+<p>这部分参阅官方文档：<a href="http://32feet.codeplex.com/wikipage?title=Getting%20Virtual%20COM%20Port%20Names" title="Getting Virtual COM Port Names for Remote Bluetooth Devices">Getting Virtual COM Port Names for Remote Bluetooth Devices</a>.</p>
+
+<p>蓝牙虚拟串口在系统中都有记录，我们可以通过检索这个记录，来找到所设置的设备的虚拟串口名，同时也可以得知我们的蓝牙虚拟串口是否设置成功。</p>
+
+<p>通过调用 WMI 查询，可以枚举出系统中每个串口的详细信息。这里可以通过 PowerShell 来查询：</p>
+
+<pre><code class="language-PowerShell">C:\&gt; Get-WmiObject -query &quot;select DeviceID,PNPDeviceID from Win32_SerialPort&quot;
+</code></pre>
+
+<p>输出样例（其中 <code>COM66</code> 对应的蓝牙设备地址为 <code>00803A686519</code>）：</p>
+
+<pre><code class="language-text">DeviceID     : COM66
+PNPDeviceID  : BTHENUM\{00001101-0000-1000-8000-00805F9B34FB}\7&amp;1D80ECD3&amp;0&amp;00803A686519_C00000003
+
+......
+</code></pre>
+
+<p>可以看出蓝牙虚拟串口的 <code>PNPDeviceID</code> 是以 <code>BTHENUM</code> 开头，并且会将蓝牙地址存放其中。</p>
+
+<p>这个查询也可以通过 C# 代码实现：</p>
+
+<pre><code class="language-cs">using System.Management;
+
+const string Win32_SerialPort = &quot;Win32_SerialPort&quot;;
+SelectQuery q = new SelectQuery(Win32_SerialPort);
+ManagementObjectSearcher s = new ManagementObjectSearcher(q);
+foreach (object cur in s.Get()) {
+    ManagementObject mo = (ManagementObject)cur;
+    object id = mo.GetPropertyValue(&quot;DeviceID&quot;);
+    object pnpId = mo.GetPropertyValue(&quot;PNPDeviceID&quot;);
+    console.WriteLine(&quot;DeviceID:    {0} &quot;, id);
+    console.WriteLine(&quot;PNPDeviceID: {0} &quot;, pnpId);
+    console.WriteLine(&quot;&quot;);
+}//for
+</code></pre>
+
+<p>综上，我们可以定义一个函数，这个函数通过 WMI 检索所有串口设备信息，然后返回一个 <code>Hashtable</code>，其中存储的键为蓝牙设备地址，存储的值为串口名。</p>
+
+<p>函数定义如下：</p>
+
+<pre><code class="language-cs">/* 定义于类 BTHelper 中 */
+public static Hashtable QueryBTHPorts()
+{
+    const string Win32_SerialPort = &quot;Win32_SerialPort&quot;;
+    SelectQuery q = new SelectQuery(Win32_SerialPort);
+    ManagementObjectSearcher s = new ManagementObjectSearcher(q);
+
+    Hashtable hashResult = new Hashtable();
+    foreach (object cur in s.Get())
+    {
+        ManagementObject mo = (ManagementObject)cur;
+        string id = mo.GetPropertyValue(&quot;DeviceID&quot;).ToString();
+        string pnpId = mo.GetPropertyValue(&quot;PNPDeviceID&quot;).ToString();
+        Debug.WriteLine(&quot;WMI&gt;&gt;DeviceID: &quot; + id);
+        Debug.WriteLine(&quot;WMI&gt;&gt;PNPDeviceID: &quot; + pnpId);
+        Debug.WriteLine(&quot;&quot;);
+
+        /* 仅处理蓝牙串口 */
+        if (pnpId.StartsWith(&quot;BTHENUM&quot;))
+        {
+            /* 从 PNPDeviceID 中提取出蓝牙地址，策略是逆序字符串  &amp; 后 _ 之前 */
+            /* 蓝牙地址为6字节，HEX为12位字符 */
+            int rBound = pnpId.LastIndexOf('_');
+            int lBound = pnpId.LastIndexOf('&amp;');
+            Debug.Assert(rBound - lBound == 13, &quot;Get BT Addr, this will nevery happened.&quot;);
+            string addr = pnpId.Substring(lBound + 1, 12);
+            if (!hashResult.Contains(addr))
+            {
+                hashResult.Add(addr, id);
+            }
+            else
+            {
+                Debug.WriteLine(&quot;Get BT Addr, addr&quot; + addr + &quot; has more than 1 ports&quot;);
+            }
+        }
+    }
+
+    return hashResult;
+}
+</code></pre>
+
+<p>同样，WMI 检索也比较耗时，所以这个函数调用需要放入工作线程中执行。</p>
+
+<p>有了这个函数，我们可以通过结果中查找我们设置的蓝牙设备地址，就可以得知对应的虚拟串口名，而如果结果中没有我们设置的蓝牙设备地址，那么就可以认定设置虚拟串口服务失败了。</p>
+
+<h2 id="样例代码">样例代码</h2>
+
+<p>这里介绍通过配合使用 <code>BackgroundWorker</code> 来实现蓝牙设备的配对、生成虚拟串口的样例代码：</p>
+
+<p>我们通过传入蓝牙设备地址给 worker，worker 在 <code>DoWork</code> 中帮我们处理所有步骤，过程中报告进度，并最终告诉我们结果。</p>
+
+<p>worker 的 <code>DoWork</code> 事件代码：</p>
+
+<pre><code class="language-cs">/* 进行蓝牙连接操作的后台线程执行函数 */
+/* 传入 蓝牙地址字符串 作为参数 */
+/* 利用 ReportProgress 报告进度 */
+/* 利用 DoWorkEventArgs.Result 报告状态 */
+void bgworkerConnection_DoWork(object sender, DoWorkEventArgs e)
+{
+    BackgroundWorker worker = sender as BackgroundWorker;
+    string args = e.Argument as string;
+    string finalportname = &quot;&quot;;
+
+    do
+    {
+        BluetoothAddress addr = BluetoothAddress.Parse(args);
+        BluetoothDeviceInfo deviceinfo = new BluetoothDeviceInfo(addr);
+
+        /* 检测设备是否在服务范围内，有些设备能被发现但不能被配对连接（如果已经被其他终端配对连接） */
+        /* 不在范围内则报告错误信息 */
+        worker.ReportProgress(10, &quot;Testing if device in range...&quot;);
+        if (!BTHelper.TestingIfInRange(addr))
+        {
+            string msg = string.Format(&quot;Error: Device {0}({1}) is not reachable!&quot;,
+                    deviceinfo.DeviceName,
+                    deviceinfo.DeviceAddress.ToString());
+            e.Result = msg;
+            return;
+        }
+
+        worker.ReportProgress(10, &quot;Device is in range.&quot;);
+
+        /* 检测设备是否是已配对设备 */
+        if (deviceinfo.Authenticated)
+        {
+            /* 已配对设备枚举系统蓝牙串口，检测是否已绑定虚拟串口 */
+            worker.ReportProgress(10, &quot;Querying Bluetooth serialport...&quot;);
+            Hashtable bthTable1 = BTHelper.QueryBTHPorts();
+            if (bthTable1.ContainsKey(addr.ToString()))
+            {   /* 获取绑定串口 */
+                finalportname = bthTable1[addr.ToString()] as string;
+                /* !!! 跳出 !!! */
+                break;
+            }
+            /* 此处 else 需考虑枚举结果中没有绑定串口的处理，如果没有绑定串口，那么重新设置串口服务 */
+            /* 此处 else 部分会在下面的流程处理，见下方设置串口服务部分 */
+        }
+        else /* 需要进行配对 */
+        {
+            worker.ReportProgress(10, &quot;Start pairing...&quot;);
+            if (!BluetoothSecurity.PairRequest(addr, &quot;1234&quot;))
+            {  /* 配对失败 */
+                string msg = string.Format(&quot;Error: Can not pair to Device {0}({1})!&quot;,
+                        deviceinfo.DeviceName,
+                        deviceinfo.DeviceAddress.ToString());
+                e.Result = msg;
+                return;
+            }
+        }
+
+        /* 设置串口服务 */
+        /* SLC蓝牙设置串口服务时，如果 SetServiceState */
+        /* 第三个参数为 true (允许异常) 那么则一定会抛出异常，即使虚拟串口创建成功 */
+        /* 所以这里调用2个参数的重载版本 */
+        /* 之后检查串口服务是否设置成功的方法就是 设置后检索蓝牙串口 */
+        worker.ReportProgress(10, &quot;Enable serialport service...&quot;);
+
+        deviceinfo.SetServiceState(BluetoothService.SerialPort, true);
+
+        /* 枚举系统蓝牙串口，检查对应蓝牙是否有串口绑定 */
+        Hashtable bthTable2 = BTHelper.QueryBTHPorts();
+        if (bthTable2.ContainsKey(addr.ToString()))
+        {
+            /* 获取绑定的串口 */
+            finalportname = bthTable2[addr.ToString()] as string;
+            /* !!! 跳出 !!! */
+            break;
+        }
+        else
+        {   /* 启用串口服务失败或者无法检测到绑定串口 */
+            string msg = string.Format(&quot;Error: Failed to set Serialport service for Device {0}({1})!&quot;,
+                    deviceinfo.DeviceName,
+                    deviceinfo.DeviceAddress.ToString());
+            e.Result = msg;
+            return;
+        }
+
+    } while (false);
+
+    worker.ReportProgress(10, &quot;Open serialport...&quot;);
+
+    Debug.WriteLine(string.Format(&quot;&gt;&gt;PORT NMAE: {0}&quot;, finalportname));
+
+    /* 成功 */
+    /* 将串口名放入消息中返回 */
+    string okmsg = string.Format(&quot;OK: {0}&quot;, finalportname);
+    e.Result = okmsg;
+}
+</code></pre>
+
+<p>代码中通过灵活使用 <code>string</code> 作为 <code>Result</code> 来表明执行结果。</p>
+
+<p>worker 的 <code>RunCompleted</code> 事件代码：</p>
+
+<pre><code class="language-cs">void bgworkerConnection_RunCompleted(object sender, RunWorkerCompletedEventArgs e)
+{
+    string msg = e.Result as string;
+    if(msg.StartsWidth(&quot;OK&quot;))
+    {   /* OK */
+        MessageBox.Show(msg);
+    }
+    else
+    {  /* Error */
+        MessageBox.Show(msg);
+    }
+}
+</code></pre>
+
+<p>后续可以通过字符串处理提取出生成的串口名。</p>
+
+<p>worker 的启动代码：</p>
+
+<pre><code class="language-cs">bgworkerConnection.RunWorkerAsync(addrstring);
+</code></pre>
+
+<p>这样子我们就获取到了绑定的虚拟串口名，但是在使用串口中要注意的是，虚拟串口打开过程中，本质上还是发起了一个蓝牙数据连接，所以打开过程会耗时较长，所以这个虚拟串口打开过程也需要放入工作线程中处理。如果虚拟串口对应的蓝牙设备没有在线或者其他原因造成不可用，那么打开时会抛出异常，需要在代码上进行处理。</p>
+
+<p>一旦蓝牙设备经过绑定并且设置虚拟串口服务成功，那么对应的串口会一直存在与系统的串口列表中，但这并不代表它是可用的，请在打开这类串口时添加异常处理代码。</p>
+
+<p>(完)</p>
+    </div>
+
+    
+    
+
+    
+    
+
+    <footer class="post-footer">
+      
+
+      
+      <nav class="post-nav">
+        
+          <a class="prev" href="/post/2016-08-29-freescale-yocto-custom-linux-image/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Freescale Yocto 编译自定义 Linux 系统镜像</span>
+            <span class="prev-text nav-mobile"></span>
+          </a>
+        
+          <a class="next" href="/post/2016-05-26-using-visual-studio-remote-debugger/">
+            <span class="next-text nav-default">远程调试C#程序环境的配置</span>
+            <span class="next-text nav-mobile"></span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="https://github.com/tisyang" class="iconfont icon-github" title="github"></a>
+  <a href="https://tisyang.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    %!(EXTRA string=<a class="hexo-link" href="https://gohugo.io">Hugo</a>)
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+     - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    
+      2016 - 
+    2018
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">TyK</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+<script src="/lib/highlight/highlight.pack.js?v=20171001"></script><script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  <script type="text/javascript" src="/lib/fancybox/jquery.fancybox-3.1.20.min.js"></script>
+
+
+<script type="text/javascript" src="/dist/even.min.js?v=3.1.1"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

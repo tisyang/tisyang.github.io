@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>CMake 项目模块化布局 - 碎片</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="TyK" />
+  <meta name="description" content="在 C\C&#43;&#43; 项目中，通常会有不止一个可执行程序，或者需要将一些调用封装成动态或静态库，来实现项目的模块化，本文就讲解一种支持这种项目布局的方法。
+CMake 支持子目录构建（add_subdirectory 指令），本文介绍的布局方法就是基于这个功能来实现。
+
+" />
+
+  <meta name="keywords" content="程序员, 博客, blog, programming" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.42.2" />
+
+
+<link rel="canonical" href="https://tisyang.github.io/post/2017-08-06-cmake-project-layout/" />
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+<link href="/dist/even.min.css?v=3.1.1" rel="stylesheet">
+<link href="/lib/fancybox/jquery.fancybox-3.1.20.min.css" rel="stylesheet">
+
+
+
+
+<meta property="og:title" content="CMake 项目模块化布局" />
+<meta property="og:description" content="在 C\C&#43;&#43; 项目中，通常会有不止一个可执行程序，或者需要将一些调用封装成动态或静态库，来实现项目的模块化，本文就讲解一种支持这种项目布局的方法。
+
+CMake 支持子目录构建（add_subdirectory 指令），本文介绍的布局方法就是基于这个功能来实现。
+
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://tisyang.github.io/post/2017-08-06-cmake-project-layout/" />
+
+
+
+<meta property="article:published_time" content="2017-08-06T00:00:00&#43;00:00"/>
+
+<meta property="article:modified_time" content="2017-08-06T00:00:00&#43;00:00"/>
+
+
+
+
+
+
+
+
+
+
+
+<meta itemprop="name" content="CMake 项目模块化布局">
+<meta itemprop="description" content="在 C\C&#43;&#43; 项目中，通常会有不止一个可执行程序，或者需要将一些调用封装成动态或静态库，来实现项目的模块化，本文就讲解一种支持这种项目布局的方法。
+
+CMake 支持子目录构建（add_subdirectory 指令），本文介绍的布局方法就是基于这个功能来实现。
+
+">
+
+
+<meta itemprop="datePublished" content="2017-08-06T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2017-08-06T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="192">
+
+
+
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="CMake 项目模块化布局"/>
+<meta name="twitter:description" content="在 C\C&#43;&#43; 项目中，通常会有不止一个可执行程序，或者需要将一些调用封装成动态或静态库，来实现项目的模块化，本文就讲解一种支持这种项目布局的方法。
+
+CMake 支持子目录构建（add_subdirectory 指令），本文介绍的布局方法就是基于这个功能来实现。
+
+"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">碎片</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/index.xml">
+        <li class="mobile-menu-item">RSS</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">碎片</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/index.xml">RSS</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">CMake 项目模块化布局</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2017-08-06 </span>
+        
+        
+        
+      </div>
+    </header>
+
+    
+    
+<div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title"></h2>
+  
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#项目">项目</a></li>
+<li><a href="#目标">目标</a>
+<ul>
+<li><a href="#目标-staticlib-静态库编译示例">目标 <code>staticlib</code>（静态库编译示例）：</a></li>
+<li><a href="#目标-sharelib-动态库编译示例">目标 <code>sharelib</code>（动态库编译示例）：</a></li>
+<li><a href="#目标-testapp-执行程序编译示例">目标 <code>testapp</code>（执行程序编译示例）：</a></li>
+<li><a href="#目标-config-配置文件示例">目标 <code>config</code>（配置文件示例）：</a></li>
+</ul></li>
+<li><a href="#结语">结语</a></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+</div>
+
+    
+    
+
+    
+    <div class="post-content">
+      <p>在 C\C++ 项目中，通常会有不止一个可执行程序，或者需要将一些调用封装成动态或静态库，来实现项目的模块化，本文就讲解一种支持这种项目布局的方法。</p>
+
+<p>CMake 支持子目录构建（<code>add_subdirectory</code> 指令），本文介绍的布局方法就是基于这个功能来实现。</p>
+
+<p></p>
+
+<h2 id="项目">项目</h2>
+
+<p>项目根目录编写一个 <code>CMakeLists.txt</code>，主要描述项目名称，也可以将一些项目级别的配置写入，来影响所有项目构建目标。比如编译的警告级别设置，如果要在项目级别上统一，可以写入，如果要针对不同构建目标来设置，可以留到构建目标 <code>CMakeLists.txt</code> 文件中写入。</p>
+
+<p>项目的各个构建目标作为子目录存放在项目根目录下，每个子目录均包含相应的构建 <code>CMakeLists.txt</code> 文件。使用 <code>add_subdirectory</code> 指令将构建目标子目录添加到项目 <code>CMakeLists.txt</code> 中，构建目标间可以相互引用，只要在添加子目录到项目 <code>CMakeLists.txt</code> 时保持依赖顺序即可。</p>
+
+<p>项目 <code>CMakeLists.txt</code> 示例：</p>
+
+<pre><code class="language-cmake">cmake_minimum_required(VERSION 2.6)
+
+# 项目名称
+set(PROJECT_NAME &quot;TestApps&quot;)
+project(${PROJECT_NAME})
+
+# 统一构建目标输出目录
+# 将所有构建目标输出目录定位在构建目录下，按类型分类子目录
+#     静态库输出目录 =&gt; 构建目录/lib
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib)
+#     动态库输出目录 =&gt; 构建目录/bin
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
+#     可执行程序输出目录 =&gt; 构建目录/bin
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
+
+# ---------- 库 ----------
+# staticlib 库
+add_subdirectory(staticlib)
+# 添加头文件搜索路径，这样其他构建目标可以引用其头文件
+include_directories(staticlib)
+
+# sharelib 库
+add_subdirectory(sharelib)
+# 添加头文件搜索路径，这样其他构建目标可以引用其头文件
+include_directories(sharelib)
+
+# ---------- 应用程序 ----------
+# testapp 程序
+add_subdirectory(testapp)
+
+# 配置文件类
+add_subdirectory(config)
+</code></pre>
+
+<p>项目 <code>TestApps</code> 中包含4个构建目标目录，2 个库 <code>staticlib</code> 和 <code>sharelib</code>，依赖库的 1 个应用程序 <code>testapp</code>，以及配置文件类目标 <code>config</code>。4 个目标的输出文件均统一到了构建目录下，按类型分类，这样便于构建结果的归档处理。</p>
+
+<p>通常将构建目标子目录名与目标名一致，这样便于项目管理。</p>
+
+<h2 id="目标">目标</h2>
+
+<p>每个构建目标对应在项目根目录下的各个子目录，每个子目录中都有一个 <code>CMakeLists.txt</code> 文件，记录着对应的构建配置。这些构建配置均会继承项目 <code>CMakeLists.txt</code> 文件中的配置。</p>
+
+<p>以下针对示例项目，讲解各个子目录的 <code>CMakeLists.txt</code> ，用以理解如何进行具体的项目布局。</p>
+
+<h3 id="目标-staticlib-静态库编译示例">目标 <code>staticlib</code>（静态库编译示例）：</h3>
+
+<pre><code class="language-cmake"># 编译选项
+add_definitions(&quot;-std=gnu99&quot;)
+add_definitions(&quot;-Wall&quot;)
+
+set(SLIB &quot;staticlib&quot;)
+aux_source_directory(&quot;.&quot; SLIB_SRC)
+add_library(${SLIB} STATIC ${SLIB_SRC})
+# 依赖库
+target_link_libraries(${SLIB} m)
+</code></pre>
+
+<p><code>add_library</code> 指令添加一个库目标，参数 <code>STATIC</code> 表示编译成静态库，该目标链接时需要链接数学库。</p>
+
+<h3 id="目标-sharelib-动态库编译示例">目标 <code>sharelib</code>（动态库编译示例）：</h3>
+
+<pre><code class="language-cmake">add_definitions(&quot;-std=gnu99&quot;)
+add_definitions(&quot;-Wall&quot;)
+
+set(DLIB &quot;sharelib&quot;)
+aux_source_directory(&quot;.&quot; DLIB_SRC)
+add_library(${DLIB} SHARED ${DLIB_SRC})
+</code></pre>
+
+<p>与目标 <code>staticlib</code> 差不多，只是<code>add_library</code> 参数 <code>SHARED</code> 表示编译成动态库。</p>
+
+<h3 id="目标-testapp-执行程序编译示例">目标 <code>testapp</code>（执行程序编译示例）：</h3>
+
+<pre><code class="language-cmake"># 编译选项
+add_definitions(&quot;-std=gnu99&quot;)
+add_definitions(&quot;-Wall&quot;)
+
+set(APP &quot;testapp&quot;)
+aux_source_directory(&quot;.&quot; APP_SRC)
+add_executable(${APP} ${APP_SRC})
+target_link_libraries(${APP}
+        staticlib
+        sharelib)
+</code></pre>
+
+<p><code>add_executable</code> 指令添加一个可执行目标，其依赖于静态库 <code>staticlib</code> 和动态库 <code>sharelib</code>。</p>
+
+<h3 id="目标-config-配置文件示例">目标 <code>config</code>（配置文件示例）：</h3>
+
+<pre><code class="language-cmake"># 拷贝文件到输出目录，便于后续打包安装文件
+file(COPY .
+    DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+    # 忽略文件匹配模式
+    PATTERN &quot;CMakeLists.txt&quot; EXCLUDE
+    PATTERN &quot;README.md&quot; EXCLUDE
+    )
+</code></pre>
+
+<p><code>config</code> 目标是一个特殊目标，其不构建库或可执行程序，而是执行一个文件拷贝工作，在此示例中，将 <code>config</code> 目录下的文件（除 <code>CMakeLists.txt</code> 和 <code>README.md</code>）都拷贝到可执行输出目录中。这个用法一般用于拷贝程序的默认配置文件。这样做的好处在于可以将默认配置文件纳入版本管理，也方便打包程序以及测试部署，既能将代码与输出分离，又能实现自动化整合。</p>
+
+<h2 id="结语">结语</h2>
+
+<p>CMake 是一个很便利的跨平台构建工具，使用模块化布局方法可以更契合多人共享开发模式，促进项目复用代码，方便上下游库协同管理。如果与 Git 的 submodule 配合，就更能体现出模块化。</p>
+    </div>
+
+    
+    
+
+    
+    
+
+    <footer class="post-footer">
+      
+
+      
+      <nav class="post-nav">
+        
+          <a class="prev" href="/post/2017-09-13-notes-about-using-apt-package-cross-gcc-arm/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">apt源arm gcc交叉编译器注意事项</span>
+            <span class="prev-text nav-mobile"></span>
+          </a>
+        
+          <a class="next" href="/post/2017-01-11-split-string-in-shell/">
+            <span class="next-text nav-default">Shell中高效分割字符串</span>
+            <span class="next-text nav-mobile"></span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="https://github.com/tisyang" class="iconfont icon-github" title="github"></a>
+  <a href="https://tisyang.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    %!(EXTRA string=<a class="hexo-link" href="https://gohugo.io">Hugo</a>)
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+     - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    
+      2016 - 
+    2018
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">TyK</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+<script src="/lib/highlight/highlight.pack.js?v=20171001"></script><script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  <script type="text/javascript" src="/lib/fancybox/jquery.fancybox-3.1.20.min.js"></script>
+
+
+<script type="text/javascript" src="/dist/even.min.js?v=3.1.1"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>
