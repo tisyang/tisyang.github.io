@@ -16,25 +16,20 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="TyK" />
-  <meta name="description" content="通常来说，使用 shell 脚本时候不需要太顾及程序的效率性，能完成任务，只要不是太慢，都可以接受。
+<meta name="author" content="TyK" /><meta name="description" content="通常来说，使用 shell 脚本时候不需要太顾及程序的效率性，能完成任务，只要不是太慢，都可以接受。
 但在一些特定应用场合，脚本效率也是一个硬性限制，不能耗时太久，比如说，用 shell 来编写一些处理 HTTP 请求的 CGI 程序，脚本的执行效率直接影响了 HTTP 的响应速度。
 在 shell 中分割字符串有多种方法，比如利用 awk、cut 工具，还有内置方法，虽然效果相同，但是执行效率差距较大，尤其在处理大数据量上更是显著。
-
-" />
-
-  <meta name="keywords" content="程序员, 博客, blog, programming" />
+" /><meta name="keywords" content="程序员, 博客, blog, programming" />
 
 
 
 
 
 
-<meta name="generator" content="Hugo 0.45.1" />
+<meta name="generator" content="Hugo 0.54.0 with even 4.0.0" />
 
 
 <link rel="canonical" href="https://tisyang.github.io/post/2017-01-11-split-string-in-shell/" />
-
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
@@ -42,15 +37,8 @@
 <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
 
 
-
-
-
-
-
-<link href="/dist/even.min.css?v=3.2.0" rel="stylesheet">
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
 <link href="/lib/fancybox/jquery.fancybox-3.1.20.min.css" rel="stylesheet">
-
-
 
 
 <meta property="og:title" content="Shell中高效分割字符串" />
@@ -58,41 +46,23 @@
 
 但在一些特定应用场合，脚本效率也是一个硬性限制，不能耗时太久，比如说，用 shell 来编写一些处理 HTTP 请求的 CGI 程序，脚本的执行效率直接影响了 HTTP 的响应速度。
 
-在 shell 中分割字符串有多种方法，比如利用 awk、cut 工具，还有内置方法，虽然效果相同，但是执行效率差距较大，尤其在处理大数据量上更是显著。
-
-" />
+在 shell 中分割字符串有多种方法，比如利用 awk、cut 工具，还有内置方法，虽然效果相同，但是执行效率差距较大，尤其在处理大数据量上更是显著。" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://tisyang.github.io/post/2017-01-11-split-string-in-shell/" />
-
-
-
 <meta property="article:published_time" content="2017-01-11T00:00:00&#43;00:00"/>
-
 <meta property="article:modified_time" content="2017-01-11T00:00:00&#43;00:00"/>
-
-
-
-
-
-
-
-
-
-
 
 <meta itemprop="name" content="Shell中高效分割字符串">
 <meta itemprop="description" content="通常来说，使用 shell 脚本时候不需要太顾及程序的效率性，能完成任务，只要不是太慢，都可以接受。
 
 但在一些特定应用场合，脚本效率也是一个硬性限制，不能耗时太久，比如说，用 shell 来编写一些处理 HTTP 请求的 CGI 程序，脚本的执行效率直接影响了 HTTP 的响应速度。
 
-在 shell 中分割字符串有多种方法，比如利用 awk、cut 工具，还有内置方法，虽然效果相同，但是执行效率差距较大，尤其在处理大数据量上更是显著。
-
-">
+在 shell 中分割字符串有多种方法，比如利用 awk、cut 工具，还有内置方法，虽然效果相同，但是执行效率差距较大，尤其在处理大数据量上更是显著。">
 
 
 <meta itemprop="datePublished" content="2017-01-11T00:00:00&#43;00:00" />
 <meta itemprop="dateModified" content="2017-01-11T00:00:00&#43;00:00" />
-<meta itemprop="wordCount" content="296">
+<meta itemprop="wordCount" content="1051">
 
 
 
@@ -103,9 +73,7 @@
 
 但在一些特定应用场合，脚本效率也是一个硬性限制，不能耗时太久，比如说，用 shell 来编写一些处理 HTTP 请求的 CGI 程序，脚本的执行效率直接影响了 HTTP 的响应速度。
 
-在 shell 中分割字符串有多种方法，比如利用 awk、cut 工具，还有内置方法，虽然效果相同，但是执行效率差距较大，尤其在处理大数据量上更是显著。
-
-"/>
+在 shell 中分割字符串有多种方法，比如利用 awk、cut 工具，还有内置方法，虽然效果相同，但是执行效率差距较大，尤其在处理大数据量上更是显著。"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -170,24 +138,15 @@
         <span class="post-time"> 2017-01-11 </span>
         
         
-        
       </div>
     </header>
 
-    
-    
-<div class="post-toc" id="post-toc">
+    <div class="post-toc" id="post-toc">
   <h2 class="post-toc-title">Contents</h2>
-  
   <div class="post-toc-content always-active">
     
   </div>
 </div>
-
-    
-    
-
-    
     <div class="post-content">
       <p>通常来说，使用 shell 脚本时候不需要太顾及程序的效率性，能完成任务，只要不是太慢，都可以接受。</p>
 
@@ -195,126 +154,247 @@
 
 <p>在 shell 中分割字符串有多种方法，比如利用 awk、cut 工具，还有内置方法，虽然效果相同，但是执行效率差距较大，尤其在处理大数据量上更是显著。</p>
 
-<p></p>
-
 <p>用 cut 工具分割字符串一般是以下用法：</p>
-
-<pre><code class="language-bash"># -f 指定列序号 -d 指定分隔符
-echo $line | cut -f1 -d ' '
-</code></pre>
-
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># -f 指定列序号 -d 指定分隔符</span>
+<span class="nb">echo</span> <span class="nv">$line</span> <span class="p">|</span> cut -f1 -d <span class="s1">&#39; &#39;</span></code></pre></td></tr></table>
+</div>
+</div>
 <p>用 awk 工具分割字符串类似：</p>
-
-<pre><code class="language-bash"># $1 代表第一列 以此类推
-# -F 指定分割符号
-echo $line | awk -F ' ' {'print $1'}
-</code></pre>
-
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># $1 代表第一列 以此类推</span>
+<span class="c1"># -F 指定分割符号</span>
+<span class="nb">echo</span> <span class="nv">$line</span> <span class="p">|</span> awk -F <span class="s1">&#39; &#39;</span> <span class="o">{</span><span class="s1">&#39;print $1&#39;</span><span class="o">}</span></code></pre></td></tr></table>
+</div>
+</div>
 <p>内部方法分割字符串，用的是 <code>IFS</code> 变量和 <code>set</code> 命令：</p>
-
-<pre><code class="language-bash"># 设置分隔符
-IFS=&quot; &quot;
-# 分割 line
-set -- $line
-# $1 代表第一列，以此类推
-echo $1
-</code></pre>
-
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># 设置分隔符</span>
+<span class="nv">IFS</span><span class="o">=</span><span class="s2">&#34; &#34;</span>
+<span class="c1"># 分割 line</span>
+<span class="nb">set</span> -- <span class="nv">$line</span>
+<span class="c1"># $1 代表第一列，以此类推</span>
+<span class="nb">echo</span> <span class="nv">$1</span></code></pre></td></tr></table>
+</div>
+</div>
 <p>在 shell 脚本中，使用 awk/cut 这些工具在运行时会创建 sub-shell 来运行，相当于 C 语言中的 <code>system</code>/<code>popen</code> 调用，当需要使用的次数比较多时，这种调用会显著降低脚本的执行速度（创建进程是比较昂贵的）。</p>
 
 <p>而使用内置方法则无需调用外部工具，执行起来效率更高，没有额外开销。</p>
 
 <p>以处理 1000 行的空格分割的数字并分别累加为例，其文件内容大概如下：</p>
-
-<pre><code class="language-text">1    25   30  100
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-text" data-lang="text"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-text" data-lang="text">1    25   30  100
 2    26   33  102
 3    27   36  104
 
 ...
 
 999  1023 3024 2096
-1000 1024 3027 2098
-</code></pre>
-
+1000 1024 3027 2098</code></pre></td></tr></table>
+</div>
+</div>
 <p>保存为文件 <code>test.data</code>。然后编写2个测试脚本，<code>split1.sh</code> 和 <code>split2.sh</code>。</p>
 
 <p><code>split1.sh</code>内容如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="cp">#!/bin/sh
+</span><span class="cp"></span>
+<span class="nv">DataFile</span><span class="o">=</span><span class="s2">&#34;test.data&#34;</span>
 
-<pre><code class="language-bash">#!/bin/sh
+<span class="k">if</span> <span class="o">[</span> ! -e <span class="nv">$DataFile</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+	<span class="nb">echo</span> <span class="s2">&#34;Fail to open file&#34;</span>
+	<span class="nb">exit</span> <span class="m">1</span>
+<span class="k">fi</span>
 
-DataFile=&quot;test.data&quot;
+<span class="nv">F1</span><span class="o">=</span><span class="m">0</span>
+<span class="nv">F2</span><span class="o">=</span><span class="m">0</span>
+<span class="nv">F3</span><span class="o">=</span><span class="m">0</span>
+<span class="nv">F4</span><span class="o">=</span><span class="m">0</span>
+<span class="c1"># 设置分割符</span>
+<span class="nv">IFS</span><span class="o">=</span><span class="s2">&#34; &#34;</span>
 
-if [ ! -e $DataFile ]; then
-	echo &quot;Fail to open file&quot;
-	exit 1
-fi
+<span class="k">while</span> <span class="nb">read</span> line
+<span class="k">do</span>
+	<span class="o">[</span> -z <span class="s2">&#34;</span><span class="nv">$line</span><span class="s2">&#34;</span> <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="k">continue</span>
+	<span class="nb">set</span> -- <span class="nv">$line</span>
 
-F1=0
-F2=0
-F3=0
-F4=0
-# 设置分割符
-IFS=&quot; &quot;
+	<span class="nv">F1</span><span class="o">=</span><span class="k">$((</span>F1+<span class="nv">$1</span><span class="k">))</span>
+	<span class="nv">F2</span><span class="o">=</span><span class="k">$((</span>F2+<span class="nv">$2</span><span class="k">))</span>
+	<span class="nv">F3</span><span class="o">=</span><span class="k">$((</span>F3+<span class="nv">$3</span><span class="k">))</span>
+	<span class="nv">F4</span><span class="o">=</span><span class="k">$((</span>F4+<span class="nv">$4</span><span class="k">))</span>
+<span class="k">done</span> &lt; <span class="nv">$DataFile</span>
 
-while read line
-do
-	[ -z &quot;$line&quot; ] &amp;&amp; continue
-	set -- $line
-
-	F1=$((F1+$1))
-	F2=$((F2+$2))
-	F3=$((F3+$3))
-	F4=$((F4+$4))
-done &lt; $DataFile
-
-echo &quot;F1=$F1&quot;
-echo &quot;F2=$F2&quot;
-echo &quot;F3=$F3&quot;
-echo &quot;F4=$F4&quot;
-</code></pre>
-
+<span class="nb">echo</span> <span class="s2">&#34;F1=</span><span class="nv">$F1</span><span class="s2">&#34;</span>
+<span class="nb">echo</span> <span class="s2">&#34;F2=</span><span class="nv">$F2</span><span class="s2">&#34;</span>
+<span class="nb">echo</span> <span class="s2">&#34;F3=</span><span class="nv">$F3</span><span class="s2">&#34;</span>
+<span class="nb">echo</span> <span class="s2">&#34;F4=</span><span class="nv">$F4</span><span class="s2">&#34;</span></code></pre></td></tr></table>
+</div>
+</div>
 <p><code>split2.sh</code>文件内容如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="cp">#!/bin/sh
+</span><span class="cp"></span>
+<span class="nv">DataFile</span><span class="o">=</span><span class="s2">&#34;test.data&#34;</span>
 
-<pre><code class="language-bash">#!/bin/sh
+<span class="k">if</span> <span class="o">[</span> ! -e <span class="nv">$DataFile</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+	<span class="nb">echo</span> <span class="s2">&#34;Fail to open file&#34;</span>
+	<span class="nb">exit</span> <span class="m">1</span>
+<span class="k">fi</span>
 
-DataFile=&quot;test.data&quot;
+<span class="nv">F1</span><span class="o">=</span><span class="m">0</span>
+<span class="nv">F2</span><span class="o">=</span><span class="m">0</span>
+<span class="nv">F3</span><span class="o">=</span><span class="m">0</span>
+<span class="nv">F4</span><span class="o">=</span><span class="m">0</span>
+<span class="nv">IFS</span><span class="o">=</span><span class="s2">&#34; &#34;</span>
 
-if [ ! -e $DataFile ]; then
-	echo &quot;Fail to open file&quot;
-	exit 1
-fi
+<span class="k">while</span> <span class="nb">read</span> line
+<span class="k">do</span>
+	<span class="o">[</span> -z <span class="s2">&#34;</span><span class="nv">$line</span><span class="s2">&#34;</span> <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="k">continue</span>
+	<span class="nv">l1</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span> <span class="nv">$line</span> <span class="p">|</span> cut -f1 -d <span class="s1">&#39; &#39;</span><span class="k">)</span>
+	<span class="nv">l2</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span> <span class="nv">$line</span> <span class="p">|</span> cut -f2 -d <span class="s1">&#39; &#39;</span><span class="k">)</span>
+	<span class="nv">l3</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span> <span class="nv">$line</span> <span class="p">|</span> cut -f3 -d <span class="s1">&#39; &#39;</span><span class="k">)</span>
+	<span class="nv">l4</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span> <span class="nv">$line</span> <span class="p">|</span> cut -f4 -d <span class="s1">&#39; &#39;</span><span class="k">)</span>
 
-F1=0
-F2=0
-F3=0
-F4=0
-IFS=&quot; &quot;
+	<span class="nv">F1</span><span class="o">=</span><span class="k">$((</span>F1+<span class="nv">$l1</span><span class="k">))</span>
+	<span class="nv">F2</span><span class="o">=</span><span class="k">$((</span>F2+<span class="nv">$l2</span><span class="k">))</span>
+	<span class="nv">F3</span><span class="o">=</span><span class="k">$((</span>F3+<span class="nv">$l3</span><span class="k">))</span>
+	<span class="nv">F4</span><span class="o">=</span><span class="k">$((</span>F4+<span class="nv">$l4</span><span class="k">))</span>
+<span class="k">done</span> &lt; <span class="nv">$DataFile</span>
 
-while read line
-do
-	[ -z &quot;$line&quot; ] &amp;&amp; continue
-	l1=$(echo $line | cut -f1 -d ' ')
-	l2=$(echo $line | cut -f2 -d ' ')
-	l3=$(echo $line | cut -f3 -d ' ')
-	l4=$(echo $line | cut -f4 -d ' ')
-
-	F1=$((F1+$l1))
-	F2=$((F2+$l2))
-	F3=$((F3+$l3))
-	F4=$((F4+$l4))
-done &lt; $DataFile
-
-echo &quot;F1=$F1&quot;
-echo &quot;F2=$F2&quot;
-echo &quot;F3=$F3&quot;
-echo &quot;F4=$F4&quot;
-</code></pre>
-
+<span class="nb">echo</span> <span class="s2">&#34;F1=</span><span class="nv">$F1</span><span class="s2">&#34;</span>
+<span class="nb">echo</span> <span class="s2">&#34;F2=</span><span class="nv">$F2</span><span class="s2">&#34;</span>
+<span class="nb">echo</span> <span class="s2">&#34;F3=</span><span class="nv">$F3</span><span class="s2">&#34;</span>
+<span class="nb">echo</span> <span class="s2">&#34;F4=</span><span class="nv">$F4</span><span class="s2">&#34;</span></code></pre></td></tr></table>
+</div>
+</div>
 <p><code>split1.sh</code>使用内置方法，<code>split2.sh</code>使用 cut 工具来处理。在 shell 中运行程序并用 <code>time</code> 命令监控执行时间，会发现速度对比特别显著。</p>
 
 <p>以本人测试电脑为例，内置方法执行输出如下：</p>
-
-<pre><code class="language-text">$ time ./split1.sh
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-text" data-lang="text"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-text" data-lang="text">$ time ./split1.sh
 F1=500500
 F2=524500
 F3=1528500
@@ -332,9 +412,9 @@ F4=1099000
 
 real	0m4.603s
 user	0m0.004s
-sys	0m0.736s
-</code></pre>
-
+sys	0m0.736s</code></pre></td></tr></table>
+</div>
+</div>
 <p>粗略看出执行速度相差 100 倍左右。</p>
 
 <p>备注：因为要获取各列数据累加，所以在脚本2中，使用了4次 cut 调用，相当于字符串分割了4此，而脚本1中只使用了一次字符串分割，这种策略也显著增加了执行开销。可以通过使用数组返回 cut 结果来避免多次调用，但是这得看 shell 环境是否支持，某些情况下是不支持数组的，比如 busybox 的 <code>sh</code> 环境。</p>
@@ -342,25 +422,15 @@ sys	0m0.736s
 <p>（完）</p>
     </div>
 
-    
-    
-
-    
-    
-
     <footer class="post-footer">
       
-
-      
       <nav class="post-nav">
-        
-          <a class="prev" href="/post/2017-08-06-cmake-project-layout/">
+        <a class="prev" href="/post/2017-08-06-cmake-project-layout/">
             <i class="iconfont icon-left"></i>
             <span class="prev-text nav-default">CMake 项目模块化布局</span>
             <span class="prev-text nav-mobile">Prev</span>
           </a>
-        
-          <a class="next" href="/post/2016-08-29-freescale-yocto-custom-linux-image/">
+        <a class="next" href="/post/2016-08-29-freescale-yocto-custom-linux-image/">
             <span class="next-text nav-default">Freescale Yocto 编译自定义 Linux 系统镜像</span>
             <span class="next-text nav-mobile">Next</span>
             <i class="iconfont icon-right"></i>
@@ -370,9 +440,6 @@ sys	0m0.736s
   </article>
         </div>
         
-  
-
-  
 
       </div>
     </main>
@@ -397,9 +464,8 @@ sys	0m0.736s
 
   <span class="copyright-year">
     &copy; 
-    
-      2016 - 
-    2018
+    2016 - 
+    2019
     <span class="heart">
       <i class="iconfont icon-heart"></i>
     </span>
@@ -412,13 +478,10 @@ sys	0m0.736s
       <i class="iconfont icon-up"></i>
     </div>
   </div>
-  
-<script src="/lib/highlight/highlight.pack.js?v=20171001"></script><script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
   <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
   <script type="text/javascript" src="/lib/fancybox/jquery.fancybox-3.1.20.min.js"></script>
-
-
-<script type="text/javascript" src="/dist/even.min.js?v=3.2.0"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
 
 
 

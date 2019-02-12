@@ -16,23 +16,19 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="TyK" />
-  <meta name="description" content="本文给出一个 Python tkinter GUI 程序中调用 shell 脚本的代码示例，在 GUI 的一个文本框中会不断输出脚本的标准输出和标准错误且不会阻塞 GUI 窗体事件响应，同时也会在脚本执行完毕后根据状态（exit code）弹出提示框，如果在脚本运行中关闭窗口，会弹出提示并中断脚本的执行。
+<meta name="author" content="TyK" /><meta name="description" content="本文给出一个 Python tkinter GUI 程序中调用 shell 脚本的代码示例，在 GUI 的一个文本框中会不断输出脚本的标准输出和标准错误且不会阻塞 GUI 窗体事件响应，同时也会在脚本执行完毕后根据状态（exit code）弹出提示框，如果在脚本运行中关闭窗口，会弹出提示并中断脚本的执行。
 这个样例很适合编写一些提供给非技术人员使用的小工具。
-" />
-
-  <meta name="keywords" content="程序员, 博客, blog, programming" />
+" /><meta name="keywords" content="程序员, 博客, blog, programming" />
 
 
 
 
 
 
-<meta name="generator" content="Hugo 0.45.1" />
+<meta name="generator" content="Hugo 0.54.0 with even 4.0.0" />
 
 
 <link rel="canonical" href="https://tisyang.github.io/post/2018-07-25-call-shell-scripts-in-python-tkinter/" />
-
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
@@ -40,15 +36,8 @@
 <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
 
 
-
-
-
-
-
-<link href="/dist/even.min.css?v=3.2.0" rel="stylesheet">
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
 <link href="/lib/fancybox/jquery.fancybox-3.1.20.min.css" rel="stylesheet">
-
-
 
 
 <meta property="og:title" content="Python tkinter GUI 中调用 shell 脚本" />
@@ -57,22 +46,8 @@
 这个样例很适合编写一些提供给非技术人员使用的小工具。" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://tisyang.github.io/post/2018-07-25-call-shell-scripts-in-python-tkinter/" />
-
-
-
 <meta property="article:published_time" content="2018-07-25T00:00:00&#43;00:00"/>
-
 <meta property="article:modified_time" content="2018-07-25T00:00:00&#43;00:00"/>
-
-
-
-
-
-
-
-
-
-
 
 <meta itemprop="name" content="Python tkinter GUI 中调用 shell 脚本">
 <meta itemprop="description" content="本文给出一个 Python tkinter GUI 程序中调用 shell 脚本的代码示例，在 GUI 的一个文本框中会不断输出脚本的标准输出和标准错误且不会阻塞 GUI 窗体事件响应，同时也会在脚本执行完毕后根据状态（exit code）弹出提示框，如果在脚本运行中关闭窗口，会弹出提示并中断脚本的执行。
@@ -82,7 +57,7 @@
 
 <meta itemprop="datePublished" content="2018-07-25T00:00:00&#43;00:00" />
 <meta itemprop="dateModified" content="2018-07-25T00:00:00&#43;00:00" />
-<meta itemprop="wordCount" content="376">
+<meta itemprop="wordCount" content="735">
 
 
 
@@ -156,181 +131,293 @@
         <span class="post-time"> 2018-07-25 </span>
         
         
-        
       </div>
     </header>
 
-    
-    
-<div class="post-toc" id="post-toc">
+    <div class="post-toc" id="post-toc">
   <h2 class="post-toc-title">Contents</h2>
-  
   <div class="post-toc-content always-active">
     
   </div>
 </div>
-
-    
-    
-
-    
     <div class="post-content">
       <p>本文给出一个 Python tkinter GUI 程序中调用 shell 脚本的代码示例，在 GUI 的一个文本框中会不断输出脚本的标准输出和标准错误且不会阻塞 GUI 窗体事件响应，同时也会在脚本执行完毕后根据状态（exit code）弹出提示框，如果在脚本运行中关闭窗口，会弹出提示并中断脚本的执行。</p>
 
 <p>这个样例很适合编写一些提供给非技术人员使用的小工具。</p>
 
-<p>
-代码如下，略长，使用的是 python 3，因为依赖 select 的原因，仅测试过 linux 下的使用，非 Posix 系统不能保证功能正常。代码也适合调用其他 console 程序，而不仅限于 shell 脚本。</p>
+<p>代码如下，略长，使用的是 python 3，因为依赖 select 的原因，仅测试过 linux 下的使用，非 Posix 系统不能保证功能正常。代码也适合调用其他 console 程序，而不仅限于 shell 脚本。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt">  1
+</span><span class="lnt">  2
+</span><span class="lnt">  3
+</span><span class="lnt">  4
+</span><span class="lnt">  5
+</span><span class="lnt">  6
+</span><span class="lnt">  7
+</span><span class="lnt">  8
+</span><span class="lnt">  9
+</span><span class="lnt"> 10
+</span><span class="lnt"> 11
+</span><span class="lnt"> 12
+</span><span class="lnt"> 13
+</span><span class="lnt"> 14
+</span><span class="lnt"> 15
+</span><span class="lnt"> 16
+</span><span class="lnt"> 17
+</span><span class="lnt"> 18
+</span><span class="lnt"> 19
+</span><span class="lnt"> 20
+</span><span class="lnt"> 21
+</span><span class="lnt"> 22
+</span><span class="lnt"> 23
+</span><span class="lnt"> 24
+</span><span class="lnt"> 25
+</span><span class="lnt"> 26
+</span><span class="lnt"> 27
+</span><span class="lnt"> 28
+</span><span class="lnt"> 29
+</span><span class="lnt"> 30
+</span><span class="lnt"> 31
+</span><span class="lnt"> 32
+</span><span class="lnt"> 33
+</span><span class="lnt"> 34
+</span><span class="lnt"> 35
+</span><span class="lnt"> 36
+</span><span class="lnt"> 37
+</span><span class="lnt"> 38
+</span><span class="lnt"> 39
+</span><span class="lnt"> 40
+</span><span class="lnt"> 41
+</span><span class="lnt"> 42
+</span><span class="lnt"> 43
+</span><span class="lnt"> 44
+</span><span class="lnt"> 45
+</span><span class="lnt"> 46
+</span><span class="lnt"> 47
+</span><span class="lnt"> 48
+</span><span class="lnt"> 49
+</span><span class="lnt"> 50
+</span><span class="lnt"> 51
+</span><span class="lnt"> 52
+</span><span class="lnt"> 53
+</span><span class="lnt"> 54
+</span><span class="lnt"> 55
+</span><span class="lnt"> 56
+</span><span class="lnt"> 57
+</span><span class="lnt"> 58
+</span><span class="lnt"> 59
+</span><span class="lnt"> 60
+</span><span class="lnt"> 61
+</span><span class="lnt"> 62
+</span><span class="lnt"> 63
+</span><span class="lnt"> 64
+</span><span class="lnt"> 65
+</span><span class="lnt"> 66
+</span><span class="lnt"> 67
+</span><span class="lnt"> 68
+</span><span class="lnt"> 69
+</span><span class="lnt"> 70
+</span><span class="lnt"> 71
+</span><span class="lnt"> 72
+</span><span class="lnt"> 73
+</span><span class="lnt"> 74
+</span><span class="lnt"> 75
+</span><span class="lnt"> 76
+</span><span class="lnt"> 77
+</span><span class="lnt"> 78
+</span><span class="lnt"> 79
+</span><span class="lnt"> 80
+</span><span class="lnt"> 81
+</span><span class="lnt"> 82
+</span><span class="lnt"> 83
+</span><span class="lnt"> 84
+</span><span class="lnt"> 85
+</span><span class="lnt"> 86
+</span><span class="lnt"> 87
+</span><span class="lnt"> 88
+</span><span class="lnt"> 89
+</span><span class="lnt"> 90
+</span><span class="lnt"> 91
+</span><span class="lnt"> 92
+</span><span class="lnt"> 93
+</span><span class="lnt"> 94
+</span><span class="lnt"> 95
+</span><span class="lnt"> 96
+</span><span class="lnt"> 97
+</span><span class="lnt"> 98
+</span><span class="lnt"> 99
+</span><span class="lnt">100
+</span><span class="lnt">101
+</span><span class="lnt">102
+</span><span class="lnt">103
+</span><span class="lnt">104
+</span><span class="lnt">105
+</span><span class="lnt">106
+</span><span class="lnt">107
+</span><span class="lnt">108
+</span><span class="lnt">109
+</span><span class="lnt">110
+</span><span class="lnt">111
+</span><span class="lnt">112
+</span><span class="lnt">113
+</span><span class="lnt">114
+</span><span class="lnt">115
+</span><span class="lnt">116
+</span><span class="lnt">117
+</span><span class="lnt">118
+</span><span class="lnt">119
+</span><span class="lnt">120
+</span><span class="lnt">121
+</span><span class="lnt">122
+</span><span class="lnt">123
+</span><span class="lnt">124
+</span><span class="lnt">125
+</span><span class="lnt">126
+</span><span class="lnt">127
+</span><span class="lnt">128
+</span><span class="lnt">129
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1"># -*- coding:utf-8 -*-</span>
 
-<pre><code class="language-python">#!/usr/bin/env python3
-# -*- coding:utf-8 -*-
+<span class="kn">import</span> <span class="nn">tkinter</span>
+<span class="kn">from</span> <span class="nn">tkinter</span> <span class="kn">import</span> <span class="n">messagebox</span><span class="p">,</span> <span class="n">scrolledtext</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span> <span class="nn">select</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">signal</span>
 
-import tkinter
-from tkinter import messagebox, scrolledtext
-import subprocess
-import select
-import os
-import signal
+<span class="n">WINDOW_SIZE</span> <span class="o">=</span> <span class="s2">&#34;600x400&#34;</span>
 
-WINDOW_SIZE = &quot;600x400&quot;
-
-# Run Button
-btn_upd = None
-# Output textbox
-txt_out = None
-# current script job/process
-cur_process = None
-# mark if Tk is closing
-close_flag = False
-# Tk root
-root = tkinter.Tk()
+<span class="c1"># Run Button</span>
+<span class="n">btn_upd</span> <span class="o">=</span> <span class="bp">None</span>
+<span class="c1"># Output textbox</span>
+<span class="n">txt_out</span> <span class="o">=</span> <span class="bp">None</span>
+<span class="c1"># current script job/process</span>
+<span class="n">cur_process</span> <span class="o">=</span> <span class="bp">None</span>
+<span class="c1"># mark if Tk is closing</span>
+<span class="n">close_flag</span> <span class="o">=</span> <span class="bp">False</span>
+<span class="c1"># Tk root</span>
+<span class="n">root</span> <span class="o">=</span> <span class="n">tkinter</span><span class="o">.</span><span class="n">Tk</span><span class="p">()</span>
 
 
-def disable_allbtn():
-    global close_flag
-    global btn_upd
-    if close_flag:
-        return
-    btn_upd.configure(state=tkinter.DISABLED)
+<span class="k">def</span> <span class="nf">disable_allbtn</span><span class="p">():</span>
+    <span class="k">global</span> <span class="n">close_flag</span>
+    <span class="k">global</span> <span class="n">btn_upd</span>
+    <span class="k">if</span> <span class="n">close_flag</span><span class="p">:</span>
+        <span class="k">return</span>
+    <span class="n">btn_upd</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="n">tkinter</span><span class="o">.</span><span class="n">DISABLED</span><span class="p">)</span>
 
-def enable_allbtn():
-    global close_flag
-    global btn_upd
-    if close_flag:
-        return
-    btn_upd.configure(state=tkinter.NORMAL)
+<span class="k">def</span> <span class="nf">enable_allbtn</span><span class="p">():</span>
+    <span class="k">global</span> <span class="n">close_flag</span>
+    <span class="k">global</span> <span class="n">btn_upd</span>
+    <span class="k">if</span> <span class="n">close_flag</span><span class="p">:</span>
+        <span class="k">return</span>
+    <span class="n">btn_upd</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="n">tkinter</span><span class="o">.</span><span class="n">NORMAL</span><span class="p">)</span>
 
-def cb_runbash_withoutput(script):
-    global cur_process
-    global txt_out
-    global root
-    global close_flag
-    # clear output
-    txt_out.delete(1.0, tkinter.END)
-    # create subprocess
-    process = subprocess.Popen(script, shell=True, preexec_fn=os.setsid,
-        stderr=subprocess.PIPE, stdout=subprocess.PIPE)
-    # read subprocess stderr/stdout in non-blocking
-    outpoll = select.poll()
-    errpoll = select.poll()
-    outpoll.register(process.stdout, select.POLLIN)
-    errpoll.register(process.stderr, select.POLLIN)
-    # store current subprocess
-    cur_process = process
-    while True:
-        output = &quot;&quot;
-        errput = &quot;&quot;
-        # poll stdout, timeout 2ms
-        if outpoll.poll(2):
-            output = process.stdout.readline().decode()
-            # insert stdout to txt_out
-            if output and not close_flag:
-                txt_out.insert(tkinter.INSERT, output)
-        # poll stderr, timeout 2ms
-        if errpoll.poll(2):
-            errput = process.stderr.readline().decode()
-            # insert stderr to txt_out
-            if errput and not close_flag:
-                txt_out.insert(tkinter.INSERT, errput)
-        # scroll text if have output
-        if (output or errput) and not close_flag:
-            txt_out.see(tkinter.END)
-        # do eventloop when not closing
-        if not close_flag:
-            root.update()
-        # process end
-        if output == &quot;&quot; and process.poll() is not None:
-            break
-    # get process return code
-    code = process.poll()
-    # reset current subprocess
-    cur_process = None
-    return code
+<span class="k">def</span> <span class="nf">cb_runbash_withoutput</span><span class="p">(</span><span class="n">script</span><span class="p">):</span>
+    <span class="k">global</span> <span class="n">cur_process</span>
+    <span class="k">global</span> <span class="n">txt_out</span>
+    <span class="k">global</span> <span class="n">root</span>
+    <span class="k">global</span> <span class="n">close_flag</span>
+    <span class="c1"># clear output</span>
+    <span class="n">txt_out</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">tkinter</span><span class="o">.</span><span class="n">END</span><span class="p">)</span>
+    <span class="c1"># create subprocess</span>
+    <span class="n">process</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">script</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">preexec_fn</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">setsid</span><span class="p">,</span>
+        <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span>
+    <span class="c1"># read subprocess stderr/stdout in non-blocking</span>
+    <span class="n">outpoll</span> <span class="o">=</span> <span class="n">select</span><span class="o">.</span><span class="n">poll</span><span class="p">()</span>
+    <span class="n">errpoll</span> <span class="o">=</span> <span class="n">select</span><span class="o">.</span><span class="n">poll</span><span class="p">()</span>
+    <span class="n">outpoll</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">process</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="n">select</span><span class="o">.</span><span class="n">POLLIN</span><span class="p">)</span>
+    <span class="n">errpoll</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">process</span><span class="o">.</span><span class="n">stderr</span><span class="p">,</span> <span class="n">select</span><span class="o">.</span><span class="n">POLLIN</span><span class="p">)</span>
+    <span class="c1"># store current subprocess</span>
+    <span class="n">cur_process</span> <span class="o">=</span> <span class="n">process</span>
+    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="s2">&#34;&#34;</span>
+        <span class="n">errput</span> <span class="o">=</span> <span class="s2">&#34;&#34;</span>
+        <span class="c1"># poll stdout, timeout 2ms</span>
+        <span class="k">if</span> <span class="n">outpoll</span><span class="o">.</span><span class="n">poll</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+            <span class="c1"># insert stdout to txt_out</span>
+            <span class="k">if</span> <span class="n">output</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">close_flag</span><span class="p">:</span>
+                <span class="n">txt_out</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">tkinter</span><span class="o">.</span><span class="n">INSERT</span><span class="p">,</span> <span class="n">output</span><span class="p">)</span>
+        <span class="c1"># poll stderr, timeout 2ms</span>
+        <span class="k">if</span> <span class="n">errpoll</span><span class="o">.</span><span class="n">poll</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+            <span class="n">errput</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+            <span class="c1"># insert stderr to txt_out</span>
+            <span class="k">if</span> <span class="n">errput</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">close_flag</span><span class="p">:</span>
+                <span class="n">txt_out</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">tkinter</span><span class="o">.</span><span class="n">INSERT</span><span class="p">,</span> <span class="n">errput</span><span class="p">)</span>
+        <span class="c1"># scroll text if have output</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">output</span> <span class="ow">or</span> <span class="n">errput</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">close_flag</span><span class="p">:</span>
+            <span class="n">txt_out</span><span class="o">.</span><span class="n">see</span><span class="p">(</span><span class="n">tkinter</span><span class="o">.</span><span class="n">END</span><span class="p">)</span>
+        <span class="c1"># do eventloop when not closing</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">close_flag</span><span class="p">:</span>
+            <span class="n">root</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+        <span class="c1"># process end</span>
+        <span class="k">if</span> <span class="n">output</span> <span class="o">==</span> <span class="s2">&#34;&#34;</span> <span class="ow">and</span> <span class="n">process</span><span class="o">.</span><span class="n">poll</span><span class="p">()</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">break</span>
+    <span class="c1"># get process return code</span>
+    <span class="n">code</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">poll</span><span class="p">()</span>
+    <span class="c1"># reset current subprocess</span>
+    <span class="n">cur_process</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="k">return</span> <span class="n">code</span>
 
-# callback 函数
-def cb_update():
-    global close_flag
-    disable_allbtn()
-    code = cb_runbash_withoutput(&quot;./bash_script_sample.sh&quot;)
-    # exit when closing
-    if close_flag:
-        return
-    if code != 0:
-        messagebox.showerror(title=&quot;Error&quot;, message=&quot;run bash script failed&quot;)
-    else:
-        messagebox.showinfo(title=&quot;Info&quot;, message=&quot;run bash script success&quot;)
-    enable_allbtn()
+<span class="c1"># callback 函数</span>
+<span class="k">def</span> <span class="nf">cb_update</span><span class="p">():</span>
+    <span class="k">global</span> <span class="n">close_flag</span>
+    <span class="n">disable_allbtn</span><span class="p">()</span>
+    <span class="n">code</span> <span class="o">=</span> <span class="n">cb_runbash_withoutput</span><span class="p">(</span><span class="s2">&#34;./bash_script_sample.sh&#34;</span><span class="p">)</span>
+    <span class="c1"># exit when closing</span>
+    <span class="k">if</span> <span class="n">close_flag</span><span class="p">:</span>
+        <span class="k">return</span>
+    <span class="k">if</span> <span class="n">code</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">messagebox</span><span class="o">.</span><span class="n">showerror</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&#34;Error&#34;</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&#34;run bash script failed&#34;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">messagebox</span><span class="o">.</span><span class="n">showinfo</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&#34;Info&#34;</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&#34;run bash script success&#34;</span><span class="p">)</span>
+    <span class="n">enable_allbtn</span><span class="p">()</span>
 
 
-def on_closing():
-    global cur_process
-    global root
-    global close_flag
-    # if cur_process still running
-    if cur_process:
-        if messagebox.askokcancel(&quot;Quit&quot;, &quot;There is task running, do you want to quit?&quot;):
-            # kill subprocess
-            os.killpg(os.getpgid(cur_process.pid), signal.SIGTERM)
-            cur_process = None
-        else:
-            return
-    # mark closing
-    close_flag = True
-    # close window
-    root.destroy()
+<span class="k">def</span> <span class="nf">on_closing</span><span class="p">():</span>
+    <span class="k">global</span> <span class="n">cur_process</span>
+    <span class="k">global</span> <span class="n">root</span>
+    <span class="k">global</span> <span class="n">close_flag</span>
+    <span class="c1"># if cur_process still running</span>
+    <span class="k">if</span> <span class="n">cur_process</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">messagebox</span><span class="o">.</span><span class="n">askokcancel</span><span class="p">(</span><span class="s2">&#34;Quit&#34;</span><span class="p">,</span> <span class="s2">&#34;There is task running, do you want to quit?&#34;</span><span class="p">):</span>
+            <span class="c1"># kill subprocess</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">killpg</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getpgid</span><span class="p">(</span><span class="n">cur_process</span><span class="o">.</span><span class="n">pid</span><span class="p">),</span> <span class="n">signal</span><span class="o">.</span><span class="n">SIGTERM</span><span class="p">)</span>
+            <span class="n">cur_process</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span>
+    <span class="c1"># mark closing</span>
+    <span class="n">close_flag</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="c1"># close window</span>
+    <span class="n">root</span><span class="o">.</span><span class="n">destroy</span><span class="p">()</span>
 
-root.title(&quot;Hello world&quot;)
-root.geometry(WINDOW_SIZE)
-# register cloing event callback
-root.protocol(&quot;WM_DELETE_WINDOW&quot;, on_closing)
+<span class="n">root</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&#34;Hello world&#34;</span><span class="p">)</span>
+<span class="n">root</span><span class="o">.</span><span class="n">geometry</span><span class="p">(</span><span class="n">WINDOW_SIZE</span><span class="p">)</span>
+<span class="c1"># register cloing event callback</span>
+<span class="n">root</span><span class="o">.</span><span class="n">protocol</span><span class="p">(</span><span class="s2">&#34;WM_DELETE_WINDOW&#34;</span><span class="p">,</span> <span class="n">on_closing</span><span class="p">)</span>
 
-btn_upd = tkinter.Button(root, text=&quot;Update&quot;, command = cb_update)
-btn_upd.pack(fill=tkinter.X, pady=10)
+<span class="n">btn_upd</span> <span class="o">=</span> <span class="n">tkinter</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&#34;Update&#34;</span><span class="p">,</span> <span class="n">command</span> <span class="o">=</span> <span class="n">cb_update</span><span class="p">)</span>
+<span class="n">btn_upd</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">fill</span><span class="o">=</span><span class="n">tkinter</span><span class="o">.</span><span class="n">X</span><span class="p">,</span> <span class="n">pady</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 
-txt_out = scrolledtext.ScrolledText(root)
-txt_out.pack(fill=tkinter.BOTH, expand=True, padx=20, pady=20)
+<span class="n">txt_out</span> <span class="o">=</span> <span class="n">scrolledtext</span><span class="o">.</span><span class="n">ScrolledText</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="n">txt_out</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">fill</span><span class="o">=</span><span class="n">tkinter</span><span class="o">.</span><span class="n">BOTH</span><span class="p">,</span> <span class="n">expand</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">padx</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">pady</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
 
-tkinter.mainloop()
-
-</code></pre>
-
+<span class="n">tkinter</span><span class="o">.</span><span class="n">mainloop</span><span class="p">()</span></code></pre></td></tr></table>
+</div>
+</div>
 <p>核心是使用 <code>subprocess</code> 调用 console 程序，然后在 GUI callback 中不断读取程序的 stdout/stderr，同时不阻塞 GUI 事件循环。</p>
     </div>
 
-    
-    
-
-    
-    
-
     <footer class="post-footer">
-      
-
       
       <nav class="post-nav">
         
-        
-          <a class="next" href="/post/2018-07-05-use-git-version-in-cmake-project/">
+        <a class="next" href="/post/2018-07-05-use-git-version-in-cmake-project/">
             <span class="next-text nav-default">在 CMake C\C&#43;&#43; 项目中使用 Git 仓库版本号</span>
             <span class="next-text nav-mobile">Next</span>
             <i class="iconfont icon-right"></i>
@@ -340,9 +427,6 @@ tkinter.mainloop()
   </article>
         </div>
         
-  
-
-  
 
       </div>
     </main>
@@ -367,9 +451,8 @@ tkinter.mainloop()
 
   <span class="copyright-year">
     &copy; 
-    
-      2016 - 
-    2018
+    2016 - 
+    2019
     <span class="heart">
       <i class="iconfont icon-heart"></i>
     </span>
@@ -382,13 +465,10 @@ tkinter.mainloop()
       <i class="iconfont icon-up"></i>
     </div>
   </div>
-  
-<script src="/lib/highlight/highlight.pack.js?v=20171001"></script><script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
   <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
   <script type="text/javascript" src="/lib/fancybox/jquery.fancybox-3.1.20.min.js"></script>
-
-
-<script type="text/javascript" src="/dist/even.min.js?v=3.2.0"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
 
 
 
