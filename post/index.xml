@@ -6,10 +6,22 @@
     <description>Recent content in Posts on 碎片</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Fri, 22 Feb 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 27 Feb 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://tisyang.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>交叉编译 LCM 库</title>
+      <link>https://tisyang.github.io/post/2019-02-27-cross-compile-lcm-library/</link>
+      <pubDate>Wed, 27 Feb 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://tisyang.github.io/post/2019-02-27-cross-compile-lcm-library/</guid>
+      <description>&lt;p&gt;LCM (&lt;a href=&#34;https://lcm-proj.github.io/&#34;&gt;Lightweight Communications and Marshalling&lt;/a&gt;)是一个
+基于 UDP 网络的消息传递库，适合高带宽和低延迟的通信需求，模式为发布/订阅。&lt;/p&gt;
+
+&lt;p&gt;本文讲述如何交叉编译 LCM 库到 arm linux上。&lt;/p&gt;</description>
+    </item>
     
     <item>
       <title>关于 nng/nanomsg 库的一点想法</title>
