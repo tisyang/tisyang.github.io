@@ -6,10 +6,21 @@
     <description>Recent content in Posts on 碎片</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Thu, 08 Aug 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 15 Jan 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://tisyang.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>U盘Linux系统在任何PC上启动</title>
+      <link>https://tisyang.github.io/post/2020-01-15-linux-uefi-boot-on-usb-drive/</link>
+      <pubDate>Wed, 15 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://tisyang.github.io/post/2020-01-15-linux-uefi-boot-on-usb-drive/</guid>
+      <description>&lt;p&gt;将系统安装在U盘中随身携带使用已经很容易了，比如 Windows 就有 Windows To Go。将系统装在U盘上需要一个寿命长久的U盘，而且随机读写性能要强。&lt;/p&gt;
+
+&lt;p&gt;Linux 发行版都提供 Live ISO 镜像，也可以将系统直接装载 U盘上，但很多时候安装后的U盘可以在安装的 PC 上启动，换一个 PC 就无法启动了。这篇文章就讲述如何解决其他 PC 上启动的问题。&lt;/p&gt;</description>
+    </item>
     
     <item>
       <title>一个基于 libev 的 ntripcaster 简单实现</title>
