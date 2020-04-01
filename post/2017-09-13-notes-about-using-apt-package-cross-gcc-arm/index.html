@@ -26,7 +26,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.54.0 with even 4.0.0" />
+<meta name="generator" content="Hugo 0.68.3 with theme even" />
 
 
 <link rel="canonical" href="https://tisyang.github.io/post/2017-09-13-notes-about-using-apt-package-cross-gcc-arm/" />
@@ -43,36 +43,26 @@
 
 <meta property="og:title" content="apt源arm gcc交叉编译器注意事项" />
 <meta property="og:description" content="做嵌入式 Linux 开发时候都需要使用交叉编译工具，这些一般是方案厂商提供，但我们通常也可以使用那些打包好的通用交叉编译工具，比如 Debian 上 apt 也有打包好的 arm 交叉编译工具： gcc-arm-linux-gnueabi 和 gcc-arm-linux-gnueabihf，对应 c&#43;&#43; 版本以 g&#43;&#43; 开头，这两类主要区别在于 CPU 对于浮点的处理上，涉及到 armel 和 armhf 架构的区别，详情参照这里，你只需要选择对应开发板的架构工具即可。
-
 由于是 Debian 自己维护更新的包，上述的两个交叉编译工具通常都会更新比较频繁，会支持最新的标准和特性，但是我们的开发板上系统通常都不是最新的，所以在使用时需要注意，否则会出现编译后的程序无法在开发板上运行。
-
 最近在将 mruby 应用到嵌入式环境时就遇到这个问题。" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://tisyang.github.io/post/2017-09-13-notes-about-using-apt-package-cross-gcc-arm/" />
-<meta property="article:published_time" content="2017-09-13T00:00:00&#43;00:00"/>
-<meta property="article:modified_time" content="2017-09-13T00:00:00&#43;00:00"/>
-
+<meta property="article:published_time" content="2017-09-13T00:00:00+00:00" />
+<meta property="article:modified_time" content="2017-09-13T00:00:00+00:00" />
 <meta itemprop="name" content="apt源arm gcc交叉编译器注意事项">
 <meta itemprop="description" content="做嵌入式 Linux 开发时候都需要使用交叉编译工具，这些一般是方案厂商提供，但我们通常也可以使用那些打包好的通用交叉编译工具，比如 Debian 上 apt 也有打包好的 arm 交叉编译工具： gcc-arm-linux-gnueabi 和 gcc-arm-linux-gnueabihf，对应 c&#43;&#43; 版本以 g&#43;&#43; 开头，这两类主要区别在于 CPU 对于浮点的处理上，涉及到 armel 和 armhf 架构的区别，详情参照这里，你只需要选择对应开发板的架构工具即可。
-
 由于是 Debian 自己维护更新的包，上述的两个交叉编译工具通常都会更新比较频繁，会支持最新的标准和特性，但是我们的开发板上系统通常都不是最新的，所以在使用时需要注意，否则会出现编译后的程序无法在开发板上运行。
-
 最近在将 mruby 应用到嵌入式环境时就遇到这个问题。">
-
-
 <meta itemprop="datePublished" content="2017-09-13T00:00:00&#43;00:00" />
 <meta itemprop="dateModified" content="2017-09-13T00:00:00&#43;00:00" />
 <meta itemprop="wordCount" content="1125">
 
 
 
-<meta itemprop="keywords" content="" />
-<meta name="twitter:card" content="summary"/>
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="apt源arm gcc交叉编译器注意事项"/>
 <meta name="twitter:description" content="做嵌入式 Linux 开发时候都需要使用交叉编译工具，这些一般是方案厂商提供，但我们通常也可以使用那些打包好的通用交叉编译工具，比如 Debian 上 apt 也有打包好的 arm 交叉编译工具： gcc-arm-linux-gnueabi 和 gcc-arm-linux-gnueabihf，对应 c&#43;&#43; 版本以 g&#43;&#43; 开头，这两类主要区别在于 CPU 对于浮点的处理上，涉及到 armel 和 armhf 架构的区别，详情参照这里，你只需要选择对应开发板的架构工具即可。
-
 由于是 Debian 自己维护更新的包，上述的两个交叉编译工具通常都会更新比较频繁，会支持最新的标准和特性，但是我们的开发板上系统通常都不是最新的，所以在使用时需要注意，否则会出现编译后的程序无法在开发板上运行。
-
 最近在将 mruby 应用到嵌入式环境时就遇到这个问题。"/>
 
 <!--[if lte IE 9]>
@@ -145,39 +135,32 @@
   <h2 class="post-toc-title">Contents</h2>
   <div class="post-toc-content always-active">
     <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#问题和溯因">问题和溯因</a></li>
-<li><a href="#解决方法">解决方法</a></li>
-<li><a href="#结语">结语</a></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#问题和溯因">问题和溯因</a></li>
+    <li><a href="#解决方法">解决方法</a></li>
+    <li><a href="#结语">结语</a></li>
+  </ul>
 </nav>
   </div>
 </div>
     <div class="post-content">
       <p>做嵌入式 Linux 开发时候都需要使用交叉编译工具，这些一般是方案厂商提供，但我们通常也可以使用那些打包好的通用交叉编译工具，比如 Debian 上 apt 也有打包好的 arm 交叉编译工具： <code>gcc-arm-linux-gnueabi</code> 和 <code>gcc-arm-linux-gnueabihf</code>，对应 c++ 版本以 g++ 开头，这两类主要区别在于 CPU 对于浮点的处理上，涉及到 <code>armel</code> 和 <code>armhf</code> 架构的区别，详情参照<a href="https://blogs.oracle.com/jtc/is-it-armhf-or-armel">这里</a>，你只需要选择对应开发板的架构工具即可。</p>
-
 <p>由于是 Debian 自己维护更新的包，上述的两个交叉编译工具通常都会更新比较频繁，会支持最新的标准和特性，但是我们的开发板上系统通常都不是最新的，所以在使用时需要注意，否则会出现编译后的程序无法在开发板上运行。</p>
-
 <p>最近在将 <a href="https://github.com/mruby/mruby">mruby</a> 应用到嵌入式环境时就遇到这个问题。</p>
-
 <h2 id="问题和溯因">问题和溯因</h2>
-
 <p>将静态链接了 <code>mruby</code> 库的测试程序 mirb 放入嵌入式环境上运行时，提示</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-bash" data-lang="bash">./mirb: /lib/libc.so.6: version <span class="sb">`</span>GLIBC_2.16<span class="err">&#39;</span> not found <span class="o">(</span>required by ./mirb<span class="o">)</span></code></pre></td></tr></table>
+<pre class="chroma"><code class="language-bash" data-lang="bash">./mirb: /lib/libc.so.6: version <span class="sb">`</span>GLIBC_2.16<span class="err">&#39;</span> not found <span class="o">(</span>required by ./mirb<span class="o">)</span>
+</code></pre></td></tr></table>
 </div>
-</div>
-<p>嵌入式环境没有 2.16 版本以上的 glibc 库，但是理论上测试程序不需要这么高版本的 glibc 库。在嵌入式命令行上用 <code>ldd</code> （有些嵌入式环境可能没有附带这个工具）查看一下可执行文件信息：</p>
+</div><p>嵌入式环境没有 2.16 版本以上的 glibc 库，但是理论上测试程序不需要这么高版本的 glibc 库。在嵌入式命令行上用 <code>ldd</code> （有些嵌入式环境可能没有附带这个工具）查看一下可执行文件信息：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -216,28 +199,26 @@
                 libc.so.6 <span class="o">(</span>GLIBC_2.4<span class="o">)</span> <span class="o">=</span>&gt; /lib/libc.so.6
         /lib/libc.so.6:
                 ld-linux.so.3 <span class="o">(</span>GLIBC_2.4<span class="o">)</span> <span class="o">=</span>&gt; /lib/ld-linux.so.3
-                ld-linux.so.3 <span class="o">(</span>GLIBC_PRIVATE<span class="o">)</span> <span class="o">=</span>&gt; /lib/ld-linux.so.3</code></pre></td></tr></table>
+                ld-linux.so.3 <span class="o">(</span>GLIBC_PRIVATE<span class="o">)</span> <span class="o">=</span>&gt; /lib/ld-linux.so.3
+</code></pre></td></tr></table>
 </div>
-</div>
-<p>可执行程序 mirb 的确引用 2.16 版本的 glibc 库，那就继续查一下引用了 2.16 版本 glibc 库的哪些符号。</p>
-
+</div><p>可执行程序 mirb 的确引用 2.16 版本的 glibc 库，那就继续查一下引用了 2.16 版本 glibc 库的哪些符号。</p>
 <p>在开发主机（不需要在嵌入式主机中）上可以使用 objdump 工具查看可执行程序的符号表（参数 <code>-t</code>）：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-bash" data-lang="bash">$ objdump -t mirb <span class="p">|</span> grep <span class="m">2</span>.16
-<span class="m">00000000</span>       F *UND*	<span class="m">00000000</span>              timespec_get@@GLIBC_2.16</code></pre></td></tr></table>
+<pre class="chroma"><code class="language-bash" data-lang="bash">$ objdump -t mirb <span class="p">|</span> grep 2.16
+<span class="m">00000000</span>       F *UND*	<span class="m">00000000</span>              timespec_get@@GLIBC_2.16
+</code></pre></td></tr></table>
 </div>
-</div>
-<p>可以看出是 <code>timespec_get</code> 这个函数符号需要 2.16 版本的 glibc 库，那么就得在代码中查一下哪个地方调用了这个函数。</p>
-
+</div><p>可以看出是 <code>timespec_get</code> 这个函数符号需要 2.16 版本的 glibc 库，那么就得在代码中查一下哪个地方调用了这个函数。</p>
 <p>在<a href="https://github.com/mruby/mruby/blob/stable/mrbgems/mruby-time/src/time.c#L285">这里</a> 可以看出 <code>mruby</code> 源码的 <code>time.c</code> 文件中使用了 <code>timespec_get</code> 函数：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-c" data-lang="c"><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -262,19 +243,16 @@
     <span class="n">tm</span><span class="o">-&gt;</span><span class="n">sec</span> <span class="o">=</span> <span class="n">ts</span><span class="p">.</span><span class="n">tv_sec</span><span class="p">;</span>
     <span class="n">tm</span><span class="o">-&gt;</span><span class="n">usec</span> <span class="o">=</span> <span class="n">ts</span><span class="p">.</span><span class="n">tv_nsec</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">;</span>
   <span class="p">}</span>
-<span class="cp">#elif defined(NO_GETTIMEOFDAY)</span></code></pre></td></tr></table>
+<span class="cp">#elif defined(NO_GETTIMEOFDAY)
+</span></code></pre></td></tr></table>
 </div>
-</div>
-<p>宏定义 <code>TIME_UTC</code> 控制着代码是否调用 <code>timespec_get</code> 函数。</p>
-
+</div><p>宏定义 <code>TIME_UTC</code> 控制着代码是否调用 <code>timespec_get</code> 函数。</p>
 <p>通过<a href="http://en.cppreference.com/w/c/chrono/timespec_get">搜索</a>了解到，<code>TIME_UTC</code> 和 <code>timespec_get</code> 都是 C11 标准里定义的。由于在编译 <code>mruby</code> 时没有指定编译参数，交叉编译工具使用了默认参数导致 C11 标准也被支持，<code>mruby</code> 库也就使用了最新的 C11 标准，引用了新函数 <code>timespec_get</code>，产生了 glibc 2.16 版本的依赖。</p>
-
 <h2 id="解决方法">解决方法</h2>
-
 <p>在知晓原因后，解决方法就简单了。就是在交叉编译 <code>mruby</code> 库时，去指定编译标准（c标准），修改 <code>mruby</code> 的编译配置文件 <code>build_config.rb</code> ：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-ruby" data-lang="ruby"><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -283,21 +261,18 @@
 <pre class="chroma"><code class="language-ruby" data-lang="ruby"><span class="n">conf</span><span class="o">.</span><span class="n">cc</span> <span class="k">do</span> <span class="o">|</span><span class="n">cc</span><span class="o">|</span>
     <span class="n">cc</span><span class="o">.</span><span class="n">command</span> <span class="o">=</span> <span class="s2">&#34;arm-linux-gnueabi-gcc&#34;</span>
     <span class="n">cc</span><span class="o">.</span><span class="n">flags</span> <span class="o">&lt;&lt;</span> <span class="s2">&#34;-std=gnu99&#34;</span>
-<span class="k">end</span></code></pre></td></tr></table>
+<span class="k">end</span>
+</code></pre></td></tr></table>
 </div>
-</div>
-<p>将编译 c 标准指定为 gnu99（<code>-std=gnu99</code>），这里也可以使用 c99 标准（<code>-std=c99</code>）。</p>
-
+</div><p>将编译 c 标准指定为 gnu99（<code>-std=gnu99</code>），这里也可以使用 c99 标准（<code>-std=c99</code>）。</p>
 <p>然后重新编译测试程序，放到嵌入式环境上运行，OK。</p>
-
 <h2 id="结语">结语</h2>
-
 <p>使用编译器尤其是交叉编译器时，最好要指定编译参数，确定编译标准，否则目标平台可能不支持，导致程序无法运行。在向第三方提供开发库而不是源码的情况下， 需要特别注意，尽量使用统一的编译参数标准，推荐 c99 或者 gnu99。</p>
-
 <p>在遇到类似 <code>/lib/libc.so.6: version GLIBC_X.XX not found</code> 问题时，可以借助 <code>ldd</code> 和 <code>objdump</code> 工具来确定依赖的符号源，寻找解决方法。</p>
     </div>
 
-    <footer class="post-footer">
+    
+<footer class="post-footer">
       
       <nav class="post-nav">
         <a class="prev" href="/post/2017-10-16-linux-shell-tips/">
@@ -315,6 +290,10 @@
   </article>
         </div>
         
+
+  
+
+  
 
       </div>
     </main>

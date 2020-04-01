@@ -26,7 +26,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.54.0 with even 4.0.0" />
+<meta name="generator" content="Hugo 0.68.3 with theme even" />
 
 
 <link rel="canonical" href="https://tisyang.github.io/post/2016-05-23-how-to-break-cs-uem-encrypt/" />
@@ -43,36 +43,26 @@
 
 <meta property="og:title" content="中软统一终端加密文件解密" />
 <meta property="og:description" content="背景不提，通过搜索能看到这篇文章的，请彼此保持同情。
-
 中软统一终端这个软件通过网内文件加密存储，使用时自解密，保证一个局部网络的资料安全性，防止泄漏，主要用于密级文档、源代码和工程图纸的管控。
-
 听起来很高大上，但是在文件加密解密这条策略链上，漏洞是很多的，在具体部署上，漏洞就更多了。下面介绍一下如何利用策略漏洞解密被加密的文件，这里主要针对源代码，其他文档类似。" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://tisyang.github.io/post/2016-05-23-how-to-break-cs-uem-encrypt/" />
-<meta property="article:published_time" content="2016-05-23T00:00:00&#43;00:00"/>
-<meta property="article:modified_time" content="2016-05-23T00:00:00&#43;00:00"/>
-
+<meta property="article:published_time" content="2016-05-23T00:00:00+00:00" />
+<meta property="article:modified_time" content="2016-05-23T00:00:00+00:00" />
 <meta itemprop="name" content="中软统一终端加密文件解密">
 <meta itemprop="description" content="背景不提，通过搜索能看到这篇文章的，请彼此保持同情。
-
 中软统一终端这个软件通过网内文件加密存储，使用时自解密，保证一个局部网络的资料安全性，防止泄漏，主要用于密级文档、源代码和工程图纸的管控。
-
 听起来很高大上，但是在文件加密解密这条策略链上，漏洞是很多的，在具体部署上，漏洞就更多了。下面介绍一下如何利用策略漏洞解密被加密的文件，这里主要针对源代码，其他文档类似。">
-
-
 <meta itemprop="datePublished" content="2016-05-23T00:00:00&#43;00:00" />
 <meta itemprop="dateModified" content="2016-05-23T00:00:00&#43;00:00" />
 <meta itemprop="wordCount" content="2131">
 
 
 
-<meta itemprop="keywords" content="" />
-<meta name="twitter:card" content="summary"/>
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="中软统一终端加密文件解密"/>
 <meta name="twitter:description" content="背景不提，通过搜索能看到这篇文章的，请彼此保持同情。
-
 中软统一终端这个软件通过网内文件加密存储，使用时自解密，保证一个局部网络的资料安全性，防止泄漏，主要用于密级文档、源代码和工程图纸的管控。
-
 听起来很高大上，但是在文件加密解密这条策略链上，漏洞是很多的，在具体部署上，漏洞就更多了。下面介绍一下如何利用策略漏洞解密被加密的文件，这里主要针对源代码，其他文档类似。"/>
 
 <!--[if lte IE 9]>
@@ -145,65 +135,48 @@
   <h2 class="post-toc-title">Contents</h2>
   <div class="post-toc-content always-active">
     <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#加密解密过程">加密解密过程</a></li>
-<li><a href="#策略的漏洞">策略的漏洞</a></li>
-<li><a href="#例子代码">例子代码</a></li>
-<li><a href="#结束">结束</a></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#加密解密过程">加密解密过程</a></li>
+    <li><a href="#策略的漏洞">策略的漏洞</a></li>
+    <li><a href="#例子代码">例子代码</a></li>
+    <li><a href="#结束">结束</a></li>
+  </ul>
 </nav>
   </div>
 </div>
     <div class="post-content">
       <p>背景不提，通过搜索能看到这篇文章的，请彼此保持同情。</p>
-
 <p>中软统一终端这个软件通过网内文件加密存储，使用时自解密，保证一个局部网络的资料安全性，防止泄漏，主要用于密级文档、源代码和工程图纸的管控。</p>
-
 <p>听起来很高大上，但是在文件加密解密这条策略链上，漏洞是很多的，在具体部署上，漏洞就更多了。下面介绍一下如何利用策略漏洞解密被加密的文件，这里主要针对源代码，其他文档类似。</p>
-
 <p>首先讲一下中软终端的文件加密解密过程。</p>
-
 <h2 id="加密解密过程">加密解密过程</h2>
-
 <p>安装统一终端后，如果有加密策略部署，程序后台会扫描所有文件，判断文件后缀名或文件类型是否与策略一致来进行加密操作。</p>
-
 <p>策略中通常会有针对加密文件类型相关软件的白名单，在这个名单中的程序，去处理加密的文件时，会<strong>透明地</strong>读取到解密后的文件，然后再保存该类型的文件时，文件又自动被加密了。如果白名单程序新生成该类型文件，那么文件保存时会自动被加密。</p>
-
 <p>白名单程序的存在是为了保证日常操作，否则都不能用了岂不是因噎废食。</p>
-
 <p>当某类文件被白名单程序读取时，中软终端会自动把加密的文件解密，然后提供给程序。中软是通过文件驱动来实现了这一中间人角色，来桥接加密文件和程序，对于非白名单程序则不提供解密，这样打开就会乱码报错。</p>
-
 <h2 id="策略的漏洞">策略的漏洞</h2>
-
 <p>这一套“透明地”加密解密的确很不错，但是停下想一想，尤其想一想互联网安全相关的实例，是不是有什么漏洞可破？</p>
-
 <p>互联网安全相关通常都是这个问题：Can I trust you?</p>
-
 <p>白名单是策略的关键，一个程序加入其中就表示对其可信，程序可以读取被加密的文件，这时候鉴权就很重要了。我们来根据实际来分析一下可能的鉴权策略：</p>
-
 <ol>
-<li><p>最简单的，根据进程名来判定程序是否归属白名单中。这个方法最简单，也最灵活，部署也很方便，但是，只根据进程名会不会不大可靠？</p></li>
-
-<li><p>进阶一点的，根据程序文件 Hash。在部署策略时，将可执行程序文件的 Hash 也加入其中，只有 Hash 匹配才认定程序是归属白名单中。这个是一个不错的方法，但是维护就很麻烦，因为很多程序经常会升级，这时候文件变了 Hash 也变了，策略就不得不更新，而对于一些离线机器得不到策略更新就更悲剧了。</p></li>
-
-<li><p>在2的基础上，继续完善，使用程序数字签名验证。程序文件的 Hash 会变，但是经过数字签名那么就可以认定这的确是谁谁谁家的程序。这个方法在终端中应该是被用到的，但肯定不是全部，毕竟只有大公司软件产品才会进行数字签名，比如 word/ppt/excel，可执行程序都是签名过的。而在软件开发中，有相当多开源工具是不可能进行签名的。</p></li>
+<li>
+<p>最简单的，根据进程名来判定程序是否归属白名单中。这个方法最简单，也最灵活，部署也很方便，但是，只根据进程名会不会不大可靠？</p>
+</li>
+<li>
+<p>进阶一点的，根据程序文件 Hash。在部署策略时，将可执行程序文件的 Hash 也加入其中，只有 Hash 匹配才认定程序是归属白名单中。这个是一个不错的方法，但是维护就很麻烦，因为很多程序经常会升级，这时候文件变了 Hash 也变了，策略就不得不更新，而对于一些离线机器得不到策略更新就更悲剧了。</p>
+</li>
+<li>
+<p>在2的基础上，继续完善，使用程序数字签名验证。程序文件的 Hash 会变，但是经过数字签名那么就可以认定这的确是谁谁谁家的程序。这个方法在终端中应该是被用到的，但肯定不是全部，毕竟只有大公司软件产品才会进行数字签名，比如 word/ppt/excel，可执行程序都是签名过的。而在软件开发中，有相当多开源工具是不可能进行签名的。</p>
+</li>
 </ol>
-
 <p>通过上述分析，可以猜测中软终端使用了方法1和3，而方法1只根据进程名判定是一个可以被利用的漏洞，我们可以编写克隆程序来读取加密文件。</p>
-
 <p>读取这边解决了，还需要考虑输出这环节。白名单程序保存文件时会进行加密，但是并不会加密所有文件。因为工具也可能用来处理不重要的事情，或者其他必须不能加密的地方，比如编译代码最终生成可执行程序，可执行程序不能被加密。而这部分通常是根据文件后缀名来判断是否需要被加密的。</p>
-
 <p>所以我们写一个与白名单中同名的程序，读取文件内容并输出到一个不会被加密的格式即可。</p>
-
 <h2 id="例子代码">例子代码</h2>
-
 <p>因为依赖程序进程名，所以用脚本在这里不合适，最简单可以用 C，一个简单的文件拷贝就可以</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-c" data-lang="c"><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -278,53 +251,45 @@
     <span class="n">fclose</span><span class="p">(</span><span class="n">nfp</span><span class="p">);</span>
 
     <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span></code></pre></td></tr></table>
+<span class="p">}</span>
+</code></pre></td></tr></table>
 </div>
-</div>
-<p>这个程序接收一个参数，参数为文件名，然后输出一个源文件的拷贝，命名为原文件名 + &ldquo;.xxx&rdquo;，这里 &ldquo;.xxx&rdquo; 可以选别的易于识别而且不会被加密的就行。</p>
-
+</div><p>这个程序接收一个参数，参数为文件名，然后输出一个源文件的拷贝，命名为原文件名 + &ldquo;.xxx&rdquo;，这里 &ldquo;.xxx&rdquo; 可以选别的易于识别而且不会被加密的就行。</p>
 <p>然后根据我们要解密的文件类型（这里以源代码为例），我们可以知道白名单程序中会有哪些程序，比如 IDE 中的 Visual Studio(<code>devenv.exe</code>)， Android Studio(<code>androidstudio.exe</code>)，代码管理程序的 SVN(<code>svn.exe</code>)，等等。</p>
-
 <p>这里以 SVN 作为例子，我们编译程序 <code>gcc -o svn xxx.c</code>，然后就生成了 <code>svn.exe</code> 程序。</p>
-
 <p>在一台安装了统一终端并启用加密的机器上，拷贝 <code>svn.exe</code> 到被加密代码的根目录。现在我们需要批量来解密我们需要的文件。</p>
-
 <p>用 Shift + 右键打开目录的命令行，然后输入 <code>powershell</code> 进入 PowerShell 执行环境，然后输入如下代码</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-powershell" data-lang="powershell"><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-powershell" data-lang="powershell"><span class="k">foreach</span><span class="p">(</span><span class="nv">$i</span> <span class="k">in</span> <span class="nb">Get-ChildItem</span> <span class="n">-Recurse</span> <span class="n">-Include</span> <span class="p">*.</span><span class="n">c</span><span class="p">)</span> <span class="p">{</span> <span class="p">.\</span><span class="n">svn</span> <span class="nv">$i</span><span class="p">.</span><span class="n">FullName</span> <span class="p">}</span></code></pre></td></tr></table>
+<pre class="chroma"><code class="language-powershell" data-lang="powershell"><span class="k">foreach</span><span class="p">(</span><span class="nv">$i</span> <span class="k">in</span> <span class="nb">Get-ChildItem</span> <span class="n">-Recurse</span> <span class="n">-Include</span> <span class="p">*.</span><span class="n">c</span><span class="p">)</span> <span class="p">{</span> <span class="p">.\</span><span class="n">svn</span> <span class="nv">$i</span><span class="p">.</span><span class="n">FullName</span> <span class="p">}</span>
+</code></pre></td></tr></table>
 </div>
-</div>
-<p>该代码表示遍历目录下所有（包括子目录，子子目录）以 <code>.c</code> 结尾的文件，然后对其执行 <code>svn</code>，也就是我们写的 <code>svn.exe</code> 程序，<code>FullName</code> 表示使用绝对路径。</p>
-
+</div><p>该代码表示遍历目录下所有（包括子目录，子子目录）以 <code>.c</code> 结尾的文件，然后对其执行 <code>svn</code>，也就是我们写的 <code>svn.exe</code> 程序，<code>FullName</code> 表示使用绝对路径。</p>
 <p>该代码只是解密了所有 C 文件，如果需要解密其他文件，则需要再次输入并修改后缀名即可。</p>
-
 <p>PS: 因为 Windows 对于 Powershell 脚本的安全限制，这里并不能写入脚本中用 Powershell 执行，必须手动输入执行。</p>
-
 <p>最后，我们需要把解密的文件的文件名复原，这里使用脚本语言就比较容易了，例如 Ruby， 写一个 <code>rename.rb</code> 放根目录然后执行即可：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-ruby" data-lang="ruby"><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span></code></pre></td>
 <td class="lntd">
 <pre class="chroma"><code class="language-ruby" data-lang="ruby"><span class="no">Dir</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&#34;**/*.xxx&#34;</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">fname</span><span class="o">|</span>
   <span class="no">File</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">fname</span><span class="o">.</span><span class="n">chomp</span><span class="p">(</span><span class="s2">&#34;.xxx&#34;</span><span class="p">))</span>
-<span class="k">end</span></code></pre></td></tr></table>
+<span class="k">end</span>
+</code></pre></td></tr></table>
 </div>
-</div>
-<h2 id="结束">结束</h2>
-
+</div><h2 id="结束">结束</h2>
 <p>找出这种漏洞并不是有意为之，而是某些时候这样做反而效率干脆，臃肿的官僚管理和流程太折磨人了，本来这个系统被利用多数也是懒政造就，系统本身带来的负面影响已经盖过了积极意义。机器运行缓慢，加密导致的奇怪问题，开发部署环境不一致的 bug 等等等，而这其中，这个系统部署和维护不够专业及时也加重了消耗。</p>
-
 <p>多点真诚，少点套路。机械依赖工具而不改变思维通常都是徒劳。</p>
     </div>
 
-    <footer class="post-footer">
+    
+<footer class="post-footer">
       
       <nav class="post-nav">
         <a class="prev" href="/post/2016-05-26-using-visual-studio-remote-debugger/">
@@ -342,6 +307,10 @@
   </article>
         </div>
         
+
+  
+
+  
 
       </div>
     </main>

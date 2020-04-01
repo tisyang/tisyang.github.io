@@ -25,7 +25,7 @@ CMake 支持子目录构建（add_subdirectory 指令），本文介绍的布局
 
 
 
-<meta name="generator" content="Hugo 0.54.0 with even 4.0.0" />
+<meta name="generator" content="Hugo 0.68.3 with theme even" />
 
 
 <link rel="canonical" href="https://tisyang.github.io/post/2017-08-06-cmake-project-layout/" />
@@ -42,30 +42,23 @@ CMake 支持子目录构建（add_subdirectory 指令），本文介绍的布局
 
 <meta property="og:title" content="CMake 项目模块化布局" />
 <meta property="og:description" content="在 C\C&#43;&#43; 项目中，通常会有不止一个可执行程序，或者需要将一些调用封装成动态或静态库，来实现项目的模块化，本文就讲解一种支持这种项目布局的方法。
-
 CMake 支持子目录构建（add_subdirectory 指令），本文介绍的布局方法就是基于这个功能来实现。" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://tisyang.github.io/post/2017-08-06-cmake-project-layout/" />
-<meta property="article:published_time" content="2017-08-06T00:00:00&#43;00:00"/>
-<meta property="article:modified_time" content="2017-08-06T00:00:00&#43;00:00"/>
-
+<meta property="article:published_time" content="2017-08-06T00:00:00+00:00" />
+<meta property="article:modified_time" content="2017-08-06T00:00:00+00:00" />
 <meta itemprop="name" content="CMake 项目模块化布局">
 <meta itemprop="description" content="在 C\C&#43;&#43; 项目中，通常会有不止一个可执行程序，或者需要将一些调用封装成动态或静态库，来实现项目的模块化，本文就讲解一种支持这种项目布局的方法。
-
 CMake 支持子目录构建（add_subdirectory 指令），本文介绍的布局方法就是基于这个功能来实现。">
-
-
 <meta itemprop="datePublished" content="2017-08-06T00:00:00&#43;00:00" />
 <meta itemprop="dateModified" content="2017-08-06T00:00:00&#43;00:00" />
 <meta itemprop="wordCount" content="1315">
 
 
 
-<meta itemprop="keywords" content="" />
-<meta name="twitter:card" content="summary"/>
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="CMake 项目模块化布局"/>
 <meta name="twitter:description" content="在 C\C&#43;&#43; 项目中，通常会有不止一个可执行程序，或者需要将一些调用封装成动态或静态库，来实现项目的模块化，本文就讲解一种支持这种项目布局的方法。
-
 CMake 支持子目录构建（add_subdirectory 指令），本文介绍的布局方法就是基于这个功能来实现。"/>
 
 <!--[if lte IE 9]>
@@ -138,38 +131,31 @@ CMake 支持子目录构建（add_subdirectory 指令），本文介绍的布局
   <h2 class="post-toc-title">Contents</h2>
   <div class="post-toc-content always-active">
     <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#项目">项目</a></li>
-<li><a href="#目标">目标</a>
-<ul>
-<li><a href="#目标-staticlib-静态库编译示例">目标 <code>staticlib</code>（静态库编译示例）：</a></li>
-<li><a href="#目标-sharelib-动态库编译示例">目标 <code>sharelib</code>（动态库编译示例）：</a></li>
-<li><a href="#目标-testapp-执行程序编译示例">目标 <code>testapp</code>（执行程序编译示例）：</a></li>
-<li><a href="#目标-config-配置文件示例">目标 <code>config</code>（配置文件示例）：</a></li>
-</ul></li>
-<li><a href="#结语">结语</a></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#项目">项目</a></li>
+    <li><a href="#目标">目标</a>
+      <ul>
+        <li><a href="#目标-staticlib静态库编译示例">目标 <code>staticlib</code>（静态库编译示例）：</a></li>
+        <li><a href="#目标-sharelib动态库编译示例">目标 <code>sharelib</code>（动态库编译示例）：</a></li>
+        <li><a href="#目标-testapp执行程序编译示例">目标 <code>testapp</code>（执行程序编译示例）：</a></li>
+        <li><a href="#目标-config配置文件示例">目标 <code>config</code>（配置文件示例）：</a></li>
+      </ul>
+    </li>
+    <li><a href="#结语">结语</a></li>
+  </ul>
 </nav>
   </div>
 </div>
     <div class="post-content">
       <p>在 C\C++ 项目中，通常会有不止一个可执行程序，或者需要将一些调用封装成动态或静态库，来实现项目的模块化，本文就讲解一种支持这种项目布局的方法。</p>
-
 <p>CMake 支持子目录构建（<code>add_subdirectory</code> 指令），本文介绍的布局方法就是基于这个功能来实现。</p>
-
 <h2 id="项目">项目</h2>
-
 <p>项目根目录编写一个 <code>CMakeLists.txt</code>，主要描述项目名称，也可以将一些项目级别的配置写入，来影响所有项目构建目标。比如编译的警告级别设置，如果要在项目级别上统一，可以写入，如果要针对不同构建目标来设置，可以留到构建目标 <code>CMakeLists.txt</code> 文件中写入。</p>
-
 <p>项目的各个构建目标作为子目录存放在项目根目录下，每个子目录均包含相应的构建 <code>CMakeLists.txt</code> 文件。使用 <code>add_subdirectory</code> 指令将构建目标子目录添加到项目 <code>CMakeLists.txt</code> 中，构建目标间可以相互引用，只要在添加子目录到项目 <code>CMakeLists.txt</code> 时保持依赖顺序即可。</p>
-
 <p>项目 <code>CMakeLists.txt</code> 示例：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-cmake" data-lang="cmake"><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -234,23 +220,18 @@ CMake 支持子目录构建（add_subdirectory 指令），本文介绍的布局
 </span><span class="c"></span><span class="nb">add_subdirectory</span><span class="p">(</span><span class="s">testapp</span><span class="p">)</span><span class="err">
 </span><span class="err">
 </span><span class="err"></span><span class="c"># 配置文件类
-</span><span class="c"></span><span class="nb">add_subdirectory</span><span class="p">(</span><span class="s">config</span><span class="p">)</span></code></pre></td></tr></table>
+</span><span class="c"></span><span class="nb">add_subdirectory</span><span class="p">(</span><span class="s">config</span><span class="p">)</span><span class="err">
+</span></code></pre></td></tr></table>
 </div>
-</div>
-<p>项目 <code>TestApps</code> 中包含4个构建目标目录，2 个库 <code>staticlib</code> 和 <code>sharelib</code>，依赖库的 1 个应用程序 <code>testapp</code>，以及配置文件类目标 <code>config</code>。4 个目标的输出文件均统一到了构建目录下，按类型分类，这样便于构建结果的归档处理。</p>
-
+</div><p>项目 <code>TestApps</code> 中包含4个构建目标目录，2 个库 <code>staticlib</code> 和 <code>sharelib</code>，依赖库的 1 个应用程序 <code>testapp</code>，以及配置文件类目标 <code>config</code>。4 个目标的输出文件均统一到了构建目录下，按类型分类，这样便于构建结果的归档处理。</p>
 <p>通常将构建目标子目录名与目标名一致，这样便于项目管理。</p>
-
 <h2 id="目标">目标</h2>
-
 <p>每个构建目标对应在项目根目录下的各个子目录，每个子目录中都有一个 <code>CMakeLists.txt</code> 文件，记录着对应的构建配置。这些构建配置均会继承项目 <code>CMakeLists.txt</code> 文件中的配置。</p>
-
 <p>以下针对示例项目，讲解各个子目录的 <code>CMakeLists.txt</code> ，用以理解如何进行具体的项目布局。</p>
-
-<h3 id="目标-staticlib-静态库编译示例">目标 <code>staticlib</code>（静态库编译示例）：</h3>
+<h3 id="目标-staticlib静态库编译示例">目标 <code>staticlib</code>（静态库编译示例）：</h3>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-cmake" data-lang="cmake"><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -269,15 +250,14 @@ CMake 支持子目录构建（add_subdirectory 指令），本文介绍的布局
 </span><span class="err"></span><span class="nb">aux_source_directory</span><span class="p">(</span><span class="s2">&#34;.&#34;</span> <span class="s">SLIB_SRC</span><span class="p">)</span><span class="err">
 </span><span class="err"></span><span class="nb">add_library</span><span class="p">(</span><span class="o">${</span><span class="nv">SLIB</span><span class="o">}</span> <span class="s">STATIC</span> <span class="o">${</span><span class="nv">SLIB_SRC</span><span class="o">}</span><span class="p">)</span><span class="err">
 </span><span class="err"></span><span class="c"># 依赖库
-</span><span class="c"></span><span class="nb">target_link_libraries</span><span class="p">(</span><span class="o">${</span><span class="nv">SLIB</span><span class="o">}</span> <span class="s">m</span><span class="p">)</span></code></pre></td></tr></table>
+</span><span class="c"></span><span class="nb">target_link_libraries</span><span class="p">(</span><span class="o">${</span><span class="nv">SLIB</span><span class="o">}</span> <span class="s">m</span><span class="p">)</span><span class="err">
+</span></code></pre></td></tr></table>
 </div>
-</div>
-<p><code>add_library</code> 指令添加一个库目标，参数 <code>STATIC</code> 表示编译成静态库，该目标链接时需要链接数学库。</p>
-
-<h3 id="目标-sharelib-动态库编译示例">目标 <code>sharelib</code>（动态库编译示例）：</h3>
+</div><p><code>add_library</code> 指令添加一个库目标，参数 <code>STATIC</code> 表示编译成静态库，该目标链接时需要链接数学库。</p>
+<h3 id="目标-sharelib动态库编译示例">目标 <code>sharelib</code>（动态库编译示例）：</h3>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-cmake" data-lang="cmake"><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -290,15 +270,14 @@ CMake 支持子目录构建（add_subdirectory 指令），本文介绍的布局
 </span><span class="err">
 </span><span class="err"></span><span class="nb">set</span><span class="p">(</span><span class="s">DLIB</span> <span class="s2">&#34;sharelib&#34;</span><span class="p">)</span><span class="err">
 </span><span class="err"></span><span class="nb">aux_source_directory</span><span class="p">(</span><span class="s2">&#34;.&#34;</span> <span class="s">DLIB_SRC</span><span class="p">)</span><span class="err">
-</span><span class="err"></span><span class="nb">add_library</span><span class="p">(</span><span class="o">${</span><span class="nv">DLIB</span><span class="o">}</span> <span class="s">SHARED</span> <span class="o">${</span><span class="nv">DLIB_SRC</span><span class="o">}</span><span class="p">)</span></code></pre></td></tr></table>
+</span><span class="err"></span><span class="nb">add_library</span><span class="p">(</span><span class="o">${</span><span class="nv">DLIB</span><span class="o">}</span> <span class="s">SHARED</span> <span class="o">${</span><span class="nv">DLIB_SRC</span><span class="o">}</span><span class="p">)</span><span class="err">
+</span></code></pre></td></tr></table>
 </div>
-</div>
-<p>与目标 <code>staticlib</code> 差不多，只是<code>add_library</code> 参数 <code>SHARED</code> 表示编译成动态库。</p>
-
-<h3 id="目标-testapp-执行程序编译示例">目标 <code>testapp</code>（执行程序编译示例）：</h3>
+</div><p>与目标 <code>staticlib</code> 差不多，只是<code>add_library</code> 参数 <code>SHARED</code> 表示编译成动态库。</p>
+<h3 id="目标-testapp执行程序编译示例">目标 <code>testapp</code>（执行程序编译示例）：</h3>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-cmake" data-lang="cmake"><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -319,15 +298,14 @@ CMake 支持子目录构建（add_subdirectory 指令），本文介绍的布局
 </span><span class="err"></span><span class="nb">add_executable</span><span class="p">(</span><span class="o">${</span><span class="nv">APP</span><span class="o">}</span> <span class="o">${</span><span class="nv">APP_SRC</span><span class="o">}</span><span class="p">)</span><span class="err">
 </span><span class="err"></span><span class="nb">target_link_libraries</span><span class="p">(</span><span class="o">${</span><span class="nv">APP</span><span class="o">}</span>
         <span class="s">staticlib</span>
-        <span class="s">sharelib</span><span class="p">)</span></code></pre></td></tr></table>
+        <span class="s">sharelib</span><span class="p">)</span><span class="err">
+</span></code></pre></td></tr></table>
 </div>
-</div>
-<p><code>add_executable</code> 指令添加一个可执行目标，其依赖于静态库 <code>staticlib</code> 和动态库 <code>sharelib</code>。</p>
-
-<h3 id="目标-config-配置文件示例">目标 <code>config</code>（配置文件示例）：</h3>
+</div><p><code>add_executable</code> 指令添加一个可执行目标，其依赖于静态库 <code>staticlib</code> 和动态库 <code>sharelib</code>。</p>
+<h3 id="目标-config配置文件示例">目标 <code>config</code>（配置文件示例）：</h3>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-cmake" data-lang="cmake"><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -342,17 +320,16 @@ CMake 支持子目录构建（add_subdirectory 指令），本文介绍的布局
     <span class="c"># 忽略文件匹配模式
 </span><span class="c"></span>    <span class="s">PATTERN</span> <span class="s2">&#34;CMakeLists.txt&#34;</span> <span class="s">EXCLUDE</span>
     <span class="s">PATTERN</span> <span class="s2">&#34;README.md&#34;</span> <span class="s">EXCLUDE</span>
-    <span class="p">)</span></code></pre></td></tr></table>
+    <span class="p">)</span><span class="err">
+</span></code></pre></td></tr></table>
 </div>
-</div>
-<p><code>config</code> 目标是一个特殊目标，其不构建库或可执行程序，而是执行一个文件拷贝工作，在此示例中，将 <code>config</code> 目录下的文件（除 <code>CMakeLists.txt</code> 和 <code>README.md</code>）都拷贝到可执行输出目录中。这个用法一般用于拷贝程序的默认配置文件。这样做的好处在于可以将默认配置文件纳入版本管理，也方便打包程序以及测试部署，既能将代码与输出分离，又能实现自动化整合。</p>
-
+</div><p><code>config</code> 目标是一个特殊目标，其不构建库或可执行程序，而是执行一个文件拷贝工作，在此示例中，将 <code>config</code> 目录下的文件（除 <code>CMakeLists.txt</code> 和 <code>README.md</code>）都拷贝到可执行输出目录中。这个用法一般用于拷贝程序的默认配置文件。这样做的好处在于可以将默认配置文件纳入版本管理，也方便打包程序以及测试部署，既能将代码与输出分离，又能实现自动化整合。</p>
 <h2 id="结语">结语</h2>
-
 <p>CMake 是一个很便利的跨平台构建工具，使用模块化布局方法可以更契合多人共享开发模式，促进项目复用代码，方便上下游库协同管理。如果与 Git 的 submodule 配合，就更能体现出模块化。</p>
     </div>
 
-    <footer class="post-footer">
+    
+<footer class="post-footer">
       
       <nav class="post-nav">
         <a class="prev" href="/post/2017-09-13-notes-about-using-apt-package-cross-gcc-arm/">
@@ -370,6 +347,10 @@ CMake 支持子目录构建（add_subdirectory 指令），本文介绍的布局
   </article>
         </div>
         
+
+  
+
+  
 
       </div>
     </main>

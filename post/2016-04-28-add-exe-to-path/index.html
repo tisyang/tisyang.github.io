@@ -24,7 +24,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.54.0 with even 4.0.0" />
+<meta name="generator" content="Hugo 0.68.3 with theme even" />
 
 
 <link rel="canonical" href="https://tisyang.github.io/post/2016-04-28-add-exe-to-path/" />
@@ -43,21 +43,17 @@
 <meta property="og:description" content="将一个程序加入到环境 Path 中，通常做法是将程序文件所在目录附加到系统或者用户的 Path 变量中，这样我们在任何路径下的命令行中，都可以调用该程序工作。大部分应用程序安装过程中的做法也是如此。" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://tisyang.github.io/post/2016-04-28-add-exe-to-path/" />
-<meta property="article:published_time" content="2016-04-28T00:00:00&#43;00:00"/>
-<meta property="article:modified_time" content="2016-04-28T00:00:00&#43;00:00"/>
-
+<meta property="article:published_time" content="2016-04-28T00:00:00+00:00" />
+<meta property="article:modified_time" content="2016-04-28T00:00:00+00:00" />
 <meta itemprop="name" content="添加可执行程序到 Path 中">
 <meta itemprop="description" content="将一个程序加入到环境 Path 中，通常做法是将程序文件所在目录附加到系统或者用户的 Path 变量中，这样我们在任何路径下的命令行中，都可以调用该程序工作。大部分应用程序安装过程中的做法也是如此。">
-
-
 <meta itemprop="datePublished" content="2016-04-28T00:00:00&#43;00:00" />
 <meta itemprop="dateModified" content="2016-04-28T00:00:00&#43;00:00" />
 <meta itemprop="wordCount" content="478">
 
 
 
-<meta itemprop="keywords" content="" />
-<meta name="twitter:card" content="summary"/>
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="添加可执行程序到 Path 中"/>
 <meta name="twitter:description" content="将一个程序加入到环境 Path 中，通常做法是将程序文件所在目录附加到系统或者用户的 Path 变量中，这样我们在任何路径下的命令行中，都可以调用该程序工作。大部分应用程序安装过程中的做法也是如此。"/>
 
@@ -130,35 +126,30 @@
     <div class="post-toc" id="post-toc">
   <h2 class="post-toc-title">Contents</h2>
   <div class="post-toc-content always-active">
-    
+    <nav id="TableOfContents"></nav>
   </div>
 </div>
     <div class="post-content">
       <p>将一个程序加入到环境 Path 中，通常做法是将程序文件所在目录附加到系统或者用户的 Path 变量中，这样我们在任何路径下的命令行中，都可以调用该程序工作。大部分应用程序安装过程中的做法也是如此。</p>
-
 <p>但是这样会将目录中的所有文件暴露到 Path 中，其中大部分是我们不需要用到的。这样做也增加了潜在 <a href="https://zh.wikipedia.org/zh-cn/DLL%E5%9C%B0%E7%8D%84">DLL Hell</a> 隐患，比如同名不同版本 DLL 暴露到 Path 中低版本覆盖了高版本导致程序运行时异常。</p>
-
 <p>最好的做法是，只将我们需要用到的 exe 文件加入到 Path 中，Windows 上也的确有这样的解决方法。</p>
-
 <p>以 vim 为例。我们新建一个 <code>vim.bat</code> 文件，编辑文件加入以下代码：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-bat" data-lang="bat"><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-bat" data-lang="bat"><span class="p">@</span><span class="s2">&#34;C:\Program Files (x86)\Vim\vim74\gvim.exe&#34;</span> <span class="nv">%*</span></code></pre></td></tr></table>
+<pre class="chroma"><code class="language-bat" data-lang="bat"><span class="p">@</span><span class="s2">&#34;C:\Program Files (x86)\Vim\vim74\gvim.exe&#34;</span> <span class="nv">%*</span>
+</code></pre></td></tr></table>
 </div>
-</div>
-<p>将该文件保存到一个目录中，然后再<strong>将该目录加入到用户或系统 Path 变量中</strong>。这样，这个 <code>vim.bat</code> 就暴露到 Path 中，可以在命令行中随时调用了，调用名为 <code>vim</code>，即 <code>.bat</code> 文件的文件名。</p>
-
+</div><p>将该文件保存到一个目录中，然后再<strong>将该目录加入到用户或系统 Path 变量中</strong>。这样，这个 <code>vim.bat</code> 就暴露到 Path 中，可以在命令行中随时调用了，调用名为 <code>vim</code>，即 <code>.bat</code> 文件的文件名。</p>
 <p><code>@</code> 表示禁止调用的回显，<code>&quot;&quot;</code> 引号包含目标程序的完整路径（这样路径中允许有空白符），<code>%*</code> 表示将传递给 <code>.bat</code> 文件的参数原封不动的传递给目标程序。</p>
-
 <p>我们可以在此目录下新建其他 <code>bat</code> 文件，来向 Path 中加入各种所需的程序（同时也可以自定义名称）。</p>
-
 <p>PS: 其实如果打开 Ruby 的安装目录，我们就会发现，irb 和 gem 都使用了这种方法。</p>
     </div>
 
-    <footer class="post-footer">
+    
+<footer class="post-footer">
       
       <nav class="post-nav">
         <a class="prev" href="/post/2016-05-23-how-to-break-cs-uem-encrypt/">
@@ -176,6 +167,10 @@
   </article>
         </div>
         
+
+  
+
+  
 
       </div>
     </main>

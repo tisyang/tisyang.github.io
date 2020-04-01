@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Posts on 碎片</title>
@@ -6,10 +6,19 @@
     <description>Recent content in Posts on 碎片</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Wed, 15 Jan 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 01 Apr 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://tisyang.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>CORS 中继程序</title>
+      <link>https://tisyang.github.io/post/2020-04-01-cors-relay-opensource/</link>
+      <pubDate>Wed, 01 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://tisyang.github.io/post/2020-04-01-cors-relay-opensource/</guid>
+      <description>&lt;p&gt;随着 CORS 全国一张网的运行，类似千寻这样的网络差分在实际运用中越来越普遍。这里开源一个可以中继重分发已有 CORS 服务的程序 &lt;a href=&#34;https://github.com/tisyang/cors-relay&#34;&gt;cors-relay&lt;/a&gt;.&lt;/p&gt;</description>
+    </item>
     
     <item>
       <title>U盘Linux系统在任何PC上启动</title>
@@ -18,7 +27,6 @@
       
       <guid>https://tisyang.github.io/post/2020-01-15-linux-uefi-boot-on-usb-drive/</guid>
       <description>&lt;p&gt;将系统安装在U盘中随身携带使用已经很容易了，比如 Windows 就有 Windows To Go。将系统装在U盘上需要一个寿命长久的U盘，而且随机读写性能要强。&lt;/p&gt;
-
 &lt;p&gt;Linux 发行版都提供 Live ISO 镜像，也可以将系统直接装载 U盘上，但很多时候安装后的U盘可以在安装的 PC 上启动，换一个 PC 就无法启动了。这篇文章就讲述如何解决其他 PC 上启动的问题。&lt;/p&gt;</description>
     </item>
     
@@ -29,7 +37,6 @@
       
       <guid>https://tisyang.github.io/post/2019-08-08-opensource-ntripcaster/</guid>
       <description>&lt;p&gt;Ntripcaster 是测绘领域GNSS相关的服务器软件，服务于差分GNSS测量、RTK测量等高精度测量测绘。&lt;/p&gt;
-
 &lt;p&gt;这里开源一个基于 &lt;a href=&#34;http://libev.schmorp.de/&#34;&gt;libev&lt;/a&gt;，用 C 实现的简单 ntripcaster 服务器。&lt;/p&gt;</description>
     </item>
     
@@ -41,7 +48,6 @@
       <guid>https://tisyang.github.io/post/2019-02-27-cross-compile-lcm-library/</guid>
       <description>&lt;p&gt;LCM (&lt;a href=&#34;https://lcm-proj.github.io/&#34;&gt;Lightweight Communications and Marshalling&lt;/a&gt;)是一个
 基于 UDP 网络的消息传递库，适合高带宽和低延迟的通信需求，模式为发布/订阅。&lt;/p&gt;
-
 &lt;p&gt;本文讲述如何交叉编译 LCM 库到 arm linux上。&lt;/p&gt;</description>
     </item>
     
@@ -52,7 +58,6 @@
       
       <guid>https://tisyang.github.io/post/2019-02-22-think-about-nng-library/</guid>
       <description>&lt;p&gt;&lt;a href=&#34;https://github.com/nanomsg/nng&#34;&gt;NNG/nanomsg&lt;/a&gt; 是最近项目上使用到的一个通信库，用来实现进程间过程调用和线程间通信，很是方便。&lt;/p&gt;
-
 &lt;p&gt;NNG 是 nanomsg 的继任版本，而 nanomsg 则是流行的 &lt;a href=&#34;http://zeromq.org/&#34;&gt;ZMQ&lt;/a&gt; 的 C 重写版。&lt;/p&gt;</description>
     </item>
     
@@ -63,7 +68,6 @@
       
       <guid>https://tisyang.github.io/post/2018-07-25-call-shell-scripts-in-python-tkinter/</guid>
       <description>&lt;p&gt;本文给出一个 Python tkinter GUI 程序中调用 shell 脚本的代码示例，在 GUI 的一个文本框中会不断输出脚本的标准输出和标准错误且不会阻塞 GUI 窗体事件响应，同时也会在脚本执行完毕后根据状态（exit code）弹出提示框，如果在脚本运行中关闭窗口，会弹出提示并中断脚本的执行。&lt;/p&gt;
-
 &lt;p&gt;这个样例很适合编写一些提供给非技术人员使用的小工具。&lt;/p&gt;</description>
     </item>
     
@@ -92,9 +96,7 @@
       
       <guid>https://tisyang.github.io/post/2017-09-13-notes-about-using-apt-package-cross-gcc-arm/</guid>
       <description>&lt;p&gt;做嵌入式 Linux 开发时候都需要使用交叉编译工具，这些一般是方案厂商提供，但我们通常也可以使用那些打包好的通用交叉编译工具，比如 Debian 上 apt 也有打包好的 arm 交叉编译工具： &lt;code&gt;gcc-arm-linux-gnueabi&lt;/code&gt; 和 &lt;code&gt;gcc-arm-linux-gnueabihf&lt;/code&gt;，对应 c++ 版本以 g++ 开头，这两类主要区别在于 CPU 对于浮点的处理上，涉及到 &lt;code&gt;armel&lt;/code&gt; 和 &lt;code&gt;armhf&lt;/code&gt; 架构的区别，详情参照&lt;a href=&#34;https://blogs.oracle.com/jtc/is-it-armhf-or-armel&#34;&gt;这里&lt;/a&gt;，你只需要选择对应开发板的架构工具即可。&lt;/p&gt;
-
 &lt;p&gt;由于是 Debian 自己维护更新的包，上述的两个交叉编译工具通常都会更新比较频繁，会支持最新的标准和特性，但是我们的开发板上系统通常都不是最新的，所以在使用时需要注意，否则会出现编译后的程序无法在开发板上运行。&lt;/p&gt;
-
 &lt;p&gt;最近在将 &lt;a href=&#34;https://github.com/mruby/mruby&#34;&gt;mruby&lt;/a&gt; 应用到嵌入式环境时就遇到这个问题。&lt;/p&gt;</description>
     </item>
     
@@ -105,7 +107,6 @@
       
       <guid>https://tisyang.github.io/post/2017-08-06-cmake-project-layout/</guid>
       <description>&lt;p&gt;在 C\C++ 项目中，通常会有不止一个可执行程序，或者需要将一些调用封装成动态或静态库，来实现项目的模块化，本文就讲解一种支持这种项目布局的方法。&lt;/p&gt;
-
 &lt;p&gt;CMake 支持子目录构建（&lt;code&gt;add_subdirectory&lt;/code&gt; 指令），本文介绍的布局方法就是基于这个功能来实现。&lt;/p&gt;</description>
     </item>
     
@@ -116,9 +117,7 @@
       
       <guid>https://tisyang.github.io/post/2017-01-11-split-string-in-shell/</guid>
       <description>&lt;p&gt;通常来说，使用 shell 脚本时候不需要太顾及程序的效率性，能完成任务，只要不是太慢，都可以接受。&lt;/p&gt;
-
 &lt;p&gt;但在一些特定应用场合，脚本效率也是一个硬性限制，不能耗时太久，比如说，用 shell 来编写一些处理 HTTP 请求的 CGI 程序，脚本的执行效率直接影响了 HTTP 的响应速度。&lt;/p&gt;
-
 &lt;p&gt;在 shell 中分割字符串有多种方法，比如利用 awk、cut 工具，还有内置方法，虽然效果相同，但是执行效率差距较大，尤其在处理大数据量上更是显著。&lt;/p&gt;</description>
     </item>
     
@@ -129,7 +128,6 @@
       
       <guid>https://tisyang.github.io/post/2016-08-29-freescale-yocto-custom-linux-image/</guid>
       <description>&lt;p&gt;Yocto Project 是一个开源的协作软件，提供模板、工具和方法帮你创建定制的 Linux 系统和嵌入式产品，而无需关心硬件体系。适合嵌入式Linux开发人员使用。&lt;/p&gt;
-
 &lt;p&gt;下面来以 Freescale 的 i.MX6UL 开发板为例，详细叙述如何搭建 Yocto 环境以及 Linux 镜像的定制编译和烧录。&lt;/p&gt;</description>
     </item>
     
@@ -140,7 +138,6 @@
       
       <guid>https://tisyang.github.io/post/2016-05-27-bluetooth-serialport-with-32feet-net-library/</guid>
       <description>&lt;p&gt;Windows 上的蓝牙编程并不方便，由于操作系统并没有提供统一的蓝牙操作接口，通常是由各个蓝牙设备商提供蓝牙栈，所以要想编程兼容这些不同的厂商蓝牙是一个问题。好在有个软件项目 &lt;a href=&#34;http://32feet.codeplex.com/&#34; title=&#34;32feet.NET&#34;&gt;32feet.NET&lt;/a&gt; 针对主流蓝牙协议栈提供了支持，包括 Microsfot, Widcomm, BlueSolei 等，同时还支持红外传输协议。&lt;/p&gt;
-
 &lt;p&gt;蓝牙虚拟串口是一个较为常见的需求，为了兼容已有使用串口设备的程序，需要将蓝牙连接转为系统上的虚拟串口，然后提供给其他程序或库使用。&lt;a href=&#34;http://32feet.codeplex.com/&#34; title=&#34;32feet.NET&#34;&gt;32feet.NET&lt;/a&gt; 对此也提供了支持。&lt;/p&gt;</description>
     </item>
     
@@ -151,7 +148,6 @@
       
       <guid>https://tisyang.github.io/post/2016-05-26-using-visual-studio-remote-debugger/</guid>
       <description>&lt;p&gt;远程调试适用于需要在本机调试在其他 Windows 设备上运行的程序，典型的比如调试 Surface 上的程序。&lt;/p&gt;
-
 &lt;p&gt;目标 Windows 主机不具备安装 Visual Studio 开发环境条件的，也可以用远程调试来进行调试。&lt;/p&gt;</description>
     </item>
     
@@ -162,9 +158,7 @@
       
       <guid>https://tisyang.github.io/post/2016-05-23-how-to-break-cs-uem-encrypt/</guid>
       <description>&lt;p&gt;背景不提，通过搜索能看到这篇文章的，请彼此保持同情。&lt;/p&gt;
-
 &lt;p&gt;中软统一终端这个软件通过网内文件加密存储，使用时自解密，保证一个局部网络的资料安全性，防止泄漏，主要用于密级文档、源代码和工程图纸的管控。&lt;/p&gt;
-
 &lt;p&gt;听起来很高大上，但是在文件加密解密这条策略链上，漏洞是很多的，在具体部署上，漏洞就更多了。下面介绍一下如何利用策略漏洞解密被加密的文件，这里主要针对源代码，其他文档类似。&lt;/p&gt;</description>
     </item>
     

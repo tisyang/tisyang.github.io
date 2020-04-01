@@ -24,7 +24,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.54.0 with even 4.0.0" />
+<meta name="generator" content="Hugo 0.68.3 with theme even" />
 
 
 <link rel="canonical" href="https://tisyang.github.io/post/2017-10-16-linux-shell-tips/" />
@@ -43,21 +43,17 @@
 <meta property="og:description" content="适用于桌面以及嵌入式 Linux 环境脚本编程。" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://tisyang.github.io/post/2017-10-16-linux-shell-tips/" />
-<meta property="article:published_time" content="2017-10-16T00:00:00&#43;00:00"/>
-<meta property="article:modified_time" content="2017-10-16T00:00:00&#43;00:00"/>
-
+<meta property="article:published_time" content="2017-10-16T00:00:00+00:00" />
+<meta property="article:modified_time" content="2017-10-16T00:00:00+00:00" />
 <meta itemprop="name" content="Linux Shell Tips">
 <meta itemprop="description" content="适用于桌面以及嵌入式 Linux 环境脚本编程。">
-
-
 <meta itemprop="datePublished" content="2017-10-16T00:00:00&#43;00:00" />
 <meta itemprop="dateModified" content="2017-10-16T00:00:00&#43;00:00" />
 <meta itemprop="wordCount" content="455">
 
 
 
-<meta itemprop="keywords" content="" />
-<meta name="twitter:card" content="summary"/>
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Linux Shell Tips"/>
 <meta name="twitter:description" content="适用于桌面以及嵌入式 Linux 环境脚本编程。"/>
 
@@ -131,37 +127,31 @@
   <h2 class="post-toc-title">Contents</h2>
   <div class="post-toc-content always-active">
     <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#1-串口操作">1. 串口操作</a></li>
-<li><a href="#2-数值操作">2. 数值操作</a></li>
-<li><a href="#3-字符串处理">3. 字符串处理</a></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#1-串口操作">1. 串口操作</a></li>
+    <li><a href="#2-数值操作">2. 数值操作</a></li>
+    <li><a href="#3-字符串处理">3. 字符串处理</a></li>
+  </ul>
 </nav>
   </div>
 </div>
     <div class="post-content">
       <p>适用于桌面以及嵌入式 Linux 环境脚本编程。</p>
-
 <h2 id="1-串口操作">1. 串口操作</h2>
-
 <p>配置串口模式（波特率 9600, 数据位 8 位，停止位 1 位，无校验）：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-bash" data-lang="bash">stty -F /dev/ttyS0 <span class="m">9600</span> cs8 -cstopb -parenb</code></pre></td></tr></table>
+<pre class="chroma"><code class="language-bash" data-lang="bash">stty -F /dev/ttyS0 <span class="m">9600</span> cs8 -cstopb -parenb
+</code></pre></td></tr></table>
 </div>
-</div>
-<p>具体可以通过 <code>man stty</code> 来了解其他配置。</p>
-
+</div><p>具体可以通过 <code>man stty</code> 来了解其他配置。</p>
 <p>按行读取串口文本：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -172,15 +162,14 @@
 <span class="k">do</span>
     <span class="c1"># do somehing with $line</span>
     <span class="nb">echo</span> <span class="s2">&#34;</span><span class="nv">$line</span><span class="s2">&#34;</span>
-<span class="k">done</span></code></pre></td></tr></table>
+<span class="k">done</span>
+</code></pre></td></tr></table>
 </div>
-</div>
-<h2 id="2-数值操作">2. 数值操作</h2>
-
+</div><h2 id="2-数值操作">2. 数值操作</h2>
 <p>整数变量累加可以参考以下示范：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -191,13 +180,13 @@
 <span class="nb">echo</span> <span class="nv">$count</span>     <span class="c1"># =&gt; 1</span>
 
 <span class="nb">let</span> <span class="nv">count</span><span class="o">+=</span><span class="m">1</span>
-<span class="nb">echo</span> <span class="nv">$count</span>     <span class="c1"># =&gt; 2</span></code></pre></td></tr></table>
+<span class="nb">echo</span> <span class="nv">$count</span>     <span class="c1"># =&gt; 2</span>
+</code></pre></td></tr></table>
 </div>
-</div>
-<p>计算平均数可以参考以下示范：</p>
+</div><p>计算平均数可以参考以下示范：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -226,30 +215,28 @@
 <span class="nb">echo</span> <span class="s2">&#34;</span><span class="nv">$data</span><span class="s2">&#34;</span> <span class="p">|</span> awk <span class="s1">&#39;{ c1+=$1; c2+=$2; c3+=$3 } END { printf &#34;sum=%d, %d, %d\navg=%f, %f, %f\n&#34;, c1, c2, c3, c1/NR, c2/NR, c3/NR}&#39;</span>
 
 <span class="c1"># =&gt; sum=154, 187, 140</span>
-<span class="c1">#    avg=51.333333, 62.333333, 46.666667</span></code></pre></td></tr></table>
+<span class="c1">#    avg=51.333333, 62.333333, 46.666667</span>
+</code></pre></td></tr></table>
 </div>
-</div>
-<h2 id="3-字符串处理">3. 字符串处理</h2>
-
+</div><h2 id="3-字符串处理">3. 字符串处理</h2>
 <p>字符串变量使用时尽量用双引号包含起来。</p>
-
 <p>去除空白符（Strip Whitespace)：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span></code></pre></td>
 <td class="lntd">
 <pre class="chroma"><code class="language-bash" data-lang="bash"><span class="nv">a</span><span class="o">=</span><span class="s2">&#34; ab cde fg &#34;</span>
 <span class="nv">a</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span> <span class="s2">&#34;</span><span class="nv">$a</span><span class="s2">&#34;</span> <span class="p">|</span> xargs<span class="k">)</span>
-<span class="nb">echo</span> <span class="s2">&#34;^</span><span class="nv">$a</span>$<span class="s2">&#34;</span>  <span class="c1"># =&gt; ^ab cde fg$</span></code></pre></td></tr></table>
+<span class="nb">echo</span> <span class="s2">&#34;^</span><span class="nv">$a</span>$<span class="s2">&#34;</span>  <span class="c1"># =&gt; ^ab cde fg$</span>
+</code></pre></td></tr></table>
 </div>
-</div>
-<p>字符串判断：</p>
+</div><p>字符串判断：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -312,12 +299,14 @@
 <span class="k">else</span>
         <span class="nb">echo</span> <span class="s2">&#34;Same&#34;</span>
 <span class="k">fi</span>
-<span class="c1"># =&gt; Same</span></code></pre></td></tr></table>
+<span class="c1"># =&gt; Same</span>
+</code></pre></td></tr></table>
 </div>
 </div>
     </div>
 
-    <footer class="post-footer">
+    
+<footer class="post-footer">
       
       <nav class="post-nav">
         <a class="prev" href="/post/2018-07-05-use-git-version-in-cmake-project/">
@@ -335,6 +324,10 @@
   </article>
         </div>
         
+
+  
+
+  
 
       </div>
     </main>

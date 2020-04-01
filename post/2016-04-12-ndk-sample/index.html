@@ -24,7 +24,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.54.0 with even 4.0.0" />
+<meta name="generator" content="Hugo 0.68.3 with theme even" />
 
 
 <link rel="canonical" href="https://tisyang.github.io/post/2016-04-12-ndk-sample/" />
@@ -43,21 +43,17 @@
 <meta property="og:description" content="本文通过编写一个算法类二进制库以及示例App应用来介绍NDK开发，重点是二进制库编写、编译以及自定义参数的传递。" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://tisyang.github.io/post/2016-04-12-ndk-sample/" />
-<meta property="article:published_time" content="2016-04-12T00:00:00&#43;00:00"/>
-<meta property="article:modified_time" content="2016-04-12T00:00:00&#43;00:00"/>
-
+<meta property="article:published_time" content="2016-04-12T00:00:00+00:00" />
+<meta property="article:modified_time" content="2016-04-12T00:00:00+00:00" />
 <meta itemprop="name" content="NDK 实例">
 <meta itemprop="description" content="本文通过编写一个算法类二进制库以及示例App应用来介绍NDK开发，重点是二进制库编写、编译以及自定义参数的传递。">
-
-
 <meta itemprop="datePublished" content="2016-04-12T00:00:00&#43;00:00" />
 <meta itemprop="dateModified" content="2016-04-12T00:00:00&#43;00:00" />
-<meta itemprop="wordCount" content="3880">
+<meta itemprop="wordCount" content="3881">
 
 
 
-<meta itemprop="keywords" content="" />
-<meta name="twitter:card" content="summary"/>
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="NDK 实例"/>
 <meta name="twitter:description" content="本文通过编写一个算法类二进制库以及示例App应用来介绍NDK开发，重点是二进制库编写、编译以及自定义参数的传递。"/>
 
@@ -131,35 +127,29 @@
   <h2 class="post-toc-title">Contents</h2>
   <div class="post-toc-content always-active">
     <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#1-java层接口定义">1. Java层接口定义</a></li>
-<li><a href="#2-so库c代码实现和编译">2. so库C代码实现和编译</a>
-<ul>
-<li><a href="#2-1-算法实现-algorithm">2.1 算法实现（<code>Algorithm</code>）</a></li>
-<li><a href="#2-2-jni-接口实现">2.2 JNI 接口实现</a></li>
-<li><a href="#2-3-编译-so-库">2.3 编译 so 库</a></li>
-</ul></li>
-<li><a href="#3-so-库的使用">3. so 库的使用</a></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#1-java层接口定义">1. Java层接口定义</a></li>
+    <li><a href="#2-so库c代码实现和编译">2. so库C代码实现和编译</a>
+      <ul>
+        <li><a href="#21-算法实现algorithm">2.1 算法实现（<code>Algorithm</code>）</a></li>
+        <li><a href="#22-jni-接口实现">2.2 JNI 接口实现</a></li>
+        <li><a href="#23-编译-so-库">2.3 编译 so 库</a></li>
+      </ul>
+    </li>
+    <li><a href="#3-so-库的使用">3. so 库的使用</a></li>
+  </ul>
 </nav>
   </div>
 </div>
     <div class="post-content">
       <p>本文通过编写一个算法类二进制库以及示例App应用来介绍NDK开发，重点是二进制库编写、编译以及自定义参数的传递。</p>
-
 <h2 id="1-java层接口定义">1. Java层接口定义</h2>
-
 <p>在做so库之前，需要首先设计约定库的接口，包括实现哪些功能，具体函数以及接口参数等等，这也是Java层调用所使用的接口。</p>
-
 <p>在这个例子中，我们准备实现一个算法库，其中实现2个函数，一个返回算法库版本号，另一个计算线段中点坐标，主要用来展示so库编写以及参数传递过程。如果有需要其他的接口实现，可以参照这两个函数来做。</p>
-
 <p>要实现的接口文件 <code>com/zhdgps/ts/TSMath.java</code>，其中 <code>tsmath</code> 是要实现的so库名字。</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -184,23 +174,22 @@
 	<span class="kd">public</span> <span class="kd">static</span> <span class="kd">native</span> <span class="n">String</span> <span class="nf">getVersion</span><span class="o">();</span>
 	<span class="cm">/* 计算两点连线中心点 */</span>
 	<span class="kd">public</span> <span class="kd">static</span> <span class="kd">native</span> <span class="n">TSCoord</span> <span class="nf">calcCenter</span><span class="o">(</span><span class="n">TSCoord</span> <span class="n">a</span><span class="o">,</span> <span class="n">TSCoord</span> <span class="n">b</span><span class="o">);</span>
-<span class="o">}</span></code></pre></td></tr></table>
+<span class="o">}</span>
+</code></pre></td></tr></table>
 </div>
-</div>
-<p><code>System.loadLibrary</code> 用来加载so库，<code>static</code> 表示这段代码要最先运行。</p>
-
+</div><p><code>System.loadLibrary</code> 用来加载so库，<code>static</code> 表示这段代码要最先运行。</p>
 <p>接口函数用 <code>native</code> 关键字修饰表明这是源生方法实现而不是 java 代码实现（JNI），在这里就是指在so库中实现的方法。</p>
-
 <p>同时辅助用的 <code>TSCoord</code> 定义文件 <code>com/zhdgps/ts/TSCoord.java</code>。</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span><span class="lnt">5
 </span><span class="lnt">6
 </span><span class="lnt">7
+</span><span class="lnt">8
 </span></code></pre></td>
 <td class="lntd">
 <pre class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">com.zhdgps.ts</span><span class="o">;</span>
@@ -209,29 +198,22 @@
 	<span class="kd">public</span> <span class="kt">double</span> <span class="n">N</span><span class="o">;</span>
 	<span class="kd">public</span> <span class="kt">double</span> <span class="n">E</span><span class="o">;</span>
 	<span class="kd">public</span> <span class="kt">double</span> <span class="n">Z</span><span class="o">;</span>
-<span class="o">}</span></code></pre></td></tr></table>
-</div>
-</div>
-<p>两个文件都放属于包 <code>com.zhdgps.ts</code> 。</p>
+<span class="o">}</span>
 
+</code></pre></td></tr></table>
+</div>
+</div><p>两个文件都放属于包 <code>com.zhdgps.ts</code> 。</p>
 <h2 id="2-so库c代码实现和编译">2. so库C代码实现和编译</h2>
-
 <p>完成库接口设计后，下面介绍如何用C来实现接口对应的功能。</p>
-
 <p>新建文件夹 <code>tsmath</code>，用于存放 so 库工程。在 <code>tsmath</code> 下新建子文件夹 <code>jni</code> （命名为<code>jni</code> 是 NDK 编译的需要）用于存放 so 库的源文件。</p>
-
 <p>在 <code>jni</code> 文件夹下新建文件 <code>tsmath.h</code>、<code>tsmath.c</code>、<code>algorithm.h</code>、<code>algorithm.c</code>、<code>Android.mk</code> 以及 <code>Application.mk</code> 文件。</p>
-
 <p>其中，<code>tsmath.h</code> 和 <code>tsmath.c</code> 是 so 库的实现文件，<code>algorithm.h</code> 和 <code>algorithm.c</code> 是实际算法实现，相对来说 <code>tsmath.c</code> 是 JNI 接口层，而 <code>algorithm.c</code> 则是实际的算法C代码。这样区分有助于代码逻辑分层，当然都写在 <code>tsmath.c</code> 中也是可行的。</p>
-
 <p><code>Android.mk</code> 和 <code>Application.mk</code> 是用于编译so库所需要的 <code>ndk-build</code> 脚本文件，后面会进行详细叙述。</p>
-
-<h3 id="2-1-算法实现-algorithm">2.1 算法实现（<code>Algorithm</code>）</h3>
-
+<h3 id="21-算法实现algorithm">2.1 算法实现（<code>Algorithm</code>）</h3>
 <p><code>Algorithm.h</code> 文件内容：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-c" data-lang="c"><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -280,13 +262,13 @@
 </span><span class="cp"></span><span class="p">}</span>
 <span class="cp">#endif
 </span><span class="cp"></span>
-<span class="cp">#endif</span></code></pre></td></tr></table>
+<span class="cp">#endif
+</span></code></pre></td></tr></table>
 </div>
-</div>
-<p>头文件主要声明了一个计算中点的函数以及参数结构体类型，实现文件 <code>Algorithm.c</code> 内容如下：</p>
+</div><p>头文件主要声明了一个计算中点的函数以及参数结构体类型，实现文件 <code>Algorithm.c</code> 内容如下：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-c" data-lang="c"><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -307,29 +289,21 @@
     <span class="n">result</span><span class="o">-&gt;</span><span class="n">Z</span> <span class="o">=</span> <span class="p">(</span><span class="n">a</span><span class="o">-&gt;</span><span class="n">Z</span> <span class="o">+</span> <span class="n">b</span><span class="o">-&gt;</span><span class="n">Z</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">;</span>
 
     <span class="k">return</span> <span class="n">TSALGO_NOERROR</span><span class="p">;</span>
-<span class="p">}</span></code></pre></td></tr></table>
+<span class="p">}</span>
+</code></pre></td></tr></table>
 </div>
-</div>
-<p>如果有其他要实现的算法，都可以在这个模块内实现。此模块将被 JNI 接口层调用。</p>
-
-<h3 id="2-2-jni-接口实现">2.2 JNI 接口实现</h3>
-
+</div><p>如果有其他要实现的算法，都可以在这个模块内实现。此模块将被 JNI 接口层调用。</p>
+<h3 id="22-jni-接口实现">2.2 JNI 接口实现</h3>
 <p>JNI 接口部分是 so 库的核心，用于在 Java 调用和实际的 C/C++ 调用之间充当中间层。JNI 的实现有两种方法，一种是静态注册，一种是动态注册。</p>
-
 <p>静态注册是指用 <code>javah</code> 工具来生成 C/C++ 头文件，获得正确的函数名。在运行时 JNI 按照指定规则的函数命名来调用对应的 C 函数。</p>
-
 <p>动态注册是指在动态库模块被加载的时候，模块注册的函数功能到 JVM 中。在对应函数被调用时，JVM会按照指定的注册函数名去调用实际的函数。</p>
-
 <p>静态注册生成的函数命名很长，而且如果要修改函数名，那么就要重新修改编译。静态注册的模块只有在被调用时才会被查找检查，如果函数命名有问题，会直接运行异常。</p>
-
 <p>动态注册在向 JVM 注册函数时，可以指定函数名，在编写时可以使用自定义的函数命名，如果需要修改维护，则只需要修改注册时的命名即可。</p>
-
 <p>NDK 推荐使用动态注册，在模块中定义 <code>JNI_OnLoad</code> 函数,此函数在模块被加载时（即<code>System.loadLibrary</code>）被调用，模块在此函数中注册所有函数。</p>
-
 <p>综上，我们要在模块中实现3个主要函数：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-c" data-lang="c"><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -342,15 +316,14 @@
 <span class="cm">/* 对应 TSMath.getVersion */</span>
 <span class="n">JNIEXPORT</span> <span class="n">jstring</span> <span class="n">JNICALL</span> <span class="nf">native_get_version</span><span class="p">(</span><span class="n">JNIEnv</span> <span class="o">*</span><span class="n">env</span><span class="p">,</span> <span class="n">jobject</span> <span class="n">thiz</span><span class="p">);</span>
 <span class="cm">/* 对应 TSMath.calcCenter */</span>
-<span class="n">JNIEXPORT</span> <span class="n">jobject</span> <span class="n">JNICALL</span> <span class="nf">native_calc_center</span><span class="p">(</span><span class="n">JNIEnv</span> <span class="o">*</span><span class="n">env</span><span class="p">,</span> <span class="n">jobject</span> <span class="n">thiz</span><span class="p">,</span> <span class="n">jobject</span> <span class="n">coorda</span><span class="p">,</span> <span class="n">jobject</span> <span class="n">coordb</span><span class="p">);</span></code></pre></td></tr></table>
+<span class="n">JNIEXPORT</span> <span class="n">jobject</span> <span class="n">JNICALL</span> <span class="nf">native_calc_center</span><span class="p">(</span><span class="n">JNIEnv</span> <span class="o">*</span><span class="n">env</span><span class="p">,</span> <span class="n">jobject</span> <span class="n">thiz</span><span class="p">,</span> <span class="n">jobject</span> <span class="n">coorda</span><span class="p">,</span> <span class="n">jobject</span> <span class="n">coordb</span><span class="p">);</span>
+</code></pre></td></tr></table>
 </div>
-</div>
-<p><code>native_get_version</code> 和 <code>native_calc_center</code> 即 <code>TSMath</code> 的 JNI 实现，函数参数和返回值也与之对应，每个函数的前两个参数 <code>JNIEnv *</code> 和 <code>jobject</code> 是 JNI 函数固定传入的参数。<code>jstring</code> 对应 Java 的 <code>String</code>，而自定义类对象均用 <code>jobject</code> 来对应，完整的 JNI 类型匹配可以参见 <a href="http://docs.oracle.com/javase/1.5.0/docs/guide/jni/spec/types.html#wp428">Primitive Types</a>.</p>
-
+</div><p><code>native_get_version</code> 和 <code>native_calc_center</code> 即 <code>TSMath</code> 的 JNI 实现，函数参数和返回值也与之对应，每个函数的前两个参数 <code>JNIEnv *</code> 和 <code>jobject</code> 是 JNI 函数固定传入的参数。<code>jstring</code> 对应 Java 的 <code>String</code>，而自定义类对象均用 <code>jobject</code> 来对应，完整的 JNI 类型匹配可以参见 <a href="http://docs.oracle.com/javase/1.5.0/docs/guide/jni/spec/types.html#wp428">Primitive Types</a>.</p>
 <p>要实现动态注册，我们需要编写注册方法：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-c" data-lang="c"><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -419,17 +392,15 @@
     <span class="cm">/* 指定要注册的类名 */</span>
     <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">classname</span> <span class="o">=</span> <span class="s">&#34;com/zhdgps/ts/TSMath&#34;</span><span class="p">;</span>
     <span class="k">return</span> <span class="n">register_navtive_methods</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">classname</span><span class="p">,</span> <span class="n">native_methods</span><span class="p">,</span> <span class="n">NATIVE_METHODS_COUNT</span><span class="p">);</span>
-<span class="p">}</span></code></pre></td></tr></table>
+<span class="p">}</span>
+</code></pre></td></tr></table>
 </div>
-</div>
-<p><code>JNINativeMethod</code> 是在 <code>&lt;jni.h&gt;</code> 中定义的结构体，用于存储要动态注册的函数信息。第一个成员是字符串，用以表示要注册的函数所使用的函数名。第二个成员是字符串，用以表示函数的参数和返回值接口(<code>Type Signatures</code>)，在这个字符串中，<code>&quot;()&quot;</code>内表示函数的参数类型，然后是函数的返回值类型，<code>&quot;()&quot;</code> 表示函数参数为空，而如果函数返回值为空，则用 <code>&quot;()V&quot;</code> 表示。 <code>&quot;Ljava/lang/String;&quot;</code> 表示为 <code>java.lang.String</code>，<code>&quot;Lxxx;&quot;</code> 是 <code>xxx</code> 类型的完整写法，包字段分隔用斜杠代替，比如 <code>&quot;Lcom/zhdgps/ts/TScoord;&quot;</code> 表示类型为 <code>com.zhdgps.ts.TSCoord</code> 。如果参数有多个，依次写出对应类型。Java 源生类型可以参考 <a href="http://docs.oracle.com/javase/1.5.0/docs/guide/jni/spec/types.html#wp16432">Type Signatures</a>.</p>
-
+</div><p><code>JNINativeMethod</code> 是在 <code>&lt;jni.h&gt;</code> 中定义的结构体，用于存储要动态注册的函数信息。第一个成员是字符串，用以表示要注册的函数所使用的函数名。第二个成员是字符串，用以表示函数的参数和返回值接口(<code>Type Signatures</code>)，在这个字符串中，<code>&quot;()&quot;</code>内表示函数的参数类型，然后是函数的返回值类型，<code>&quot;()&quot;</code> 表示函数参数为空，而如果函数返回值为空，则用 <code>&quot;()V&quot;</code> 表示。 <code>&quot;Ljava/lang/String;&quot;</code> 表示为 <code>java.lang.String</code>，<code>&quot;Lxxx;&quot;</code> 是 <code>xxx</code> 类型的完整写法，包字段分隔用斜杠代替，比如 <code>&quot;Lcom/zhdgps/ts/TScoord;&quot;</code> 表示类型为 <code>com.zhdgps.ts.TSCoord</code> 。如果参数有多个，依次写出对应类型。Java 源生类型可以参考 <a href="http://docs.oracle.com/javase/1.5.0/docs/guide/jni/spec/types.html#wp16432">Type Signatures</a>.</p>
 <p>在 <code>register_natives</code> 中，我们将这两个函数注册到了类 <code>com/zhgps/ts/TSmath</code> 中，这个类就是之前在 Java 层定义的 <code>com.zhdgps.ts.TSMath</code>。</p>
-
 <p>下面继续 <code>native_get_version</code> 和 <code>native_calc_center</code> 两个函数的实现</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-c" data-lang="c"><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -442,13 +413,13 @@
 <span class="n">JNIEXPORT</span> <span class="n">jstring</span> <span class="n">JNICALL</span> <span class="nf">native_get_version</span><span class="p">(</span><span class="n">JNIEnv</span> <span class="o">*</span><span class="n">env</span><span class="p">,</span> <span class="n">jobject</span> <span class="n">thiz</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="k">return</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">NewStringUTF</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">TSMATH_VERSION</span><span class="p">);</span>
-<span class="p">}</span></code></pre></td></tr></table>
+<span class="p">}</span>
+</code></pre></td></tr></table>
 </div>
-</div>
-<p><code>native_get_version</code> 比较简单，就返回一个版本文本字符串。这里需要注意的是，如果函数需要返回非ASCII的字符串，则不能直接使用 <code>NewStringUTF</code>，因为 JNI 使用了修改版的 UTF-8 编码，具体可以参考 <a href="http://docs.oracle.com/javase/1.5.0/docs/guide/jni/spec/types.html#wp16542">Modified UTF-8 Strings</a>.</p>
+</div><p><code>native_get_version</code> 比较简单，就返回一个版本文本字符串。这里需要注意的是，如果函数需要返回非ASCII的字符串，则不能直接使用 <code>NewStringUTF</code>，因为 JNI 使用了修改版的 UTF-8 编码，具体可以参考 <a href="http://docs.oracle.com/javase/1.5.0/docs/guide/jni/spec/types.html#wp16542">Modified UTF-8 Strings</a>.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-c" data-lang="c"><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -595,23 +566,18 @@
     <span class="n">helper_set_tscoord</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">c</span><span class="p">);</span>
 
     <span class="k">return</span> <span class="n">obj</span><span class="p">;</span>
-<span class="p">}</span></code></pre></td></tr></table>
+<span class="p">}</span>
+</code></pre></td></tr></table>
 </div>
-</div>
-<p>我们定义了一个结构体 <code>struct TSCoordJNIInfo</code> 用于保存 Java 类 <code>com.zhdgps.ts.TSCoord</code> 保存在 JVM 中的信息，包括类句柄、各字段ID（N，E，Z）以及构造函数ID。这些信息到后面获取/设置类对象字段时会用到，用全局结构体保存这些信息是为了效率，对于 <code>FieldID</code> 和 <code>MethodID</code> 来说，一旦类初始化后就不再变化，如果每次需要获取类对象信息时都去调用 <code>GetFieldID</code> 和 <code>GetMethodID</code> ，会给 JVM 带来负担，而且代码也有冗余。这里需要注意的是类句柄，对于 ICS4.0 以后的安卓系统，内存中的句柄可能会因为内存整理而移动，这意味着类句柄是会变化的，需要使用函数 <code>NewGlobalRef</code> 来保证句柄不变。</p>
-
+</div><p>我们定义了一个结构体 <code>struct TSCoordJNIInfo</code> 用于保存 Java 类 <code>com.zhdgps.ts.TSCoord</code> 保存在 JVM 中的信息，包括类句柄、各字段ID（N，E，Z）以及构造函数ID。这些信息到后面获取/设置类对象字段时会用到，用全局结构体保存这些信息是为了效率，对于 <code>FieldID</code> 和 <code>MethodID</code> 来说，一旦类初始化后就不再变化，如果每次需要获取类对象信息时都去调用 <code>GetFieldID</code> 和 <code>GetMethodID</code> ，会给 JVM 带来负担，而且代码也有冗余。这里需要注意的是类句柄，对于 ICS4.0 以后的安卓系统，内存中的句柄可能会因为内存整理而移动，这意味着类句柄是会变化的，需要使用函数 <code>NewGlobalRef</code> 来保证句柄不变。</p>
 <p>函数 <code>helper_init_tscoord_jniinfo</code> 用于获取类信息，这个函数需要在 <code>JNI_OnLoad</code> 中调用，保证在函数被调用前初始化全局信息。</p>
-
 <p>函数 <code>helper_new_tscoord</code>、 <code>helper_get_tscoord</code> 和 <code>helper_set_tscoord</code> 是定义的三个辅助函数，用于新建 <code>TSCoord</code> Java 对象、<code>TSCoord</code> Java 对象与 C 结构体互相转换。</p>
-
 <p>如上，要获取一个类对象信息，依次需要使用 <code>FindClass</code> 来获取类句柄，然后通过句柄来获取各个字段的 <code>FieldID</code>，之后就可以通过这些字段 ID 来获取实际的值。<code>com.zhdgps.ts.TSCoord</code> 字段均为 <code>double</code> 所以使用 <code>GetDoubleField</code> 来获取字段值，如果有其他类型，可以以此类推。</p>
-
 <p>函数 <code>native_calc_center</code> 的逻辑就比较简单了，通过转换对象，然后转为调用 <code>Algorithm</code> 中的算法，然后再将结果转换为 Java 对象返回。</p>
-
 <p>函数注册的是在 <code>JNI_OnLoad</code> 函数中，此函数会在 so 文件被加载时由 Java 虚拟机调用。</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-c" data-lang="c"><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -664,15 +630,14 @@
 
     <span class="n">result</span> <span class="o">=</span> <span class="n">JNI_VERSION_1_4</span><span class="p">;</span>
     <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
-<span class="p">}</span></code></pre></td></tr></table>
+<span class="p">}</span>
+</code></pre></td></tr></table>
 </div>
-</div>
-<h3 id="2-3-编译-so-库">2.3 编译 so 库</h3>
-
+</div><h3 id="23-编译-so-库">2.3 编译 so 库</h3>
 <p>编辑 <code>Android.mk</code> 文件</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-makefile" data-lang="makefile"><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -689,7 +654,7 @@
 </span></code></pre></td>
 <td class="lntd">
 <pre class="chroma"><code class="language-makefile" data-lang="makefile"><span class="nv">LOCAL_PATH</span> <span class="o">:=</span> <span class="k">$(</span>call my-dir<span class="k">)</span>
-<span class="err">include</span> <span class="k">$(</span>CLEAR_VARS<span class="k">)</span>
+<span class="err">include</span> <span class="k">$(</span><span class="nv">CLEAR_VARS</span><span class="k">)</span>
 
 <span class="c"># 架构
 </span><span class="c"></span><span class="nv">LOCAL_ARM_MODE</span> <span class="o">:=</span> arm
@@ -701,38 +666,29 @@
 </span><span class="c"></span><span class="nv">LOCAL_LDLIBS</span> <span class="o">:=</span> -llog
 
 <span class="c"># 编译为动态库
-</span><span class="c"></span><span class="err">include</span> <span class="k">$(</span>BUILD_SHARED_LIBRARY<span class="k">)</span>
+</span><span class="c"></span><span class="err">include</span> <span class="k">$(</span><span class="nv">BUILD_SHARED_LIBRARY</span><span class="k">)</span>
 </code></pre></td></tr></table>
 </div>
-</div>
-<p>这个文件是用于 so 模块的编译，其中模块名为 <code>tsmath</code>，这样编译出的文件会自动加前后缀，输出为 <code>libtsmath.so</code>。源文件部分加上项目使用的所有 C 文件，头文件不必加入其中。如果有依赖的安卓库，则加到 <code>LOCAL_LDLIBS</code> 链接部分。</p>
-
+</div><p>这个文件是用于 so 模块的编译，其中模块名为 <code>tsmath</code>，这样编译出的文件会自动加前后缀，输出为 <code>libtsmath.so</code>。源文件部分加上项目使用的所有 C 文件，头文件不必加入其中。如果有依赖的安卓库，则加到 <code>LOCAL_LDLIBS</code> 链接部分。</p>
 <p>编辑 <code>Application.mk</code> 文件</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-makefile" data-lang="makefile"><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
 <pre class="chroma"><code class="language-makefile" data-lang="makefile"><span class="nv">APP_OPTIM</span> <span class="o">:=</span> release
 </code></pre></td></tr></table>
 </div>
-</div>
-<p>这里指定生成 release 版本的 so 库。如果这里如果需要生成其他平台库，则需要设置 <code>APP_ABI</code> 字段。比如要生成全平台，则添加一句 <code>APP_ABI := all</code>，这样会同时生成其他平台（x86 等）。</p>
-
+</div><p>这里指定生成 release 版本的 so 库。如果这里如果需要生成其他平台库，则需要设置 <code>APP_ABI</code> 字段。比如要生成全平台，则添加一句 <code>APP_ABI := all</code>，这样会同时生成其他平台（x86 等）。</p>
 <p>下载 NDK ，完成安装并设置好系统 <code>Path</code> 变量。下载地址 <a href="http://developer.android.com/ndk/index.html">Android NDK</a>.</p>
-
 <p>在 <code>jni</code> 上一级目录 <code>tsmath</code> 下打开命令行，输入命令 <code>ndk-build</code> 进行编译，编译完成后的 so 文件自动会保存到 <code>libs</code> 目录下。</p>
-
 <h2 id="3-so-库的使用">3. so 库的使用</h2>
-
 <p>下面来新建一个 Android 项目来测试一下 so 库。</p>
-
 <p>使用 Android Studio 新建一个 Hello World 项目，这里可以设置项目命名空间为 <code>com.zhdgps.ts</code> 来方便后面的测试。在项目文件夹的 <code>app/src/main</code> 目录下，新建文件夹 <code>jniLibs</code>，然后复制 <code>tsmath/libs</code> 目录下的编译输出到该文件夹中，注意保留 so 库的目录结构，比如 arm 架构编译的为 <code>jniLibs/armeabi/libtsmath.so</code>。将 <code>TSCoord.java</code> 和 <code>TSMath.java</code> 文件复制到 <code>app/src/main/java/com/zhdgps/ts</code> 目录下。Android Studi 会自动将添加的文件加入到工程中。</p>
-
 <p>修改 <code>MainActivity.java</code> 文件， 在 <code>onCreate</code> 中添加测试代码</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -771,15 +727,15 @@
 				<span class="n">c</span><span class="o">.</span><span class="na">N</span><span class="o">,</span> <span class="n">c</span><span class="o">.</span><span class="na">E</span><span class="o">,</span> <span class="n">c</span><span class="o">.</span><span class="na">Z</span><span class="o">);</span>
 
 <span class="n">TextView</span> <span class="n">view</span> <span class="o">=</span> <span class="o">(</span><span class="n">TextView</span><span class="o">)</span><span class="n">findViewById</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">message</span><span class="o">);</span>
-<span class="n">view</span><span class="o">.</span><span class="na">setText</span><span class="o">(</span><span class="n">output</span><span class="o">);</span></code></pre></td></tr></table>
+<span class="n">view</span><span class="o">.</span><span class="na">setText</span><span class="o">(</span><span class="n">output</span><span class="o">);</span>
+</code></pre></td></tr></table>
 </div>
-</div>
-<p>这里测试了函数 <code>TSMath.calcCenter</code>。编译项目并运行，就可以看到结果了。</p>
-
+</div><p>这里测试了函数 <code>TSMath.calcCenter</code>。编译项目并运行，就可以看到结果了。</p>
 <p>源码可以点击这里<a href="/download/ndk_sample.zip">下载</a></p>
     </div>
 
-    <footer class="post-footer">
+    
+<footer class="post-footer">
       
       <nav class="post-nav">
         <a class="prev" href="/post/2016-04-28-add-exe-to-path/">
@@ -797,6 +753,10 @@
   </article>
         </div>
         
+
+  
+
+  
 
       </div>
     </main>

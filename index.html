@@ -23,7 +23,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.54.0 with even 4.0.0" />
+<meta name="generator" content="Hugo 0.68.3 with theme even" />
 
 
 <link rel="canonical" href="https://tisyang.github.io/" />
@@ -44,13 +44,9 @@
 <meta property="og:description" content="" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://tisyang.github.io/" />
-
-<meta property="og:updated_time" content="2020-01-15T00:00:00&#43;00:00"/>
-
+<meta property="og:updated_time" content="2020-04-01T00:00:00+00:00" />
 <meta itemprop="name" content="碎片">
-<meta itemprop="description" content="">
-
-<meta name="twitter:card" content="summary"/>
+<meta itemprop="description" content=""><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="碎片"/>
 <meta name="twitter:description" content=""/>
 
@@ -111,6 +107,25 @@
           <section id="posts" class="posts">
     <article class="post">
   <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/post/2020-04-01-cors-relay-opensource/">CORS 中继程序</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2020-04-01 </span>
+      
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      <p>随着 CORS 全国一张网的运行，类似千寻这样的网络差分在实际运用中越来越普遍。这里开源一个可以中继重分发已有 CORS 服务的程序 <a href="https://github.com/tisyang/cors-relay">cors-relay</a>.</p>
+    </div>
+    <div class="read-more">
+      <a href="/post/2020-04-01-cors-relay-opensource/" class="read-more-link">Read more...</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
     <h1 class="post-title"><a class="post-link" href="/post/2020-01-15-linux-uefi-boot-on-usb-drive/">U盘Linux系统在任何PC上启动</a></h1>
     <div class="post-meta">
       <span class="post-time"> 2020-01-15 </span>
@@ -121,11 +136,10 @@
   <div class="post-content">
     <div class="post-summary">
       <p>将系统安装在U盘中随身携带使用已经很容易了，比如 Windows 就有 Windows To Go。将系统装在U盘上需要一个寿命长久的U盘，而且随机读写性能要强。</p>
-
 <p>Linux 发行版都提供 Live ISO 镜像，也可以将系统直接装载 U盘上，但很多时候安装后的U盘可以在安装的 PC 上启动，换一个 PC 就无法启动了。这篇文章就讲述如何解决其他 PC 上启动的问题。</p>
     </div>
     <div class="read-more">
-      <a href="/post/2020-01-15-linux-uefi-boot-on-usb-drive/" class="read-more-link">Read more..</a>
+      <a href="/post/2020-01-15-linux-uefi-boot-on-usb-drive/" class="read-more-link">Read more...</a>
     </div>
   </div>
 </article>
@@ -142,11 +156,10 @@
   <div class="post-content">
     <div class="post-summary">
       <p>Ntripcaster 是测绘领域GNSS相关的服务器软件，服务于差分GNSS测量、RTK测量等高精度测量测绘。</p>
-
 <p>这里开源一个基于 <a href="http://libev.schmorp.de/">libev</a>，用 C 实现的简单 ntripcaster 服务器。</p>
     </div>
     <div class="read-more">
-      <a href="/post/2019-08-08-opensource-ntripcaster/" class="read-more-link">Read more..</a>
+      <a href="/post/2019-08-08-opensource-ntripcaster/" class="read-more-link">Read more...</a>
     </div>
   </div>
 </article>
@@ -164,11 +177,10 @@
     <div class="post-summary">
       <p>LCM (<a href="https://lcm-proj.github.io/">Lightweight Communications and Marshalling</a>)是一个
 基于 UDP 网络的消息传递库，适合高带宽和低延迟的通信需求，模式为发布/订阅。</p>
-
 <p>本文讲述如何交叉编译 LCM 库到 arm linux上。</p>
     </div>
     <div class="read-more">
-      <a href="/post/2019-02-27-cross-compile-lcm-library/" class="read-more-link">Read more..</a>
+      <a href="/post/2019-02-27-cross-compile-lcm-library/" class="read-more-link">Read more...</a>
     </div>
   </div>
 </article>
@@ -185,11 +197,10 @@
   <div class="post-content">
     <div class="post-summary">
       <p><a href="https://github.com/nanomsg/nng">NNG/nanomsg</a> 是最近项目上使用到的一个通信库，用来实现进程间过程调用和线程间通信，很是方便。</p>
-
 <p>NNG 是 nanomsg 的继任版本，而 nanomsg 则是流行的 <a href="http://zeromq.org/">ZMQ</a> 的 C 重写版。</p>
     </div>
     <div class="read-more">
-      <a href="/post/2019-02-22-think-about-nng-library/" class="read-more-link">Read more..</a>
+      <a href="/post/2019-02-22-think-about-nng-library/" class="read-more-link">Read more...</a>
     </div>
   </div>
 </article>
@@ -206,11 +217,10 @@
   <div class="post-content">
     <div class="post-summary">
       <p>本文给出一个 Python tkinter GUI 程序中调用 shell 脚本的代码示例，在 GUI 的一个文本框中会不断输出脚本的标准输出和标准错误且不会阻塞 GUI 窗体事件响应，同时也会在脚本执行完毕后根据状态（exit code）弹出提示框，如果在脚本运行中关闭窗口，会弹出提示并中断脚本的执行。</p>
-
 <p>这个样例很适合编写一些提供给非技术人员使用的小工具。</p>
     </div>
     <div class="read-more">
-      <a href="/post/2018-07-25-call-shell-scripts-in-python-tkinter/" class="read-more-link">Read more..</a>
+      <a href="/post/2018-07-25-call-shell-scripts-in-python-tkinter/" class="read-more-link">Read more...</a>
     </div>
   </div>
 </article>
@@ -229,26 +239,7 @@
       <p>为了便于自动化版本管理，在C\C++项目中通常会考虑使用 Git 标识的版本作为程序版本号，本文介绍如何在 CMake 构建的项目中加入此项功能支持。</p>
     </div>
     <div class="read-more">
-      <a href="/post/2018-07-05-use-git-version-in-cmake-project/" class="read-more-link">Read more..</a>
-    </div>
-  </div>
-</article>
-
-    <article class="post">
-  <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="/post/2017-10-16-linux-shell-tips/">Linux Shell Tips</a></h1>
-    <div class="post-meta">
-      <span class="post-time"> 2017-10-16 </span>
-      
-    </div>
-  </header>
-  
-  <div class="post-content">
-    <div class="post-summary">
-      <p>适用于桌面以及嵌入式 Linux 环境脚本编程。</p>
-    </div>
-    <div class="read-more">
-      <a href="/post/2017-10-16-linux-shell-tips/" class="read-more-link">Read more..</a>
+      <a href="/post/2018-07-05-use-git-version-in-cmake-project/" class="read-more-link">Read more...</a>
     </div>
   </div>
 </article>
