@@ -6,10 +6,19 @@
     <description>Recent content on 碎片</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Wed, 01 Apr 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 01 May 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://tisyang.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Nuklear 界面库使用</title>
+      <link>https://tisyang.github.io/post/2020-05-01-nuklear-gui/</link>
+      <pubDate>Fri, 01 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://tisyang.github.io/post/2020-05-01-nuklear-gui/</guid>
+      <description>&lt;p&gt;&lt;a href=&#34;https://github.com/vurtun/nuklear/&#34;&gt;Nuklear&lt;/a&gt; 是一个 C 编写的、只有头文件的 GUI 界面库，也是 imgui 类的界面实现工具，支持多种渲染后端，包括 gdi/gdi+/D3D/X11/Xft/SDL/opengl 等，特别适合跨平台和工具软件的界面实现。&lt;/p&gt;</description>
+    </item>
     
     <item>
       <title>CORS 中继程序</title>
