@@ -133,7 +133,7 @@
       <p><a href="https://github.com/vurtun/nuklear/">Nuklear</a> 是一个 C 编写的、只有头文件的 GUI 界面库，也是 imgui 类的界面实现工具，支持多种渲染后端，包括 gdi/gdi+/D3D/X11/Xft/SDL/opengl 等，特别适合跨平台和工具软件的界面实现。</p>
 <p>Nuklear 其实核心是实现了基于2D绘图的界面控件绘制以及交互事件处理，而底层的渲染和用户操作事件处理，则由使用的后端来实现。Nuklear 实现了大部分常用控件，包括 label、button、radio、checkbox、edit、slider、chart 等，但没有提供常用对话框比如 MessageBox 和 FileDialog（毕竟控件都只是绘制）。</p>
 <p>下图是一个样例代码实现的界面，源码托管在 <a href="https://github.com/tisyang/nuklear_demo">GitHub</a> 上。其中使用了 <a href="https://sourceforge.net/projects/tinyfiledialogs/">tinyfiledialogs</a> 来实 MessageBox 和 FileDialog 对话框功能。</p>
-<p><img src="https://github.com/tisyang/nuklear_demo/raw/master/nuklear_demo.gif" alt="Nuklear Demo"></p>
+<p><img src="/image/nuklear_demo.gif" alt="Nuklear Demo"></p>
 <p>Nuklear 的文档都包含在头文件里，接口和样例齐全，WIKI 里也有部分控件的使用样例代码，这里说一些使用时的注意点：</p>
 <ol>
 <li>Nuklear 的界面在每一帧中都会重新绘制，所以没有其他界面库的事件循环和回调，通常实现一些功能需要在代码里保存一些状态。</li>
