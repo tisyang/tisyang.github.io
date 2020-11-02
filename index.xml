@@ -18,15 +18,6 @@
     </item>
     
     <item>
-      <title>利用 CMake 在程序构建中嵌入文件资源</title>
-      <link>https://tisyang.github.io/draft-cmake-embed-file-data/</link>
-      <pubDate>Tue, 27 Oct 2020 00:00:00 +0000</pubDate>
-      
-      <guid>https://tisyang.github.io/draft-cmake-embed-file-data/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>CMake 中使用 protobuf/protobuf-c</title>
       <link>https://tisyang.github.io/post/2020-10-05-cmake-protobuf/</link>
       <pubDate>Mon, 05 Oct 2020 00:00:00 +0000</pubDate>
