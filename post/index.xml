@@ -6,14 +6,24 @@
     <description>Recent content in Posts on 碎片</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Mon, 05 Oct 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://tisyang.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 02 Nov 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://tisyang.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Linux To Go 系统优化</title>
+      <link>https://tisyang.github.io/post/2020-11-02-tuning-linux-to-go/</link>
+      <pubDate>Mon, 02 Nov 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://tisyang.github.io/post/2020-11-02-tuning-linux-to-go/</guid>
+      <description>&lt;p&gt;本文主要讲述如何优化配置 U 盘上安装的 Debian/Linux 系统，使其适配各种硬件主机并优化 U 盘上性能。&lt;/p&gt;
+&lt;p&gt;在高速 U 盘上安装 Linux 系统随身携带使用是很方便的事情，这跟 LiveCD 模式不同，所有的系统配置和文件都是随盘保存，不会随着重启重置，也不会因为更换机器而产生差异。&lt;/p&gt;</description>
+    </item>
+    
     <item>
       <title>CMake 中使用 protobuf/protobuf-c</title>
       <link>https://tisyang.github.io/post/2020-10-05-cmake-protobuf/</link>
       <pubDate>Mon, 05 Oct 2020 00:00:00 +0000</pubDate>
       
       <guid>https://tisyang.github.io/post/2020-10-05-cmake-protobuf/</guid>
-      <description>本文主要提供一种在 C\C++ 项目中嵌入 Protobuf/Protobuf-C proto 源文件进行编译的应用方法。 Protobuf 的 proto 源文件在 C\C++ 项目构建需要首先通过 protoc 工具生成对应的 C++ 源码文件，然后参与编译过程</description>
+      <description>&lt;p&gt;本文主要提供一种在 C\C++ 项目中嵌入 Protobuf/Protobuf-C proto 源文件进行编译的应用方法。&lt;/p&gt;</description>
     </item>
     
     <item>

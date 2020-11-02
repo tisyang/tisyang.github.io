@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Linux To Go 系统优化 - 碎片</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="TyK" /><meta name="description" content="本文主要讲述如何优化配置 U 盘上安装的 Debian/Linux 系统，使其适配各种硬件主机并优化 U 盘上性能。
+在高速 U 盘上安装 Linux 系统随身携带使用是很方便的事情，这跟 LiveCD 模式不同，所有的系统配置和文件都是随盘保存，不会随着重启重置，也不会因为更换机器而产生差异。
+" /><meta name="keywords" content="程序员, 博客, blog, programming" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.77.0 with theme even" />
+
+
+<link rel="canonical" href="https://tisyang.github.io/post/2020-11-02-tuning-linux-to-go/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.c7bc1becf36bcf6a9ebd25d2947e43a2eb745ddb0c9a32b43126fd7fa460c351.css" rel="stylesheet">
+<link href="/lib/fancybox/jquery.fancybox-3.1.20.min.css" rel="stylesheet">
+
+
+<meta property="og:title" content="Linux To Go 系统优化" />
+<meta property="og:description" content="本文主要讲述如何优化配置 U 盘上安装的 Debian/Linux 系统，使其适配各种硬件主机并优化 U 盘上性能。
+在高速 U 盘上安装 Linux 系统随身携带使用是很方便的事情，这跟 LiveCD 模式不同，所有的系统配置和文件都是随盘保存，不会随着重启重置，也不会因为更换机器而产生差异。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://tisyang.github.io/post/2020-11-02-tuning-linux-to-go/" />
+<meta property="article:published_time" content="2020-11-02T00:00:00+00:00" />
+<meta property="article:modified_time" content="2020-11-02T00:00:00+00:00" />
+<meta itemprop="name" content="Linux To Go 系统优化">
+<meta itemprop="description" content="本文主要讲述如何优化配置 U 盘上安装的 Debian/Linux 系统，使其适配各种硬件主机并优化 U 盘上性能。
+在高速 U 盘上安装 Linux 系统随身携带使用是很方便的事情，这跟 LiveCD 模式不同，所有的系统配置和文件都是随盘保存，不会随着重启重置，也不会因为更换机器而产生差异。">
+<meta itemprop="datePublished" content="2020-11-02T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2020-11-02T00:00:00+00:00" />
+<meta itemprop="wordCount" content="1204">
+
+
+
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Linux To Go 系统优化"/>
+<meta name="twitter:description" content="本文主要讲述如何优化配置 U 盘上安装的 Debian/Linux 系统，使其适配各种硬件主机并优化 U 盘上性能。
+在高速 U 盘上安装 Linux 系统随身携带使用是很方便的事情，这跟 LiveCD 模式不同，所有的系统配置和文件都是随盘保存，不会随着重启重置，也不会因为更换机器而产生差异。"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">碎片</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/index.xml">
+        <li class="mobile-menu-item">RSS</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">碎片</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/index.xml">RSS</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Linux To Go 系统优化</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2020-11-02 </span>
+        
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#硬件及系统选择">硬件及系统选择</a></li>
+    <li><a href="#分区及挂载优化">分区及挂载优化</a></li>
+    <li><a href="#源及驱动安装">源及驱动安装</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>本文主要讲述如何优化配置 U 盘上安装的 Debian/Linux 系统，使其适配各种硬件主机并优化 U 盘上性能。</p>
+<p>在高速 U 盘上安装 Linux 系统随身携带使用是很方便的事情，这跟 LiveCD 模式不同，所有的系统配置和文件都是随盘保存，不会随着重启重置，也不会因为更换机器而产生差异。</p>
+<h2 id="硬件及系统选择">硬件及系统选择</h2>
+<p>U 盘硬件直接影响系统性能，主要影响指标为容量以及主控性能。</p>
+<p>建议使用 U 盘容量大于等于 128G，不管是文件系统大小还是从用户数据考量，过小的容量很容易造成磁盘满载，而 U 盘满载会导致 IO 等待 GC 处理而卡顿，影响体验和 U 盘寿命。</p>
+<p>而 U 盘主控同样影响，尤其是主控的 4K 随机读写性能。市面上大多数 U 盘都是连续读写速度还不错，但是小文件 4K 性能很渣，而操作系统大多数都是受制于 4K 读写性能。这里推荐三星的三款 U 盘，Bar Plus，Fit Plus，Duo Plus，这三款 4K 性能都很优异（4K IO &gt; 10MB/s）。</p>
+<p>系统镜像方面，推荐使用最新内核 (5.6 以上）的系统，这样可以支持最新的硬件平台而保证在各个硬件上启动，而且新的内核已知问题更少。这里推荐使用 Debian testing（bullseye），镜像建议使用附带非自由驱动的 <a href="https://cdimage.debian.org/cdimage/unofficial/non-free/images-including-firmware/weekly-builds/amd64/iso-dvd/firmware-testing-amd64-DVD-1.iso">firmware-debian-testing.dvd</a> DVR 镜像。</p>
+<h2 id="分区及挂载优化">分区及挂载优化</h2>
+<p>U 盘相对于 SSD，存在天然的短板（读写性能差，没有磨损平衡等），所以选择合适的文件系统并适当配置，可以提升不少性能和寿命优化。</p>
+<p>本文推荐 U 盘系统将根 <code>/</code> 和用户目录 <code>/home</code> 独立分区，并且采用 <code>btrfs</code> 文件系统。独立分区可以后期更换系统而保留用户文件数据，使用 <code>btrfs</code> 可以获得一些先进的文件系统特性，但是使用 <code>btrfs</code> 文件系统可能存在不稳定的情况，所以推荐安装的系统都尽量使用最新的内核（越新的内核中 <code>btrfs</code> 已知问题越少）。</p>
+<p>在安装完系统后，建议修改 <code>/etc/fstab</code> 中 <code>btrfs</code> 文件系统的挂载参数如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">defaults,noatime,compress<span class="o">=</span>lzo,ssd_spread,autodefrag
+</code></pre></td></tr></table>
+</div>
+</div><p>其中：</p>
+<ul>
+<li><code>noatime</code>. 默认为 <code>relatime</code>，每次读取文件会更新文件访问时间而增加 IO，修改为 <code>noatime</code> 后可以大幅提升文件系统性能。</li>
+<li><code>compress=lzo</code>. 启用文件系统透明压缩（lzo 算法），可以缩小文件系统占用磁盘空间（在 <code>/</code> 上大概可以获得 30% 压缩，在 <code>/home</code> 上大约可以获得 20% 的压缩），提升 IO 吞吐量（因为压缩），而代价仅略微增加 CPU 消耗（<code>btrfs</code>压缩算法有 3 种，默认为<code>zlib</code>，压缩效果好，但是占用 CPU 高，<code>lzo</code>压缩快，CPU 占用低，<code>zstd</code> 在两者之间，但是 grub 目前还不支持 <code>zstd</code> 压缩 ）。</li>
+<li><code>ssd_spread</code>. 启用 <code>btrfs</code> 为低速 SSD 设备的优化策略。</li>
+<li><code>autodefrag</code>. 启用在线整理，可以后台自动优化文件系统布局。</li>
+</ul>
+<p>需要注意的是，在系统安装时，默认 <code>btrfs</code> 是不激活透明压缩的，在修改 <code>/etc/fstab</code> 后，透明压缩也只对新生成的文件生效，想要对已有文件进行压缩处理，需要执行如下指令：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">sudo btrfs filesystem defragment -v -r /
+sudo btrfs filesystem defragment -v -r /home/
+</code></pre></td></tr></table>
+</div>
+</div><p>想要粗略知道 <code>btrfs</code> 文件系统大小和占用磁盘大小，可以执行如下指令：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">sudo btrfs filesystem show /
+sudo btrfs filesystem show /home
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="源及驱动安装">源及驱动安装</h2>
+<p>针对 Debian testing 系统的更新源建议使用清华大学开源镜像站的源（国内）：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># /etc/apt/sources.list</span>
+deb http://mirrors.tuna.tsinghua.edu.cn/debian/ testing main contrib non-free
+<span class="c1"># deb-src http://mirrors.tuna.tsinghua.edu.cn/debian/ testing main contrib non-free</span>
+deb http://mirrors.tuna.tsinghua.edu.cn/debian/ testing-updates main contrib non-free
+<span class="c1"># deb-src http://mirrors.tuna.tsinghua.edu.cn/debian/ testing-updates main contrib non-free</span>
+deb http://mirrors.tuna.tsinghua.edu.cn/debian-security testing-security main
+<span class="c1"># deb-src http://mirrors.tuna.tsinghua.edu.cn/debian-security testing-security main</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>建议在系统中安装如下额外驱动包，以适配广泛的平台硬件：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">sudo apt-get install  <span class="se">\
+</span><span class="se"></span>        firmware-amd-graphics <span class="se">\
+</span><span class="se"></span>        firmware-brcm80211 <span class="se">\
+</span><span class="se"></span>        firmware-iwlwifi <span class="se">\
+</span><span class="se"></span>        firmware-misc-nonfree <span class="se">\
+</span><span class="se"></span>        firmware-realtek
+</code></pre></td></tr></table>
+</div>
+</div>
+    </div>
+
+    
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        
+        <a class="next" href="/post/2020-10-05-cmake-protobuf/">
+            <span class="next-text nav-default">CMake 中使用 protobuf/protobuf-c</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="https://github.com/tisyang" class="iconfont icon-github" title="github"></a>
+  <a href="https://tisyang.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2016 - 
+    2020<span class="heart"><i class="iconfont icon-heart"></i></span><span>TyK</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  <script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  <script type="text/javascript" src="/lib/fancybox/jquery.fancybox-3.1.20.min.js"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.c12618f9a600c40bd024996677e951e64d3487006775aeb22e200c990006c5c7.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>
