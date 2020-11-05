@@ -148,7 +148,7 @@
 <p>U 盘硬件直接影响系统性能，主要影响指标为容量以及主控性能。</p>
 <p>建议使用 U 盘容量大于等于 128G，不管是文件系统大小还是从用户数据考量，过小的容量很容易造成磁盘满载，而 U 盘满载会导致 IO 等待 GC 处理而卡顿，影响体验和 U 盘寿命。</p>
 <p>而 U 盘主控同样影响，尤其是主控的 4K 随机读写性能。市面上大多数 U 盘都是连续读写速度还不错，但是小文件 4K 性能很渣，而操作系统大多数都是受制于 4K 读写性能。这里推荐三星的三款 U 盘，Bar Plus，Fit Plus，Duo Plus，这三款 4K 性能都很优异（4K IO &gt; 10MB/s）。</p>
-<p>系统镜像方面，推荐使用最新内核 (5.6 以上）的系统，这样可以支持最新的硬件平台而保证在各个硬件上启动，而且新的内核已知问题更少。这里推荐使用 Debian testing（bullseye），镜像建议使用附带非自由驱动的 <a href="https://cdimage.debian.org/cdimage/unofficial/non-free/images-including-firmware/weekly-builds/amd64/iso-dvd/firmware-testing-amd64-DVD-1.iso">firmware-debian-testing.dvd</a> DVR 镜像。</p>
+<p>系统镜像方面，推荐使用最新内核 (5.6 以上）的系统，这样可以支持最新的硬件平台而保证在各个硬件上启动，而且新的内核已知问题更少。这里推荐使用 Debian testing（bullseye），镜像建议使用附带非自由驱动的 <a href="https://cdimage.debian.org/cdimage/unofficial/non-free/images-including-firmware/weekly-builds/amd64/iso-dvd/firmware-testing-amd64-DVD-1.iso">firmware-debian-testing-dvd</a> DVD 镜像。</p>
 <h2 id="分区及挂载优化">分区及挂载优化</h2>
 <p>U 盘相对于 SSD，存在天然的短板（读写性能差，没有磨损平衡等），所以选择合适的文件系统并适当配置，可以提升不少性能和寿命优化。</p>
 <p>本文推荐 U 盘系统将根 <code>/</code> 和用户目录 <code>/home</code> 独立分区，并且采用 <code>btrfs</code> 文件系统。独立分区可以后期更换系统而保留用户文件数据，使用 <code>btrfs</code> 可以获得一些先进的文件系统特性，但是使用 <code>btrfs</code> 文件系统可能存在不稳定的情况，所以推荐安装的系统都尽量使用最新的内核（越新的内核中 <code>btrfs</code> 已知问题越少）。</p>
@@ -238,7 +238,11 @@ deb http://mirrors.tuna.tsinghua.edu.cn/debian-security testing-security main
 <footer class="post-footer">
       
       <nav class="post-nav">
-        
+        <a class="prev" href="/post/2020-11-05-socketcan-auto-up/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">自动使能 CAN 总线</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
         <a class="next" href="/post/2020-10-05-cmake-protobuf/">
             <span class="next-text nav-default">CMake 中使用 protobuf/protobuf-c</span>
             <span class="next-text nav-mobile">Next</span>

@@ -6,7 +6,16 @@
     <description>Recent content in Posts on 碎片</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Mon, 02 Nov 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://tisyang.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 05 Nov 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://tisyang.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>自动使能 CAN 总线</title>
+      <link>https://tisyang.github.io/post/2020-11-05-socketcan-auto-up/</link>
+      <pubDate>Thu, 05 Nov 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://tisyang.github.io/post/2020-11-05-socketcan-auto-up/</guid>
+      <description>&lt;p&gt;Linux 上 CAN 总线接口以网络设备形式呈现，默认系统启动时 CAN 总线处于 DOWN 模式，需要手动使用 &lt;code&gt;ip&lt;/code&gt; 命令配置并使能 &lt;code&gt;UP&lt;/code&gt;。但也可以使用系统 network 的 interfaces 式文件来实现 CAN 总线自动化配置和激活。&lt;/p&gt;</description>
+    </item>
+    
     <item>
       <title>Linux To Go 系统优化</title>
       <link>https://tisyang.github.io/post/2020-11-02-tuning-linux-to-go/</link>
