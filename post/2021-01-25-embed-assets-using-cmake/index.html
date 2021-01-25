@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>利用 CMake 在 C\C&#43;&#43; 中嵌入资源 - 碎片</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="TyK" /><meta name="description" content="在程序中嵌入资源是很常见的需求，资源可以是 GLSL Shader、LICENSE/EULA 文本、预定义公钥、图标图片等等。特定的平台和SDK里，会有特定的接口和工具来导入管理这些资源，比如 VC 的rc、QT 的 qrc，或者直接使用文件读写、dlopen/dlsym 来加载外部资源。对于C\C&#43;&#43;而言，可以直接将资源转换成字符串字面量或数组，嵌入到程序中使用，本文即讲解如何在 cmake 构建中方便的嵌入各种资源。
+" /><meta name="keywords" content="程序员, 博客, blog, programming" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.80.0 with theme even" />
+
+
+<link rel="canonical" href="https://tisyang.github.io/post/2021-01-25-embed-assets-using-cmake/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.c7bc1becf36bcf6a9ebd25d2947e43a2eb745ddb0c9a32b43126fd7fa460c351.css" rel="stylesheet">
+<link href="/lib/fancybox/jquery.fancybox-3.1.20.min.css" rel="stylesheet">
+
+
+<meta property="og:title" content="利用 CMake 在 C\C&#43;&#43; 中嵌入资源" />
+<meta property="og:description" content="在程序中嵌入资源是很常见的需求，资源可以是 GLSL Shader、LICENSE/EULA 文本、预定义公钥、图标图片等等。特定的平台和SDK里，会有特定的接口和工具来导入管理这些资源，比如 VC 的rc、QT 的 qrc，或者直接使用文件读写、dlopen/dlsym 来加载外部资源。对于C\C&#43;&#43;而言，可以直接将资源转换成字符串字面量或数组，嵌入到程序中使用，本文即讲解如何在 cmake 构建中方便的嵌入各种资源。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://tisyang.github.io/post/2021-01-25-embed-assets-using-cmake/" />
+<meta property="article:published_time" content="2021-01-25T00:00:00+00:00" />
+<meta property="article:modified_time" content="2021-01-25T00:00:00+00:00" />
+<meta itemprop="name" content="利用 CMake 在 C\C&#43;&#43; 中嵌入资源">
+<meta itemprop="description" content="在程序中嵌入资源是很常见的需求，资源可以是 GLSL Shader、LICENSE/EULA 文本、预定义公钥、图标图片等等。特定的平台和SDK里，会有特定的接口和工具来导入管理这些资源，比如 VC 的rc、QT 的 qrc，或者直接使用文件读写、dlopen/dlsym 来加载外部资源。对于C\C&#43;&#43;而言，可以直接将资源转换成字符串字面量或数组，嵌入到程序中使用，本文即讲解如何在 cmake 构建中方便的嵌入各种资源。">
+<meta itemprop="datePublished" content="2021-01-25T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2021-01-25T00:00:00+00:00" />
+<meta itemprop="wordCount" content="1059">
+
+
+
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="利用 CMake 在 C\C&#43;&#43; 中嵌入资源"/>
+<meta name="twitter:description" content="在程序中嵌入资源是很常见的需求，资源可以是 GLSL Shader、LICENSE/EULA 文本、预定义公钥、图标图片等等。特定的平台和SDK里，会有特定的接口和工具来导入管理这些资源，比如 VC 的rc、QT 的 qrc，或者直接使用文件读写、dlopen/dlsym 来加载外部资源。对于C\C&#43;&#43;而言，可以直接将资源转换成字符串字面量或数组，嵌入到程序中使用，本文即讲解如何在 cmake 构建中方便的嵌入各种资源。"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">碎片</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/index.xml">
+        <li class="mobile-menu-item">RSS</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">碎片</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/index.xml">RSS</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">利用 CMake 在 C\C&#43;&#43; 中嵌入资源</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2021-01-25 </span>
+        
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents"></nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>在程序中嵌入资源是很常见的需求，资源可以是 GLSL Shader、LICENSE/EULA 文本、预定义公钥、图标图片等等。特定的平台和SDK里，会有特定的接口和工具来导入管理这些资源，比如 VC 的rc、QT 的 qrc，或者直接使用文件读写、dlopen/dlsym 来加载外部资源。对于C\C++而言，可以直接将资源转换成字符串字面量或数组，嵌入到程序中使用，本文即讲解如何在 cmake 构建中方便的嵌入各种资源。</p>
+<p>嵌入文本资源可以在源文件中写字面量，但是字符转义和格式调整会比较麻烦，二进制资源可以使用
+<code>xxd</code> / <code>hexdump</code> 工具来转成数组，但这增加额外依赖。其实利用 CMake 本身的指令语法，就可以
+实现上述的资源嵌入。主要思路如下：</p>
+<ol>
+<li>将资源文件纳入工程中，利用 cmake 获取文件大小、文件名以及文件内容；</li>
+<li>利用 <code>string(MAKE_C_IDENTIFIER...)</code> 转换文件名为合法的 C 符号，后面将会使用该
+符号作为资源字节数组名；</li>
+<li>利用 <code>string(REGEX...)</code> 转换文件内容为 HEX 编码，并导出到生成的 C 文件中；</li>
+</ol>
+<p>再配合 <a href="http://tisyang.github.io/post/2020-10-05-cmake-protobuf/">CMake 中使用 protobuf/protobuf-c</a> 文中的 <code>add_custom_target</code> 方法，可以实现只有资源文件修改后才会触发构建转换。</p>
+<p>以示例工程为例，工程有3个文件，分别是</p>
+<ul>
+<li><code>a_demo_assets.assets</code>，项目资源文件，其内容是 GPLv2 License 文本；</li>
+<li><code>main.c</code>，项目主程序源码，内容是打印资源文件大小和内容；</li>
+<li><code>CMakeLists.txt</code>，构建脚本；</li>
+</ul>
+<p><code>main.c</code> 源码内容如下，其中 <code>a_demo_assets.assets.h</code> 是资源生成的头文件，文件名与
+资源文件名相关，头文件就包含两个常量定义 <code>A_DEMO_ASSETS_ASSETS__SIZE</code> 和 <code>A_DEMO_ASSETS_ASSETS__DATA</code>，分别为资源字节大小和资源字节数组。</p>
+<p>需要注意的是，转换的资源字节数组最后会多一个 <code>0x00</code> 字节，用来保证文本资源可以满足 C 风格字符串末尾截断。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c"><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp">
+</span><span class="cp">#include</span> <span class="cpf">&#34;a_demo_assets.assets.h&#34;</span><span class="cp">
+</span><span class="cp"></span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span><span class="n">argv</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">&#34;a_demo_assets size=%u</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span> <span class="n">A_DEMO_ASSETS_ASSETS__SIZE</span><span class="p">);</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">&#34;a_demo_assets data=</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">);</span>
+    <span class="n">fwrite</span><span class="p">(</span><span class="n">A_DEMO_ASSETS_ASSETS__DATA</span><span class="p">,</span> <span class="n">A_DEMO_ASSETS_ASSETS__SIZE</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">stdout</span><span class="p">);</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><code>CMakeLists.txt</code> 内容如下，这里是实现的核心地方，细节可以参见注释。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-cmake" data-lang="cmake"><span class="nb">cmake_minimum_required</span><span class="p">(</span><span class="s">VERSION</span> <span class="s">3.0</span><span class="p">)</span><span class="err">
+</span><span class="err"></span><span class="nb">project</span><span class="p">(</span><span class="s">demo_cmake_embed</span><span class="p">)</span><span class="err">
+</span><span class="err">
+</span><span class="err"></span><span class="c"># 需要生成嵌入的文件
+</span><span class="c"></span><span class="nb">file</span> <span class="p">(</span><span class="s">GLOB</span> <span class="s">EMBED_FILES</span>
+    <span class="s2">&#34;${CMAKE_CURRENT_SOURCE_DIR}/*.assets&#34;</span>
+<span class="p">)</span><span class="err">
+</span><span class="err"></span><span class="c"># 输出文件目录
+</span><span class="c"></span><span class="nb">set</span> <span class="p">(</span><span class="s">GEN_EMBED_OUTPUT_HDR_DIR</span>
+    <span class="s2">&#34;${CMAKE_CURRENT_BINARY_DIR}/gen_inc&#34;</span><span class="p">)</span><span class="err">
+</span><span class="err"></span><span class="nb">set</span> <span class="p">(</span><span class="s">GEN_EMBED_OUTPUT_SRC_DIR</span>
+    <span class="s2">&#34;${CMAKE_CURRENT_BINARY_DIR}/gen_src&#34;</span><span class="p">)</span><span class="err">
+</span><span class="err"></span><span class="nb">file</span><span class="p">(</span><span class="s">MAKE_DIRECTORY</span> <span class="o">${</span><span class="nv">GEN_EMBED_OUTPUT_HDR_DIR</span><span class="o">}</span><span class="p">)</span><span class="err">
+</span><span class="err"></span><span class="nb">file</span><span class="p">(</span><span class="s">MAKE_DIRECTORY</span> <span class="o">${</span><span class="nv">GEN_EMBED_OUTPUT_SRC_DIR</span><span class="o">}</span><span class="p">)</span><span class="err">
+</span><span class="err">
+</span><span class="err"></span><span class="c"># 依次处理文件
+</span><span class="c"></span><span class="nb">foreach</span><span class="p">(</span><span class="s">input_src</span> <span class="o">${</span><span class="nv">EMBED_FILES</span><span class="o">}</span><span class="p">)</span><span class="err">
+</span><span class="err"></span>    <span class="c"># 配置输出文件名
+</span><span class="c"></span>    <span class="nb">file</span><span class="p">(</span><span class="s">SIZE</span> <span class="o">${</span><span class="nv">input_src</span><span class="o">}</span> <span class="s">embed_file_size</span><span class="p">)</span><span class="err">
+</span><span class="err"></span>    <span class="nb">get_filename_component</span><span class="p">(</span><span class="s">embed_file</span> <span class="o">${</span><span class="nv">input_src</span><span class="o">}</span> <span class="s">NAME</span><span class="p">)</span><span class="err">
+</span><span class="err"></span>    <span class="nb">set</span><span class="p">(</span><span class="s">gen_embed_file</span>        <span class="s2">&#34;${GEN_EMBED_OUTPUT_SRC_DIR}/${embed_file}.c&#34;</span><span class="p">)</span><span class="err">
+</span><span class="err"></span>    <span class="nb">set</span><span class="p">(</span><span class="s">gen_embed_file_header</span> <span class="s2">&#34;${GEN_EMBED_OUTPUT_HDR_DIR}/${embed_file}.h&#34;</span><span class="p">)</span><span class="err">
+</span><span class="err"></span>    <span class="c"># 清空输出文件
+</span><span class="c"></span>    <span class="nb">file</span><span class="p">(</span><span class="s">WRITE</span> <span class="o">${</span><span class="nv">gen_embed_file</span><span class="o">}</span> <span class="s2">&#34;&#34;</span><span class="p">)</span><span class="err">
+</span><span class="err"></span>    <span class="nb">file</span><span class="p">(</span><span class="s">WRITE</span> <span class="o">${</span><span class="nv">gen_embed_file_header</span><span class="o">}</span> <span class="s2">&#34;&#34;</span><span class="p">)</span><span class="err">
+</span><span class="err"></span>    <span class="c"># for c compatibility
+</span><span class="c"></span>    <span class="nb">string</span><span class="p">(</span><span class="s">MAKE_C_IDENTIFIER</span> <span class="o">${</span><span class="nv">embed_file</span><span class="o">}</span> <span class="s">token</span><span class="p">)</span><span class="err">
+</span><span class="err"></span>    <span class="c"># to upper case
+</span><span class="c"></span>    <span class="nb">string</span><span class="p">(</span><span class="s">TOUPPER</span> <span class="o">${</span><span class="nv">token</span><span class="o">}</span> <span class="s">token</span><span class="p">)</span><span class="err">
+</span><span class="err"></span>    <span class="c"># read hex data from file
+</span><span class="c"></span>    <span class="nb">file</span><span class="p">(</span><span class="s">READ</span> <span class="o">${</span><span class="nv">input_src</span><span class="o">}</span> <span class="s">filedata</span> <span class="s">HEX</span><span class="p">)</span><span class="err">
+</span><span class="err"></span>    <span class="c"># convert hex data for C compatibility
+</span><span class="c"></span>    <span class="nb">string</span><span class="p">(</span><span class="s">REGEX</span> <span class="s">REPLACE</span> <span class="s2">&#34;([0-9a-f][0-9a-f])&#34;</span> <span class="s2">&#34;0x\\1,&#34;</span> <span class="s">filedata</span> <span class="o">${</span><span class="nv">filedata</span><span class="o">}</span><span class="p">)</span><span class="err">
+</span><span class="err"></span>    <span class="c"># append data to output file
+</span><span class="c"></span>    <span class="nb">file</span><span class="p">(</span><span class="s">APPEND</span> <span class="o">${</span><span class="nv">gen_embed_file</span><span class="o">}</span>
+        <span class="s2">&#34;const unsigned char ${token}__DATA[] = {\n${filedata}0x00\n};\n&#34;</span>
+        <span class="s2">&#34;const unsigned long ${token}__SIZE   = ${embed_file_size};\n&#34;</span><span class="p">)</span><span class="err">
+</span><span class="err"></span>    <span class="nb">file</span><span class="p">(</span><span class="s">APPEND</span> <span class="o">${</span><span class="nv">gen_embed_file_header</span><span class="o">}</span>
+        <span class="s2">&#34;extern const unsigned char ${token}__DATA[];\n&#34;</span>
+        <span class="s2">&#34;extern const unsigned long ${token}__SIZE;\n&#34;</span><span class="p">)</span><span class="err">
+</span><span class="err"></span>    <span class="c"># 加入到生成文件列表
+</span><span class="c"></span>    <span class="nb">list</span><span class="p">(</span><span class="s">APPEND</span> <span class="s">GEN_EMBED_FILES</span>
+        <span class="o">${</span><span class="nv">gen_embed_file</span><span class="o">}</span>
+        <span class="o">${</span><span class="nv">gen_embed_file_header</span><span class="o">}</span>
+    <span class="p">)</span><span class="err">
+</span><span class="err"></span><span class="nb">endforeach</span><span class="p">()</span><span class="err">
+</span><span class="err">
+</span><span class="err"></span><span class="nb">add_custom_target</span><span class="p">(</span>
+    <span class="s">embed_gen_files</span>
+    <span class="s">DEPENDS</span> <span class="o">${</span><span class="nv">GEN_EMBED_FILES</span><span class="o">}</span>
+<span class="p">)</span><span class="err">
+</span><span class="err"></span><span class="nb">include_directories</span><span class="p">(</span><span class="o">${</span><span class="nv">GEN_EMBED_OUTPUT_HDR_DIR</span><span class="o">}</span><span class="p">)</span><span class="err">
+</span><span class="err">
+</span><span class="err"></span><span class="nb">add_executable</span><span class="p">(</span><span class="o">${</span><span class="nv">PROJECT_NAME</span><span class="o">}</span> <span class="s">main.c</span> <span class="o">${</span><span class="nv">GEN_EMBED_FILES</span><span class="o">}</span><span class="p">)</span><span class="err">
+</span><span class="err"></span><span class="nb">add_dependencies</span><span class="p">(</span><span class="o">${</span><span class="nv">PROJECT_NAME</span><span class="o">}</span> <span class="s">embed_gen_files</span><span class="p">)</span><span class="err">
+</span><span class="err"></span><span class="c">#target_link_libraries(${PROJECT_NAME} m)
+</span><span class="c"></span><span class="err">
+</span></code></pre></td></tr></table>
+</div>
+</div><p>在构建中，每个资源会对应生成头文件和C文件，头文件只包含大小和资源字节数组声明，C文件包含实际定义。
+在大项目中，可以将资源统一在一个子模块中，模块最终输出成静态库或动态库，其他需要使用资源的模块可以链接该模块来获取资源。</p>
+<p>示例工程<a href="/code/demo_cmake_embed.zip">源码下载</a>.</p>
+    </div>
+
+    
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        
+        <a class="next" href="/post/2020-11-05-socketcan-auto-up/">
+            <span class="next-text nav-default">自动使能 CAN 总线</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="https://github.com/tisyang" class="iconfont icon-github" title="github"></a>
+  <a href="https://tisyang.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2016 - 
+    2021<span class="heart"><i class="iconfont icon-heart"></i></span><span>TyK</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  <script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  <script type="text/javascript" src="/lib/fancybox/jquery.fancybox-3.1.20.min.js"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.c12618f9a600c40bd024996677e951e64d3487006775aeb22e200c990006c5c7.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

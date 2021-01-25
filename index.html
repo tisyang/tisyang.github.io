@@ -23,7 +23,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.77.0 with theme even" />
+<meta name="generator" content="Hugo 0.80.0 with theme even" />
 
 
 <link rel="canonical" href="https://tisyang.github.io/" />
@@ -45,7 +45,7 @@
 <meta property="og:description" content="" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://tisyang.github.io/" />
-<meta property="og:updated_time" content="2020-11-05T00:00:00+00:00" />
+<meta property="og:updated_time" content="2021-01-25T00:00:00+00:00" />
 <meta itemprop="name" content="碎片">
 <meta itemprop="description" content="">
 <meta name="twitter:card" content="summary"/>
@@ -107,6 +107,25 @@
       <div class="content-wrapper">
         <div id="content" class="content">
           <section id="posts" class="posts">
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/post/2021-01-25-embed-assets-using-cmake/">利用 CMake 在 C\C&#43;&#43; 中嵌入资源</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2021-01-25 </span>
+      
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      <p>在程序中嵌入资源是很常见的需求，资源可以是 GLSL Shader、LICENSE/EULA 文本、预定义公钥、图标图片等等。特定的平台和SDK里，会有特定的接口和工具来导入管理这些资源，比如 VC 的rc、QT 的 qrc，或者直接使用文件读写、dlopen/dlsym 来加载外部资源。对于C\C++而言，可以直接将资源转换成字符串字面量或数组，嵌入到程序中使用，本文即讲解如何在 cmake 构建中方便的嵌入各种资源。</p>
+    </div>
+    <div class="read-more">
+      <a href="/post/2021-01-25-embed-assets-using-cmake/" class="read-more-link">Read more...</a>
+    </div>
+  </div>
+</article>
+
     <article class="post">
   <header class="post-header">
     <h1 class="post-title"><a class="post-link" href="/post/2020-11-05-socketcan-auto-up/">自动使能 CAN 总线</a></h1>
@@ -223,26 +242,6 @@
   </div>
 </article>
 
-    <article class="post">
-  <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="/post/2019-08-08-opensource-ntripcaster/">一个基于 libev 的 ntripcaster 简单实现</a></h1>
-    <div class="post-meta">
-      <span class="post-time"> 2019-08-08 </span>
-      
-    </div>
-  </header>
-  
-  <div class="post-content">
-    <div class="post-summary">
-      <p>Ntripcaster 是测绘领域GNSS相关的服务器软件，服务于差分GNSS测量、RTK测量等高精度测量测绘。</p>
-<p>这里开源一个基于 <a href="http://libev.schmorp.de/">libev</a>，用 C 实现的简单 ntripcaster 服务器。</p>
-    </div>
-    <div class="read-more">
-      <a href="/post/2019-08-08-opensource-ntripcaster/" class="read-more-link">Read more...</a>
-    </div>
-  </div>
-</article>
-
     </section>
   
   <nav class="pagination">
@@ -279,7 +278,7 @@
   <span class="copyright-year">
     &copy; 
     2016 - 
-    2020<span class="heart"><i class="iconfont icon-heart"></i></span><span>TyK</span>
+    2021<span class="heart"><i class="iconfont icon-heart"></i></span><span>TyK</span>
   </span>
 </div>
 

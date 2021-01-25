@@ -6,7 +6,16 @@
     <description>Recent content in Posts on 碎片</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Thu, 05 Nov 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://tisyang.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 25 Jan 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://tisyang.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>利用 CMake 在 C\C&#43;&#43; 中嵌入资源</title>
+      <link>https://tisyang.github.io/post/2021-01-25-embed-assets-using-cmake/</link>
+      <pubDate>Mon, 25 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://tisyang.github.io/post/2021-01-25-embed-assets-using-cmake/</guid>
+      <description>&lt;p&gt;在程序中嵌入资源是很常见的需求，资源可以是 GLSL Shader、LICENSE/EULA 文本、预定义公钥、图标图片等等。特定的平台和SDK里，会有特定的接口和工具来导入管理这些资源，比如 VC 的rc、QT 的 qrc，或者直接使用文件读写、dlopen/dlsym 来加载外部资源。对于C\C++而言，可以直接将资源转换成字符串字面量或数组，嵌入到程序中使用，本文即讲解如何在 cmake 构建中方便的嵌入各种资源。&lt;/p&gt;</description>
+    </item>
+    
     <item>
       <title>自动使能 CAN 总线</title>
       <link>https://tisyang.github.io/post/2020-11-05-socketcan-auto-up/</link>
