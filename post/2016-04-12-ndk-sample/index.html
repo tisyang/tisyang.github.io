@@ -24,7 +24,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.80.0 with theme even" />
+<meta name="generator" content="Hugo 0.92.2 with theme even" />
 
 
 <link rel="canonical" href="https://tisyang.github.io/post/2016-04-12-ndk-sample/" />
@@ -36,26 +36,22 @@
 
 
 
-<link href="/sass/main.min.c7bc1becf36bcf6a9ebd25d2947e43a2eb745ddb0c9a32b43126fd7fa460c351.css" rel="stylesheet">
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
 <link href="/lib/fancybox/jquery.fancybox-3.1.20.min.css" rel="stylesheet">
 
 
 <meta property="og:title" content="NDK 实例" />
 <meta property="og:description" content="本文通过编写一个算法类二进制库以及示例App应用来介绍NDK开发，重点是二进制库编写、编译以及自定义参数的传递。" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://tisyang.github.io/post/2016-04-12-ndk-sample/" />
+<meta property="og:url" content="https://tisyang.github.io/post/2016-04-12-ndk-sample/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2016-04-12T00:00:00+00:00" />
 <meta property="article:modified_time" content="2016-04-12T00:00:00+00:00" />
+
 <meta itemprop="name" content="NDK 实例">
-<meta itemprop="description" content="本文通过编写一个算法类二进制库以及示例App应用来介绍NDK开发，重点是二进制库编写、编译以及自定义参数的传递。">
-<meta itemprop="datePublished" content="2016-04-12T00:00:00+00:00" />
+<meta itemprop="description" content="本文通过编写一个算法类二进制库以及示例App应用来介绍NDK开发，重点是二进制库编写、编译以及自定义参数的传递。"><meta itemprop="datePublished" content="2016-04-12T00:00:00+00:00" />
 <meta itemprop="dateModified" content="2016-04-12T00:00:00+00:00" />
 <meta itemprop="wordCount" content="3881">
-
-
-
-<meta itemprop="keywords" content="" />
-<meta name="twitter:card" content="summary"/>
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="NDK 实例"/>
 <meta name="twitter:description" content="本文通过编写一个算法类二进制库以及示例App应用来介绍NDK开发，重点是二进制库编写、编译以及自定义参数的传递。"/>
 
@@ -90,12 +86,21 @@
         <li class="mobile-menu-item">RSS</li>
       </a>
   </ul>
+
+  
+
+
 </nav>
+
   <div class="container" id="mobile-panel">
     <header id="header" class="header">
         <div class="logo-wrapper">
   <a href="/" class="logo">碎片</a>
 </div>
+
+
+
+
 
 <nav class="site-navbar">
   <ul id="menu" class="menu">
@@ -108,6 +113,7 @@
       </li>
   </ul>
 </nav>
+
     </header>
 
     <main id="main" class="main">
@@ -151,7 +157,7 @@
 <p>要实现的接口文件 <code>com/zhdgps/ts/TSMath.java</code>，其中 <code>tsmath</code> 是要实现的so库名字。</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -165,7 +171,7 @@
 </span><span class="lnt">12
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">com.zhdgps.ts</span><span class="o">;</span>
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">com.zhdgps.ts</span><span class="o">;</span>
 
 <span class="kd">public</span> <span class="kd">class</span> <span class="nc">TSMath</span> <span class="o">{</span>
 	<span class="kd">static</span> <span class="o">{</span>
@@ -184,7 +190,7 @@
 <p>同时辅助用的 <code>TSCoord</code> 定义文件 <code>com/zhdgps/ts/TSCoord.java</code>。</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -194,7 +200,7 @@
 </span><span class="lnt">8
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">com.zhdgps.ts</span><span class="o">;</span>
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">com.zhdgps.ts</span><span class="o">;</span>
 
 <span class="kd">public</span> <span class="kd">class</span> <span class="nc">TSCoord</span> <span class="o">{</span>
 	<span class="kd">public</span> <span class="kt">double</span> <span class="n">N</span><span class="o">;</span>
@@ -215,7 +221,7 @@
 <p><code>Algorithm.h</code> 文件内容：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -241,7 +247,7 @@
 </span><span class="lnt">24
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-c" data-lang="c"><span class="cp">#ifndef TS_ALGORITHM_H
+<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="cp">#ifndef TS_ALGORITHM_H
 </span><span class="cp">#define TS_ALGORITHM_H
 </span><span class="cp"></span>
 <span class="cp">#ifdef __cplusplus
@@ -270,7 +276,7 @@
 </div><p>头文件主要声明了一个计算中点的函数以及参数结构体类型，实现文件 <code>Algorithm.c</code> 内容如下：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -282,7 +288,7 @@
 </span><span class="lnt">10
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-c" data-lang="c"><span class="cp">#include</span> <span class="cpf">&#34;algorithm.h&#34;</span><span class="cp">
+<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="cp">#include</span> <span class="cpf">&#34;algorithm.h&#34;</span><span class="cp">
 </span><span class="cp"></span>
 <span class="kt">int</span> <span class="nf">TSAlgo_CalcCenter</span><span class="p">(</span><span class="k">const</span> <span class="n">TSCoord</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">TSCoord</span> <span class="o">*</span><span class="n">b</span><span class="p">,</span> <span class="n">TSCoord</span> <span class="o">*</span><span class="n">result</span><span class="p">)</span>
 <span class="p">{</span>
@@ -305,7 +311,7 @@
 <p>综上，我们要在模块中实现3个主要函数：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -313,7 +319,7 @@
 </span><span class="lnt">6
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-c" data-lang="c"><span class="cm">/* 动态库加载时候被调用的方法，进行初始化并注册模块函数 */</span>
+<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="cm">/* 动态库加载时候被调用的方法，进行初始化并注册模块函数 */</span>
 <span class="n">JNIEXPORT</span> <span class="n">jint</span> <span class="n">JNICALL</span> <span class="nf">JNI_OnLoad</span><span class="p">(</span><span class="n">JavaVM</span> <span class="o">*</span><span class="n">vm</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="n">reserved</span><span class="p">);</span>
 <span class="cm">/* 对应 TSMath.getVersion */</span>
 <span class="n">JNIEXPORT</span> <span class="n">jstring</span> <span class="n">JNICALL</span> <span class="nf">native_get_version</span><span class="p">(</span><span class="n">JNIEnv</span> <span class="o">*</span><span class="n">env</span><span class="p">,</span> <span class="n">jobject</span> <span class="n">thiz</span><span class="p">);</span>
@@ -325,7 +331,7 @@
 <p>要实现动态注册，我们需要编写注册方法：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -361,7 +367,7 @@
 </span><span class="lnt">34
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-c" data-lang="c"><span class="cm">/* ------------------------------------------------------------- */</span>
+<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="cm">/* ------------------------------------------------------------- */</span>
 <span class="cm">/* 方法注册资源表 */</span>
 <span class="k">static</span> <span class="n">JNINativeMethod</span> <span class="n">native_methods</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span>
     <span class="p">{</span><span class="s">&#34;getVersion&#34;</span><span class="p">,</span> <span class="s">&#34;()Ljava/lang/String;&#34;</span><span class="p">,</span> <span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="p">)</span><span class="n">native_get_version</span><span class="p">},</span>
@@ -402,7 +408,7 @@
 <p>下面继续 <code>native_get_version</code> 和 <code>native_calc_center</code> 两个函数的实现</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -410,7 +416,7 @@
 </span><span class="lnt">6
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-c" data-lang="c"><span class="cp">#define TSMATH_VERSION  &#34;v0.1 alpha&#34;
+<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="cp">#define TSMATH_VERSION  &#34;v0.1 alpha&#34;
 </span><span class="cp"></span>
 <span class="n">JNIEXPORT</span> <span class="n">jstring</span> <span class="n">JNICALL</span> <span class="nf">native_get_version</span><span class="p">(</span><span class="n">JNIEnv</span> <span class="o">*</span><span class="n">env</span><span class="p">,</span> <span class="n">jobject</span> <span class="n">thiz</span><span class="p">)</span>
 <span class="p">{</span>
@@ -421,7 +427,7 @@
 </div><p><code>native_get_version</code> 比较简单，就返回一个版本文本字符串。这里需要注意的是，如果函数需要返回非ASCII的字符串，则不能直接使用 <code>NewStringUTF</code>，因为 JNI 使用了修改版的 UTF-8 编码，具体可以参考 <a href="http://docs.oracle.com/javase/1.5.0/docs/guide/jni/spec/types.html#wp16542">Modified UTF-8 Strings</a>.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -496,7 +502,7 @@
 </span><span class="lnt">73
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-c" data-lang="c"><span class="cm">/* 保存全局 TSCoord 的信息，便于后续检索成员 */</span>
+<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="cm">/* 保存全局 TSCoord 的信息，便于后续检索成员 */</span>
 <span class="k">struct</span> <span class="n">TSCoordJNIInfo</span> <span class="p">{</span>
     <span class="cm">/* ICS 4.0 之后，jclass 可能会变化，所以在获取后，调用 NewGlobalRef 保存引用，然后就不再变化 */</span>
     <span class="n">jclass</span> <span class="n">cls</span><span class="p">;</span>
@@ -579,7 +585,7 @@
 <p>函数注册的是在 <code>JNI_OnLoad</code> 函数中，此函数会在 so 文件被加载时由 Java 虚拟机调用。</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -607,7 +613,7 @@
 </span><span class="lnt">26
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-c" data-lang="c"><span class="cm">/* System.loadLibrary 时调用，成功返回 JNI 版本，失败返回 -1
+<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="cm">/* System.loadLibrary 时调用，成功返回 JNI 版本，失败返回 -1
 </span><span class="cm"> *
 </span><span class="cm"> * 可在此函数中进行初始化等操作
 </span><span class="cm"> * */</span>
@@ -639,7 +645,7 @@
 <p>编辑 <code>Android.mk</code> 文件</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -655,7 +661,7 @@
 </span><span class="lnt">14
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-makefile" data-lang="makefile"><span class="nv">LOCAL_PATH</span> <span class="o">:=</span> <span class="k">$(</span>call my-dir<span class="k">)</span>
+<pre tabindex="0" class="chroma"><code class="language-makefile" data-lang="makefile"><span class="nv">LOCAL_PATH</span> <span class="o">:=</span> <span class="k">$(</span>call my-dir<span class="k">)</span>
 <span class="err">include</span> <span class="k">$(</span><span class="nv">CLEAR_VARS</span><span class="k">)</span>
 
 <span class="c"># 架构
@@ -675,10 +681,10 @@
 <p>编辑 <code>Application.mk</code> 文件</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-makefile" data-lang="makefile"><span class="nv">APP_OPTIM</span> <span class="o">:=</span> release
+<pre tabindex="0" class="chroma"><code class="language-makefile" data-lang="makefile"><span class="nv">APP_OPTIM</span> <span class="o">:=</span> release
 </code></pre></td></tr></table>
 </div>
 </div><p>这里指定生成 release 版本的 so 库。如果这里如果需要生成其他平台库，则需要设置 <code>APP_ABI</code> 字段。比如要生成全平台，则添加一句 <code>APP_ABI := all</code>，这样会同时生成其他平台（x86 等）。</p>
@@ -690,7 +696,7 @@
 <p>修改 <code>MainActivity.java</code> 文件， 在 <code>onCreate</code> 中添加测试代码</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -711,7 +717,7 @@
 </span><span class="lnt">19
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-java" data-lang="java"><span class="n">TSCoord</span> <span class="n">a</span> <span class="o">=</span> <span class="k">new</span> <span class="n">TSCoord</span><span class="o">();</span>
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="n">TSCoord</span> <span class="n">a</span> <span class="o">=</span> <span class="k">new</span> <span class="n">TSCoord</span><span class="o">();</span>
 <span class="n">a</span><span class="o">.</span><span class="na">N</span> <span class="o">=</span> <span class="n">1</span><span class="o">.</span><span class="na">0</span><span class="o">;</span>
 <span class="n">a</span><span class="o">.</span><span class="na">E</span> <span class="o">=</span> <span class="n">2</span><span class="o">.</span><span class="na">0</span><span class="o">;</span>
 <span class="n">a</span><span class="o">.</span><span class="na">Z</span> <span class="o">=</span> <span class="n">3</span><span class="o">.</span><span class="na">0</span><span class="o">;</span>
@@ -784,7 +790,7 @@
   <span class="copyright-year">
     &copy; 
     2016 - 
-    2021<span class="heart"><i class="iconfont icon-heart"></i></span><span>TyK</span>
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>TyK</span>
   </span>
 </div>
 
@@ -800,7 +806,7 @@
 
 
 
-<script type="text/javascript" src="/js/main.min.c12618f9a600c40bd024996677e951e64d3487006775aeb22e200c990006c5c7.js"></script>
+<script type="text/javascript" src="/js/main.min.c99b103c33d1539acf3025e1913697534542c4a5aa5af0ccc20475ed2863603b.js"></script>
 
 
 

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>自动使能 CAN 总线 - 碎片</title>
+  <title>FTDI 串口驱动数据包延迟 - 碎片</title>
   <meta name="renderer" content="webkit" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
@@ -16,7 +16,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="TyK" /><meta name="description" content="Linux 上 CAN 总线接口以网络设备形式呈现，默认系统启动时 CAN 总线处于 DOWN 模式，需要手动使用 ip 命令配置并使能 UP。但也可以使用系统 network 的 interfaces 式文件来实现 CAN 总线自动化配置和激活。
+<meta name="author" content="TyK" /><meta name="description" content="最近项目测试发现串口收取时存在延迟、拥堵现象，多个 packet 接收的时间戳是一样的，但是发送的时候的确是每帧间隔固定时间。
 " /><meta name="keywords" content="程序员, 博客, blog, programming" />
 
 
@@ -27,7 +27,7 @@
 <meta name="generator" content="Hugo 0.92.2 with theme even" />
 
 
-<link rel="canonical" href="https://tisyang.github.io/post/2020-11-05-socketcan-auto-up/" />
+<link rel="canonical" href="https://tisyang.github.io/post/2022-03-14-ftdi-serial-latency/" />
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
@@ -40,20 +40,20 @@
 <link href="/lib/fancybox/jquery.fancybox-3.1.20.min.css" rel="stylesheet">
 
 
-<meta property="og:title" content="自动使能 CAN 总线" />
-<meta property="og:description" content="Linux 上 CAN 总线接口以网络设备形式呈现，默认系统启动时 CAN 总线处于 DOWN 模式，需要手动使用 ip 命令配置并使能 UP。但也可以使用系统 network 的 interfaces 式文件来实现 CAN 总线自动化配置和激活。" />
+<meta property="og:title" content="FTDI 串口驱动数据包延迟" />
+<meta property="og:description" content="最近项目测试发现串口收取时存在延迟、拥堵现象，多个 packet 接收的时间戳是一样的，但是发送的时候的确是每帧间隔固定时间。" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://tisyang.github.io/post/2020-11-05-socketcan-auto-up/" /><meta property="article:section" content="post" />
-<meta property="article:published_time" content="2020-11-05T00:00:00+00:00" />
-<meta property="article:modified_time" content="2020-11-05T00:00:00+00:00" />
+<meta property="og:url" content="https://tisyang.github.io/post/2022-03-14-ftdi-serial-latency/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2022-03-14T00:00:00+00:00" />
+<meta property="article:modified_time" content="2022-03-14T00:00:00+00:00" />
 
-<meta itemprop="name" content="自动使能 CAN 总线">
-<meta itemprop="description" content="Linux 上 CAN 总线接口以网络设备形式呈现，默认系统启动时 CAN 总线处于 DOWN 模式，需要手动使用 ip 命令配置并使能 UP。但也可以使用系统 network 的 interfaces 式文件来实现 CAN 总线自动化配置和激活。"><meta itemprop="datePublished" content="2020-11-05T00:00:00+00:00" />
-<meta itemprop="dateModified" content="2020-11-05T00:00:00+00:00" />
-<meta itemprop="wordCount" content="274">
+<meta itemprop="name" content="FTDI 串口驱动数据包延迟">
+<meta itemprop="description" content="最近项目测试发现串口收取时存在延迟、拥堵现象，多个 packet 接收的时间戳是一样的，但是发送的时候的确是每帧间隔固定时间。"><meta itemprop="datePublished" content="2022-03-14T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2022-03-14T00:00:00+00:00" />
+<meta itemprop="wordCount" content="421">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="自动使能 CAN 总线"/>
-<meta name="twitter:description" content="Linux 上 CAN 总线接口以网络设备形式呈现，默认系统启动时 CAN 总线处于 DOWN 模式，需要手动使用 ip 命令配置并使能 UP。但也可以使用系统 network 的 interfaces 式文件来实现 CAN 总线自动化配置和激活。"/>
+<meta name="twitter:title" content="FTDI 串口驱动数据包延迟"/>
+<meta name="twitter:description" content="最近项目测试发现串口收取时存在延迟、拥堵现象，多个 packet 接收的时间戳是一样的，但是发送的时候的确是每帧间隔固定时间。"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -122,10 +122,10 @@
           <article class="post">
     
     <header class="post-header">
-      <h1 class="post-title">自动使能 CAN 总线</h1>
+      <h1 class="post-title">FTDI 串口驱动数据包延迟</h1>
 
       <div class="post-meta">
-        <span class="post-time"> 2020-11-05 </span>
+        <span class="post-time"> 2022-03-14 </span>
         
         
       </div>
@@ -138,60 +138,54 @@
   </div>
 </div>
     <div class="post-content">
-      <p>Linux 上 CAN 总线接口以网络设备形式呈现，默认系统启动时 CAN 总线处于 DOWN 模式，需要手动使用 <code>ip</code> 命令配置并使能 <code>UP</code>。但也可以使用系统 network 的 interfaces 式文件来实现 CAN 总线自动化配置和激活。</p>
-<p>以 <code>can0</code> 总线设备为例，如果设备为非可插拔（固定）总线，则可以新建 <code>/etc/network/interfaces.d/can</code> 文件，写入如下内容（假设使用 500k 波特率)：</p>
+      <p>最近项目测试发现串口收取时存在延迟、拥堵现象，多个 packet 接收的时间戳是一样的，但是发送的时候的确是每帧间隔固定时间。</p>
+<p>测试了手头的 USB转串口模块，CH340的没有这个问题，但是 FT 系列都存在这个问题，包括 FT232/FT2232 等。现象是高频小包数据通信时，多个包拥堵到达，达到时间是一样的，但是发送时候是明显单包单包发送，就好像传输过来有缓冲区一样。</p>
+<p>搜索了 &ldquo;FTDI+Latency&quot;后，发现如果使用的是 FTDI 厂商的 USB 转 UART 串口模块，默认是存在传输延迟的，参见 <a href="https://granitedevices.com/wiki/FTDI_Linux_USB_latency">FTDI Linux USB latency</a>，通过一下命令可以查看当前的默认延迟时间，默认一般为 16ms，这个对于高频率小包传输的影响是相当明显的：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span><span class="lnt">6
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">auto can0
-iface can0 inet manual
-        pre-up /sbin/ip link <span class="nb">set</span> <span class="nv">$IFACE</span> <span class="nb">type</span> can bitrate <span class="m">500000</span> restart-ms <span class="m">10</span>
-        up /sbin/ip link <span class="nb">set</span> <span class="nv">$IFACE</span> up
-        down /sbin/ip link <span class="nb">set</span> <span class="nv">$IFACE</span> down
-
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash">cat /sys/bus/usb-serial/devices/ttyUSB0/latency_timer
 </code></pre></td></tr></table>
 </div>
-</div><p>重启，然后使用 <code>ip -details link show can0</code> 来查看总线是否激活。</p>
-<p>对于可插拔总线，比如 USB 转换的 CAN 总线，需要修改 <code>auto can0</code> 为 <code>allow-hotplug can0</code>：</p>
+</div><p>对于目前的新版内科而言，命令 <code>echo 1 &gt; /sys/bus/usb-serial/devices/ttyUSB0/latency_timer</code> 无法使用，提示 <code>Input/Output Error</code>，正确的方法是通过系统 API 来配置串口描述符 的 <code>Low Latency</code> 属性：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span><span class="lnt">6
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">allow-hotplug can0
-iface can0 inet manual
-        pre-up /sbin/ip link <span class="nb">set</span> <span class="nv">$IFACE</span> <span class="nb">type</span> can bitrate <span class="m">500000</span> restart-ms <span class="m">10</span>
-        up /sbin/ip link <span class="nb">set</span> <span class="nv">$IFACE</span> up
-        down /sbin/ip link <span class="nb">set</span> <span class="nv">$IFACE</span> down
-
+<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="cp">#include</span> <span class="cpf">&lt;sys/ioctl.h&gt;</span><span class="cp">
+</span><span class="cp">#include</span> <span class="cpf">&lt;linux/serial.h&gt;</span><span class="cp">
+</span><span class="cp"></span><span class="p">...</span>
+<span class="c1">// low latency
+</span><span class="c1"></span><span class="kt">int</span> <span class="n">serial</span> <span class="o">=</span> <span class="n">open</span><span class="p">(...);</span>
+<span class="p">...</span>
+<span class="k">struct</span> <span class="n">serial_struct</span> <span class="n">kernel_serial_settings</span><span class="p">;</span>
+<span class="n">ioctl</span><span class="p">(</span><span class="n">serial</span><span class="p">,</span> <span class="n">TIOCGSERIAL</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">kernel_serial_settings</span><span class="p">);</span>
+<span class="n">kernel_serial_settings</span><span class="p">.</span><span class="n">flags</span> <span class="o">|=</span> <span class="n">ASYNC_LOW_LATENCY</span><span class="p">;</span>
+<span class="n">ioctl</span><span class="p">(</span><span class="n">serial</span><span class="p">,</span> <span class="n">TIOCSSERIAL</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">kernel_serial_settings</span><span class="p">);</span>
 </code></pre></td></tr></table>
 </div>
-</div><p>这样当 CAN 设备插入时，系统会自动配置并激活。</p>
+</div><p>如此设置后，内核会通知 ftdi 驱动部分去降低 <code>latency_timer</code> 值，设置后可以通过 <code>cat /sys/bus/usb-serial/devices/ttyUSB0/latency_timer</code> 查看到该值已变更为 1.</p>
     </div>
 
     
 <footer class="post-footer">
       
       <nav class="post-nav">
-        <a class="prev" href="/post/2021-01-25-embed-assets-using-cmake/">
-            <i class="iconfont icon-left"></i>
-            <span class="prev-text nav-default">利用 CMake 在 C\C&#43;&#43; 中嵌入资源</span>
-            <span class="prev-text nav-mobile">Prev</span>
-          </a>
-        <a class="next" href="/post/2020-11-02-tuning-linux-to-go/">
-            <span class="next-text nav-default">Linux To Go 系统优化</span>
+        
+        <a class="next" href="/post/2021-01-25-embed-assets-using-cmake/">
+            <span class="next-text nav-default">利用 CMake 在 C\C&#43;&#43; 中嵌入资源</span>
             <span class="next-text nav-mobile">Next</span>
             <i class="iconfont icon-right"></i>
           </a>

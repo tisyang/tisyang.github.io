@@ -6,7 +6,16 @@
     <description>Recent content on 碎片</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Mon, 25 Jan 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://tisyang.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 14 Mar 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://tisyang.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>FTDI 串口驱动数据包延迟</title>
+      <link>https://tisyang.github.io/post/2022-03-14-ftdi-serial-latency/</link>
+      <pubDate>Mon, 14 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://tisyang.github.io/post/2022-03-14-ftdi-serial-latency/</guid>
+      <description>&lt;p&gt;最近项目测试发现串口收取时存在延迟、拥堵现象，多个 packet 接收的时间戳是一样的，但是发送的时候的确是每帧间隔固定时间。&lt;/p&gt;</description>
+    </item>
+    
     <item>
       <title>利用 CMake 在 C\C&#43;&#43; 中嵌入资源</title>
       <link>https://tisyang.github.io/post/2021-01-25-embed-assets-using-cmake/</link>

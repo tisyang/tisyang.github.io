@@ -24,7 +24,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.80.0 with theme even" />
+<meta name="generator" content="Hugo 0.92.2 with theme even" />
 
 
 <link rel="canonical" href="https://tisyang.github.io/post/2016-04-28-add-exe-to-path/" />
@@ -36,26 +36,22 @@
 
 
 
-<link href="/sass/main.min.c7bc1becf36bcf6a9ebd25d2947e43a2eb745ddb0c9a32b43126fd7fa460c351.css" rel="stylesheet">
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
 <link href="/lib/fancybox/jquery.fancybox-3.1.20.min.css" rel="stylesheet">
 
 
 <meta property="og:title" content="添加可执行程序到 Path 中" />
 <meta property="og:description" content="将一个程序加入到环境 Path 中，通常做法是将程序文件所在目录附加到系统或者用户的 Path 变量中，这样我们在任何路径下的命令行中，都可以调用该程序工作。大部分应用程序安装过程中的做法也是如此。" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://tisyang.github.io/post/2016-04-28-add-exe-to-path/" />
+<meta property="og:url" content="https://tisyang.github.io/post/2016-04-28-add-exe-to-path/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2016-04-28T00:00:00+00:00" />
 <meta property="article:modified_time" content="2016-04-28T00:00:00+00:00" />
+
 <meta itemprop="name" content="添加可执行程序到 Path 中">
-<meta itemprop="description" content="将一个程序加入到环境 Path 中，通常做法是将程序文件所在目录附加到系统或者用户的 Path 变量中，这样我们在任何路径下的命令行中，都可以调用该程序工作。大部分应用程序安装过程中的做法也是如此。">
-<meta itemprop="datePublished" content="2016-04-28T00:00:00+00:00" />
+<meta itemprop="description" content="将一个程序加入到环境 Path 中，通常做法是将程序文件所在目录附加到系统或者用户的 Path 变量中，这样我们在任何路径下的命令行中，都可以调用该程序工作。大部分应用程序安装过程中的做法也是如此。"><meta itemprop="datePublished" content="2016-04-28T00:00:00+00:00" />
 <meta itemprop="dateModified" content="2016-04-28T00:00:00+00:00" />
 <meta itemprop="wordCount" content="478">
-
-
-
-<meta itemprop="keywords" content="" />
-<meta name="twitter:card" content="summary"/>
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="添加可执行程序到 Path 中"/>
 <meta name="twitter:description" content="将一个程序加入到环境 Path 中，通常做法是将程序文件所在目录附加到系统或者用户的 Path 变量中，这样我们在任何路径下的命令行中，都可以调用该程序工作。大部分应用程序安装过程中的做法也是如此。"/>
 
@@ -90,12 +86,21 @@
         <li class="mobile-menu-item">RSS</li>
       </a>
   </ul>
+
+  
+
+
 </nav>
+
   <div class="container" id="mobile-panel">
     <header id="header" class="header">
         <div class="logo-wrapper">
   <a href="/" class="logo">碎片</a>
 </div>
+
+
+
+
 
 <nav class="site-navbar">
   <ul id="menu" class="menu">
@@ -108,6 +113,7 @@
       </li>
   </ul>
 </nav>
+
     </header>
 
     <main id="main" class="main">
@@ -138,10 +144,10 @@
 <p>以 vim 为例。我们新建一个 <code>vim.bat</code> 文件，编辑文件加入以下代码：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-bat" data-lang="bat"><span class="p">@</span><span class="s2">&#34;C:\Program Files (x86)\Vim\vim74\gvim.exe&#34;</span> <span class="nv">%*</span>
+<pre tabindex="0" class="chroma"><code class="language-bat" data-lang="bat"><span class="p">@</span><span class="s2">&#34;C:\Program Files (x86)\Vim\vim74\gvim.exe&#34;</span> <span class="nv">%*</span>
 </code></pre></td></tr></table>
 </div>
 </div><p>将该文件保存到一个目录中，然后再<strong>将该目录加入到用户或系统 Path 变量中</strong>。这样，这个 <code>vim.bat</code> 就暴露到 Path 中，可以在命令行中随时调用了，调用名为 <code>vim</code>，即 <code>.bat</code> 文件的文件名。</p>
@@ -198,7 +204,7 @@
   <span class="copyright-year">
     &copy; 
     2016 - 
-    2021<span class="heart"><i class="iconfont icon-heart"></i></span><span>TyK</span>
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>TyK</span>
   </span>
 </div>
 
@@ -214,7 +220,7 @@
 
 
 
-<script type="text/javascript" src="/js/main.min.c12618f9a600c40bd024996677e951e64d3487006775aeb22e200c990006c5c7.js"></script>
+<script type="text/javascript" src="/js/main.min.c99b103c33d1539acf3025e1913697534542c4a5aa5af0ccc20475ed2863603b.js"></script>
 
 
 
