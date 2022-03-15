@@ -6,7 +6,16 @@
     <description>Recent content in Posts on 碎片</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Mon, 14 Mar 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://tisyang.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 15 Mar 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://tisyang.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Linux 下 Logitech G29 编程</title>
+      <link>https://tisyang.github.io/post/2022-03-15-logitech-g29-linux/</link>
+      <pubDate>Tue, 15 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://tisyang.github.io/post/2022-03-15-logitech-g29-linux/</guid>
+      <description>&lt;p&gt;本文介绍在 Linux 下 Logitech G29 套间的编程接入，包括摇杆数据读取、自动归中配置以及 LED 控制。&lt;/p&gt;</description>
+    </item>
+    
     <item>
       <title>FTDI 串口驱动数据包延迟</title>
       <link>https://tisyang.github.io/post/2022-03-14-ftdi-serial-latency/</link>

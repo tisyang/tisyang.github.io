@@ -2,21 +2,28 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://tisyang.github.io/post/2022-03-14-ftdi-serial-latency/</loc>
-    <lastmod>2022-03-14T00:00:00+00:00</lastmod>
+    <loc>https://tisyang.github.io/post/2022-03-15-logitech-g29-linux/</loc>
+    <lastmod>2022-03-15T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
     <loc>https://tisyang.github.io/post/</loc>
-    <lastmod>2022-03-14T00:00:00+00:00</lastmod>
+    <lastmod>2022-03-15T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
     <loc>https://tisyang.github.io/</loc>
+    <lastmod>2022-03-15T00:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://tisyang.github.io/post/2022-03-14-ftdi-serial-latency/</loc>
     <lastmod>2022-03-14T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
