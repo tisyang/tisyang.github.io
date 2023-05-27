@@ -24,7 +24,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.92.2 with theme even" />
+<meta name="generator" content="Hugo 0.111.3 with theme even" />
 
 
 <link rel="canonical" href="https://tisyang.github.io/post/2016-04-12-ndk-sample/" />
@@ -36,7 +36,7 @@
 
 
 
-<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link href="/sass/main.min.d4d0dce78b3ec6333437bc36540c4749ae9a27ff4ca2d7562da2dbfbf991dde3.css" rel="stylesheet">
 <link href="/lib/fancybox/jquery.fancybox-3.1.20.min.css" rel="stylesheet">
 
 
@@ -46,11 +46,10 @@
 <meta property="og:url" content="https://tisyang.github.io/post/2016-04-12-ndk-sample/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2016-04-12T00:00:00+00:00" />
 <meta property="article:modified_time" content="2016-04-12T00:00:00+00:00" />
-
 <meta itemprop="name" content="NDK 实例">
 <meta itemprop="description" content="本文通过编写一个算法类二进制库以及示例App应用来介绍NDK开发，重点是二进制库编写、编译以及自定义参数的传递。"><meta itemprop="datePublished" content="2016-04-12T00:00:00+00:00" />
 <meta itemprop="dateModified" content="2016-04-12T00:00:00+00:00" />
-<meta itemprop="wordCount" content="3881">
+<meta itemprop="wordCount" content="3880">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="NDK 实例"/>
 <meta name="twitter:description" content="本文通过编写一个算法类二进制库以及示例App应用来介绍NDK开发，重点是二进制库编写、编译以及自定义参数的传递。"/>
@@ -63,6 +62,17 @@
   <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
 <![endif]-->
+
+<script>
+    (function(){
+     if(''){
+     if (prompt('请输入文章密码') !== ''){
+     alert('密码错误！');
+     history.back();
+     }
+     }
+     })();
+</script>
 
 </head>
 <body>
@@ -96,12 +106,8 @@
     <header id="header" class="header">
         <div class="logo-wrapper">
   <a href="/" class="logo">碎片</a>
+  
 </div>
-
-
-
-
-
 <nav class="site-navbar">
   <ul id="menu" class="menu">
     <li class="menu-item">
@@ -113,6 +119,10 @@
       </li>
   </ul>
 </nav>
+
+
+
+
 
     </header>
 
@@ -128,6 +138,7 @@
         <span class="post-time"> 2016-04-12 </span>
         
         
+        <span class="more-meta"> by </span>
       </div>
     </header>
 
@@ -171,19 +182,19 @@
 </span><span class="lnt">12
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">com.zhdgps.ts</span><span class="o">;</span>
-
-<span class="kd">public</span> <span class="kd">class</span> <span class="nc">TSMath</span> <span class="o">{</span>
-	<span class="kd">static</span> <span class="o">{</span>
-		<span class="n">System</span><span class="o">.</span><span class="na">loadLibrary</span><span class="o">(</span><span class="s">&#34;tsmath&#34;</span><span class="o">);</span>
-	<span class="o">}</span>
-
-	<span class="cm">/* 获取版本信息 */</span>
-	<span class="kd">public</span> <span class="kd">static</span> <span class="kd">native</span> <span class="n">String</span> <span class="nf">getVersion</span><span class="o">();</span>
-	<span class="cm">/* 计算两点连线中心点 */</span>
-	<span class="kd">public</span> <span class="kd">static</span> <span class="kd">native</span> <span class="n">TSCoord</span> <span class="nf">calcCenter</span><span class="o">(</span><span class="n">TSCoord</span> <span class="n">a</span><span class="o">,</span> <span class="n">TSCoord</span> <span class="n">b</span><span class="o">);</span>
-<span class="o">}</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kn">package</span> <span class="nn">com.zhdgps.ts</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">TSMath</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">	<span class="kd">static</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">System</span><span class="o">.</span><span class="na">loadLibrary</span><span class="o">(</span><span class="s">&#34;tsmath&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">	<span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="cm">/* 获取版本信息 */</span>
+</span></span><span class="line"><span class="cl">	<span class="kd">public</span> <span class="kd">static</span> <span class="kd">native</span> <span class="n">String</span> <span class="nf">getVersion</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">	<span class="cm">/* 计算两点连线中心点 */</span>
+</span></span><span class="line"><span class="cl">	<span class="kd">public</span> <span class="kd">static</span> <span class="kd">native</span> <span class="n">TSCoord</span> <span class="nf">calcCenter</span><span class="o">(</span><span class="n">TSCoord</span> <span class="n">a</span><span class="o">,</span> <span class="n">TSCoord</span> <span class="n">b</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p><code>System.loadLibrary</code> 用来加载so库，<code>static</code> 表示这段代码要最先运行。</p>
 <p>接口函数用 <code>native</code> 关键字修饰表明这是源生方法实现而不是 java 代码实现（JNI），在这里就是指在so库中实现的方法。</p>
@@ -197,18 +208,16 @@
 </span><span class="lnt">5
 </span><span class="lnt">6
 </span><span class="lnt">7
-</span><span class="lnt">8
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">com.zhdgps.ts</span><span class="o">;</span>
-
-<span class="kd">public</span> <span class="kd">class</span> <span class="nc">TSCoord</span> <span class="o">{</span>
-	<span class="kd">public</span> <span class="kt">double</span> <span class="n">N</span><span class="o">;</span>
-	<span class="kd">public</span> <span class="kt">double</span> <span class="n">E</span><span class="o">;</span>
-	<span class="kd">public</span> <span class="kt">double</span> <span class="n">Z</span><span class="o">;</span>
-<span class="o">}</span>
-
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kn">package</span> <span class="nn">com.zhdgps.ts</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">TSCoord</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">	<span class="kd">public</span> <span class="kt">double</span> <span class="n">N</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">	<span class="kd">public</span> <span class="kt">double</span> <span class="n">E</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">	<span class="kd">public</span> <span class="kt">double</span> <span class="n">Z</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>两个文件都放属于包 <code>com.zhdgps.ts</code> 。</p>
 <h2 id="2-so库c代码实现和编译">2. so库C代码实现和编译</h2>
@@ -247,31 +256,31 @@
 </span><span class="lnt">24
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="cp">#ifndef TS_ALGORITHM_H
-</span><span class="cp">#define TS_ALGORITHM_H
-</span><span class="cp"></span>
-<span class="cp">#ifdef __cplusplus
-</span><span class="cp"></span><span class="k">extern</span> <span class="s">&#34;C&#34;</span> <span class="p">{</span>
-<span class="cp">#endif
-</span><span class="cp"></span>
-<span class="k">typedef</span> <span class="k">struct</span> <span class="n">_TSCoord</span> <span class="p">{</span>
-    <span class="kt">double</span> <span class="n">N</span><span class="p">;</span>
-    <span class="kt">double</span> <span class="n">E</span><span class="p">;</span>
-    <span class="kt">double</span> <span class="n">Z</span><span class="p">;</span>
-<span class="p">}</span><span class="n">TSCoord</span><span class="p">;</span>
-
-<span class="k">enum</span> <span class="n">TSAlgo_ErrorCode</span> <span class="p">{</span>
-    <span class="n">TSALGO_NOERROR</span><span class="p">,</span>
-<span class="p">};</span>
-
-<span class="kt">int</span> <span class="nf">TSAlgo_CalcCenter</span><span class="p">(</span><span class="k">const</span> <span class="n">TSCoord</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">TSCoord</span> <span class="o">*</span><span class="n">b</span><span class="p">,</span> <span class="n">TSCoord</span> <span class="o">*</span><span class="n">result</span><span class="p">);</span>
-
-<span class="cp">#ifdef __cplusplus
-</span><span class="cp"></span><span class="p">}</span>
-<span class="cp">#endif
-</span><span class="cp"></span>
-<span class="cp">#endif
-</span></code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="cp">#ifndef TS_ALGORITHM_H
+</span></span></span><span class="line"><span class="cl"><span class="cp">#define TS_ALGORITHM_H
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="cp">#ifdef __cplusplus
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="k">extern</span> <span class="s">&#34;C&#34;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="cp">#endif
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="k">typedef</span> <span class="k">struct</span> <span class="n">_TSCoord</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">double</span> <span class="n">N</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">double</span> <span class="n">E</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">double</span> <span class="n">Z</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span><span class="n">TSCoord</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">enum</span> <span class="n">TSAlgo_ErrorCode</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">TSALGO_NOERROR</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">TSAlgo_CalcCenter</span><span class="p">(</span><span class="k">const</span> <span class="n">TSCoord</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">TSCoord</span> <span class="o">*</span><span class="n">b</span><span class="p">,</span> <span class="n">TSCoord</span> <span class="o">*</span><span class="n">result</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="cp">#ifdef __cplusplus
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="cp">#endif
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="cp">#endif
+</span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>头文件主要声明了一个计算中点的函数以及参数结构体类型，实现文件 <code>Algorithm.c</code> 内容如下：</p>
 <div class="highlight"><div class="chroma">
@@ -288,17 +297,17 @@
 </span><span class="lnt">10
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="cp">#include</span> <span class="cpf">&#34;algorithm.h&#34;</span><span class="cp">
-</span><span class="cp"></span>
-<span class="kt">int</span> <span class="nf">TSAlgo_CalcCenter</span><span class="p">(</span><span class="k">const</span> <span class="n">TSCoord</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">TSCoord</span> <span class="o">*</span><span class="n">b</span><span class="p">,</span> <span class="n">TSCoord</span> <span class="o">*</span><span class="n">result</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="n">result</span><span class="o">-&gt;</span><span class="n">N</span> <span class="o">=</span> <span class="p">(</span><span class="n">a</span><span class="o">-&gt;</span><span class="n">N</span> <span class="o">+</span> <span class="n">b</span><span class="o">-&gt;</span><span class="n">N</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">;</span>
-    <span class="n">result</span><span class="o">-&gt;</span><span class="n">E</span> <span class="o">=</span> <span class="p">(</span><span class="n">a</span><span class="o">-&gt;</span><span class="n">E</span> <span class="o">+</span> <span class="n">b</span><span class="o">-&gt;</span><span class="n">E</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">;</span>
-    <span class="n">result</span><span class="o">-&gt;</span><span class="n">Z</span> <span class="o">=</span> <span class="p">(</span><span class="n">a</span><span class="o">-&gt;</span><span class="n">Z</span> <span class="o">+</span> <span class="n">b</span><span class="o">-&gt;</span><span class="n">Z</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">;</span>
-
-    <span class="k">return</span> <span class="n">TSALGO_NOERROR</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&#34;algorithm.h&#34;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">TSAlgo_CalcCenter</span><span class="p">(</span><span class="k">const</span> <span class="n">TSCoord</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">TSCoord</span> <span class="o">*</span><span class="n">b</span><span class="p">,</span> <span class="n">TSCoord</span> <span class="o">*</span><span class="n">result</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">result</span><span class="o">-&gt;</span><span class="n">N</span> <span class="o">=</span> <span class="p">(</span><span class="n">a</span><span class="o">-&gt;</span><span class="n">N</span> <span class="o">+</span> <span class="n">b</span><span class="o">-&gt;</span><span class="n">N</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">result</span><span class="o">-&gt;</span><span class="n">E</span> <span class="o">=</span> <span class="p">(</span><span class="n">a</span><span class="o">-&gt;</span><span class="n">E</span> <span class="o">+</span> <span class="n">b</span><span class="o">-&gt;</span><span class="n">E</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">result</span><span class="o">-&gt;</span><span class="n">Z</span> <span class="o">=</span> <span class="p">(</span><span class="n">a</span><span class="o">-&gt;</span><span class="n">Z</span> <span class="o">+</span> <span class="n">b</span><span class="o">-&gt;</span><span class="n">Z</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">TSALGO_NOERROR</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>如果有其他要实现的算法，都可以在这个模块内实现。此模块将被 JNI 接口层调用。</p>
 <h3 id="22-jni-接口实现">2.2 JNI 接口实现</h3>
@@ -319,13 +328,13 @@
 </span><span class="lnt">6
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="cm">/* 动态库加载时候被调用的方法，进行初始化并注册模块函数 */</span>
-<span class="n">JNIEXPORT</span> <span class="n">jint</span> <span class="n">JNICALL</span> <span class="nf">JNI_OnLoad</span><span class="p">(</span><span class="n">JavaVM</span> <span class="o">*</span><span class="n">vm</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="n">reserved</span><span class="p">);</span>
-<span class="cm">/* 对应 TSMath.getVersion */</span>
-<span class="n">JNIEXPORT</span> <span class="n">jstring</span> <span class="n">JNICALL</span> <span class="nf">native_get_version</span><span class="p">(</span><span class="n">JNIEnv</span> <span class="o">*</span><span class="n">env</span><span class="p">,</span> <span class="n">jobject</span> <span class="n">thiz</span><span class="p">);</span>
-<span class="cm">/* 对应 TSMath.calcCenter */</span>
-<span class="n">JNIEXPORT</span> <span class="n">jobject</span> <span class="n">JNICALL</span> <span class="nf">native_calc_center</span><span class="p">(</span><span class="n">JNIEnv</span> <span class="o">*</span><span class="n">env</span><span class="p">,</span> <span class="n">jobject</span> <span class="n">thiz</span><span class="p">,</span> <span class="n">jobject</span> <span class="n">coorda</span><span class="p">,</span> <span class="n">jobject</span> <span class="n">coordb</span><span class="p">);</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="cm">/* 动态库加载时候被调用的方法，进行初始化并注册模块函数 */</span>
+</span></span><span class="line"><span class="cl"><span class="n">JNIEXPORT</span> <span class="n">jint</span> <span class="n">JNICALL</span> <span class="nf">JNI_OnLoad</span><span class="p">(</span><span class="n">JavaVM</span> <span class="o">*</span><span class="n">vm</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="n">reserved</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="cm">/* 对应 TSMath.getVersion */</span>
+</span></span><span class="line"><span class="cl"><span class="n">JNIEXPORT</span> <span class="n">jstring</span> <span class="n">JNICALL</span> <span class="nf">native_get_version</span><span class="p">(</span><span class="n">JNIEnv</span> <span class="o">*</span><span class="n">env</span><span class="p">,</span> <span class="n">jobject</span> <span class="n">thiz</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="cm">/* 对应 TSMath.calcCenter */</span>
+</span></span><span class="line"><span class="cl"><span class="n">JNIEXPORT</span> <span class="n">jobject</span> <span class="n">JNICALL</span> <span class="nf">native_calc_center</span><span class="p">(</span><span class="n">JNIEnv</span> <span class="o">*</span><span class="n">env</span><span class="p">,</span> <span class="n">jobject</span> <span class="n">thiz</span><span class="p">,</span> <span class="n">jobject</span> <span class="n">coorda</span><span class="p">,</span> <span class="n">jobject</span> <span class="n">coordb</span><span class="p">);</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p><code>native_get_version</code> 和 <code>native_calc_center</code> 即 <code>TSMath</code> 的 JNI 实现，函数参数和返回值也与之对应，每个函数的前两个参数 <code>JNIEnv *</code> 和 <code>jobject</code> 是 JNI 函数固定传入的参数。<code>jstring</code> 对应 Java 的 <code>String</code>，而自定义类对象均用 <code>jobject</code> 来对应，完整的 JNI 类型匹配可以参见 <a href="http://docs.oracle.com/javase/1.5.0/docs/guide/jni/spec/types.html#wp428">Primitive Types</a>.</p>
 <p>要实现动态注册，我们需要编写注册方法：</p>
@@ -367,41 +376,41 @@
 </span><span class="lnt">34
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="cm">/* ------------------------------------------------------------- */</span>
-<span class="cm">/* 方法注册资源表 */</span>
-<span class="k">static</span> <span class="n">JNINativeMethod</span> <span class="n">native_methods</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="p">{</span><span class="s">&#34;getVersion&#34;</span><span class="p">,</span> <span class="s">&#34;()Ljava/lang/String;&#34;</span><span class="p">,</span> <span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="p">)</span><span class="n">native_get_version</span><span class="p">},</span>
-    <span class="p">{</span><span class="s">&#34;calcCenter&#34;</span><span class="p">,</span> <span class="s">&#34;(Lcom/zhdgps/ts/TSCoord;Lcom/zhdgps/ts/TSCoord;)Lcom/zhdgps/ts/TSCoord;&#34;</span><span class="p">,</span> <span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="p">)</span><span class="n">native_calc_center</span><span class="p">},</span>
-<span class="p">};</span>
-<span class="cp">#define NATIVE_METHODS_COUNT (sizeof(native_methods)/sizeof(native_methods[0]))
-</span><span class="cp"></span>
-<span class="cm">/* 为某一个类注册方法 */</span>
-<span class="k">static</span> <span class="kt">int</span> <span class="nf">register_navtive_methods</span><span class="p">(</span><span class="n">JNIEnv</span> <span class="o">*</span><span class="n">env</span><span class="p">,</span>
-                                    <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">classname</span><span class="p">,</span>
-                                    <span class="n">JNINativeMethod</span> <span class="o">*</span><span class="n">methods</span><span class="p">,</span>
-                                    <span class="kt">int</span> <span class="n">methods_num</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="n">jclass</span> <span class="n">clazz</span><span class="p">;</span>
-    <span class="n">clazz</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">FindClass</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">classname</span><span class="p">);</span>
-    <span class="k">if</span><span class="p">(</span><span class="n">clazz</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="n">JNI_FALSE</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="k">if</span><span class="p">((</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">RegisterNatives</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">clazz</span><span class="p">,</span> <span class="n">methods</span><span class="p">,</span> <span class="n">methods_num</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="n">JNI_FALSE</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="k">return</span> <span class="n">JNI_TRUE</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="cm">/* 为所有类注册本地方法 */</span>
-<span class="k">static</span> <span class="kt">int</span> <span class="nf">register_natives</span><span class="p">(</span><span class="n">JNIEnv</span> <span class="o">*</span><span class="n">env</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="cm">/* 指定要注册的类名 */</span>
-    <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">classname</span> <span class="o">=</span> <span class="s">&#34;com/zhdgps/ts/TSMath&#34;</span><span class="p">;</span>
-    <span class="k">return</span> <span class="n">register_navtive_methods</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">classname</span><span class="p">,</span> <span class="n">native_methods</span><span class="p">,</span> <span class="n">NATIVE_METHODS_COUNT</span><span class="p">);</span>
-<span class="p">}</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="cm">/* ------------------------------------------------------------- */</span>
+</span></span><span class="line"><span class="cl"><span class="cm">/* 方法注册资源表 */</span>
+</span></span><span class="line"><span class="cl"><span class="k">static</span> <span class="n">JNINativeMethod</span> <span class="n">native_methods</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span><span class="s">&#34;getVersion&#34;</span><span class="p">,</span> <span class="s">&#34;()Ljava/lang/String;&#34;</span><span class="p">,</span> <span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="p">)</span><span class="n">native_get_version</span><span class="p">},</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span><span class="s">&#34;calcCenter&#34;</span><span class="p">,</span> <span class="s">&#34;(Lcom/zhdgps/ts/TSCoord;Lcom/zhdgps/ts/TSCoord;)Lcom/zhdgps/ts/TSCoord;&#34;</span><span class="p">,</span> <span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="p">)</span><span class="n">native_calc_center</span><span class="p">},</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl"><span class="cp">#define NATIVE_METHODS_COUNT (sizeof(native_methods)/sizeof(native_methods[0]))
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="cm">/* 为某一个类注册方法 */</span>
+</span></span><span class="line"><span class="cl"><span class="k">static</span> <span class="kt">int</span> <span class="nf">register_navtive_methods</span><span class="p">(</span><span class="n">JNIEnv</span> <span class="o">*</span><span class="n">env</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                                    <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">classname</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                                    <span class="n">JNINativeMethod</span> <span class="o">*</span><span class="n">methods</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                                    <span class="kt">int</span> <span class="n">methods_num</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">jclass</span> <span class="n">clazz</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">clazz</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="nf">FindClass</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">classname</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span><span class="p">(</span><span class="n">clazz</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">JNI_FALSE</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">if</span><span class="p">((</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="nf">RegisterNatives</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">clazz</span><span class="p">,</span> <span class="n">methods</span><span class="p">,</span> <span class="n">methods_num</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">JNI_FALSE</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">JNI_TRUE</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="cm">/* 为所有类注册本地方法 */</span>
+</span></span><span class="line"><span class="cl"><span class="k">static</span> <span class="kt">int</span> <span class="nf">register_natives</span><span class="p">(</span><span class="n">JNIEnv</span> <span class="o">*</span><span class="n">env</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="cm">/* 指定要注册的类名 */</span>
+</span></span><span class="line"><span class="cl">    <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">classname</span> <span class="o">=</span> <span class="s">&#34;com/zhdgps/ts/TSMath&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nf">register_navtive_methods</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">classname</span><span class="p">,</span> <span class="n">native_methods</span><span class="p">,</span> <span class="n">NATIVE_METHODS_COUNT</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p><code>JNINativeMethod</code> 是在 <code>&lt;jni.h&gt;</code> 中定义的结构体，用于存储要动态注册的函数信息。第一个成员是字符串，用以表示要注册的函数所使用的函数名。第二个成员是字符串，用以表示函数的参数和返回值接口(<code>Type Signatures</code>)，在这个字符串中，<code>&quot;()&quot;</code>内表示函数的参数类型，然后是函数的返回值类型，<code>&quot;()&quot;</code> 表示函数参数为空，而如果函数返回值为空，则用 <code>&quot;()V&quot;</code> 表示。 <code>&quot;Ljava/lang/String;&quot;</code> 表示为 <code>java.lang.String</code>，<code>&quot;Lxxx;&quot;</code> 是 <code>xxx</code> 类型的完整写法，包字段分隔用斜杠代替，比如 <code>&quot;Lcom/zhdgps/ts/TScoord;&quot;</code> 表示类型为 <code>com.zhdgps.ts.TSCoord</code> 。如果参数有多个，依次写出对应类型。Java 源生类型可以参考 <a href="http://docs.oracle.com/javase/1.5.0/docs/guide/jni/spec/types.html#wp16432">Type Signatures</a>.</p>
 <p>在 <code>register_natives</code> 中，我们将这两个函数注册到了类 <code>com/zhgps/ts/TSmath</code> 中，这个类就是之前在 Java 层定义的 <code>com.zhdgps.ts.TSMath</code>。</p>
@@ -416,13 +425,13 @@
 </span><span class="lnt">6
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="cp">#define TSMATH_VERSION  &#34;v0.1 alpha&#34;
-</span><span class="cp"></span>
-<span class="n">JNIEXPORT</span> <span class="n">jstring</span> <span class="n">JNICALL</span> <span class="nf">native_get_version</span><span class="p">(</span><span class="n">JNIEnv</span> <span class="o">*</span><span class="n">env</span><span class="p">,</span> <span class="n">jobject</span> <span class="n">thiz</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="k">return</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">NewStringUTF</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">TSMATH_VERSION</span><span class="p">);</span>
-<span class="p">}</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="cp">#define TSMATH_VERSION  &#34;v0.1 alpha&#34;
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="n">JNIEXPORT</span> <span class="n">jstring</span> <span class="n">JNICALL</span> <span class="nf">native_get_version</span><span class="p">(</span><span class="n">JNIEnv</span> <span class="o">*</span><span class="n">env</span><span class="p">,</span> <span class="n">jobject</span> <span class="n">thiz</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="nf">NewStringUTF</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">TSMATH_VERSION</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p><code>native_get_version</code> 比较简单，就返回一个版本文本字符串。这里需要注意的是，如果函数需要返回非ASCII的字符串，则不能直接使用 <code>NewStringUTF</code>，因为 JNI 使用了修改版的 UTF-8 编码，具体可以参考 <a href="http://docs.oracle.com/javase/1.5.0/docs/guide/jni/spec/types.html#wp16542">Modified UTF-8 Strings</a>.</p>
 <div class="highlight"><div class="chroma">
@@ -502,80 +511,80 @@
 </span><span class="lnt">73
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="cm">/* 保存全局 TSCoord 的信息，便于后续检索成员 */</span>
-<span class="k">struct</span> <span class="n">TSCoordJNIInfo</span> <span class="p">{</span>
-    <span class="cm">/* ICS 4.0 之后，jclass 可能会变化，所以在获取后，调用 NewGlobalRef 保存引用，然后就不再变化 */</span>
-    <span class="n">jclass</span> <span class="n">cls</span><span class="p">;</span>
-    <span class="cm">/* ID 一般不会变化 */</span>
-    <span class="n">jfieldID</span> <span class="n">fid_n</span><span class="p">;</span>
-    <span class="n">jfieldID</span> <span class="n">fid_e</span><span class="p">;</span>
-    <span class="n">jfieldID</span> <span class="n">fid_z</span><span class="p">;</span>
-    <span class="n">jmethodID</span> <span class="n">mid_init</span><span class="p">;</span>
-<span class="p">}</span> <span class="n">g_tscoord_jni</span><span class="p">;</span>
-
-<span class="k">static</span> <span class="kt">int</span> <span class="nf">helper_init_tscoord_jniinfo</span><span class="p">(</span><span class="n">JNIEnv</span> <span class="o">*</span><span class="n">env</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="n">jclass</span> <span class="n">cls</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">FindClass</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="s">&#34;com/zhdgps/ts/TSCoord&#34;</span><span class="p">);</span>
-    <span class="n">jfieldID</span> <span class="n">fid_n</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetFieldID</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">cls</span><span class="p">,</span> <span class="s">&#34;N&#34;</span><span class="p">,</span> <span class="s">&#34;D&#34;</span><span class="p">);</span>
-    <span class="n">jfieldID</span> <span class="n">fid_e</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetFieldID</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">cls</span><span class="p">,</span> <span class="s">&#34;E&#34;</span><span class="p">,</span> <span class="s">&#34;D&#34;</span><span class="p">);</span>
-    <span class="n">jfieldID</span> <span class="n">fid_z</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetFieldID</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">cls</span><span class="p">,</span> <span class="s">&#34;Z&#34;</span><span class="p">,</span> <span class="s">&#34;D&#34;</span><span class="p">);</span>
-    <span class="n">jmethodID</span> <span class="n">mid_init</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetMethodID</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">cls</span><span class="p">,</span> <span class="s">&#34;&lt;init&gt;&#34;</span><span class="p">,</span> <span class="s">&#34;()V&#34;</span><span class="p">);</span>
-
-    <span class="cm">/* ICS 4.0 之后保存全局引用需要调用此函数，后续需要解除引用，使用函数 DeleteGlobalRef */</span>
-    <span class="n">cls</span> <span class="o">=</span> <span class="p">(</span><span class="n">jclass</span><span class="p">)((</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">NewGlobalRef</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">cls</span><span class="p">));</span>
-    <span class="n">g_tscoord_jni</span><span class="p">.</span><span class="n">cls</span> <span class="o">=</span> <span class="n">cls</span><span class="p">;</span>
-    <span class="n">g_tscoord_jni</span><span class="p">.</span><span class="n">fid_n</span> <span class="o">=</span> <span class="n">fid_n</span><span class="p">;</span>
-    <span class="n">g_tscoord_jni</span><span class="p">.</span><span class="n">fid_e</span> <span class="o">=</span> <span class="n">fid_e</span><span class="p">;</span>
-    <span class="n">g_tscoord_jni</span><span class="p">.</span><span class="n">fid_z</span> <span class="o">=</span> <span class="n">fid_z</span><span class="p">;</span>
-    <span class="n">g_tscoord_jni</span><span class="p">.</span><span class="n">mid_init</span> <span class="o">=</span> <span class="n">mid_init</span><span class="p">;</span>
-
-    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="k">static</span> <span class="n">jobject</span> <span class="nf">helper_new_tscoord</span><span class="p">(</span><span class="n">JNIEnv</span> <span class="o">*</span><span class="n">env</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="n">jobject</span> <span class="n">tscoord</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">NewObject</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">g_tscoord_jni</span><span class="p">.</span><span class="n">cls</span><span class="p">,</span> <span class="n">g_tscoord_jni</span><span class="p">.</span><span class="n">mid_init</span><span class="p">);</span>
-    <span class="k">return</span> <span class="n">tscoord</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="k">static</span> <span class="n">TSCoord</span> <span class="nf">helper_get_tscoord</span><span class="p">(</span><span class="n">JNIEnv</span> <span class="o">*</span><span class="n">env</span><span class="p">,</span> <span class="n">jobject</span> <span class="n">coord</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="n">TSCoord</span> <span class="n">res_coord</span><span class="p">;</span>
-
-    <span class="n">jdouble</span> <span class="n">n</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetDoubleField</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">coord</span><span class="p">,</span> <span class="n">g_tscoord_jni</span><span class="p">.</span><span class="n">fid_n</span><span class="p">);</span>
-    <span class="n">jdouble</span> <span class="n">e</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetDoubleField</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">coord</span><span class="p">,</span> <span class="n">g_tscoord_jni</span><span class="p">.</span><span class="n">fid_e</span><span class="p">);</span>
-    <span class="n">jdouble</span> <span class="n">z</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetDoubleField</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">coord</span><span class="p">,</span> <span class="n">g_tscoord_jni</span><span class="p">.</span><span class="n">fid_z</span><span class="p">);</span>
-
-    <span class="n">res_coord</span><span class="p">.</span><span class="n">N</span> <span class="o">=</span> <span class="n">n</span><span class="p">;</span>
-    <span class="n">res_coord</span><span class="p">.</span><span class="n">E</span> <span class="o">=</span> <span class="n">e</span><span class="p">;</span>
-    <span class="n">res_coord</span><span class="p">.</span><span class="n">Z</span> <span class="o">=</span> <span class="n">z</span><span class="p">;</span>
-
-    <span class="k">return</span> <span class="n">res_coord</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="k">static</span> <span class="kt">void</span> <span class="nf">helper_set_tscoord</span><span class="p">(</span><span class="n">JNIEnv</span> <span class="o">*</span><span class="n">env</span><span class="p">,</span> <span class="n">jobject</span> <span class="n">coord</span><span class="p">,</span> <span class="k">const</span> <span class="n">TSCoord</span> <span class="o">*</span><span class="n">source</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">SetDoubleField</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">coord</span><span class="p">,</span> <span class="n">g_tscoord_jni</span><span class="p">.</span><span class="n">fid_n</span><span class="p">,</span> <span class="n">source</span><span class="o">-&gt;</span><span class="n">N</span><span class="p">);</span>
-    <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">SetDoubleField</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">coord</span><span class="p">,</span> <span class="n">g_tscoord_jni</span><span class="p">.</span><span class="n">fid_e</span><span class="p">,</span> <span class="n">source</span><span class="o">-&gt;</span><span class="n">E</span><span class="p">);</span>
-    <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">SetDoubleField</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">coord</span><span class="p">,</span> <span class="n">g_tscoord_jni</span><span class="p">.</span><span class="n">fid_z</span><span class="p">,</span> <span class="n">source</span><span class="o">-&gt;</span><span class="n">Z</span><span class="p">);</span>
-<span class="p">}</span>
-
-<span class="n">JNIEXPORT</span> <span class="n">jobject</span> <span class="n">JNICALL</span> <span class="nf">native_calc_center</span><span class="p">(</span><span class="n">JNIEnv</span> <span class="o">*</span><span class="n">env</span><span class="p">,</span> <span class="n">jobject</span> <span class="n">thiz</span><span class="p">,</span> <span class="n">jobject</span> <span class="n">coorda</span><span class="p">,</span> <span class="n">jobject</span> <span class="n">coordb</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="n">TSCoord</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">;</span>
-    <span class="n">jobject</span> <span class="n">obj</span><span class="p">;</span>
-
-    <span class="n">a</span> <span class="o">=</span> <span class="n">helper_get_tscoord</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">coorda</span><span class="p">);</span>
-    <span class="n">b</span> <span class="o">=</span> <span class="n">helper_get_tscoord</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">coordb</span><span class="p">);</span>
-
-    <span class="n">TSAlgo_CalcCenter</span><span class="p">(</span><span class="o">&amp;</span><span class="n">a</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">b</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">c</span><span class="p">);</span>
-
-    <span class="n">obj</span> <span class="o">=</span> <span class="n">helper_new_tscoord</span><span class="p">(</span><span class="n">env</span><span class="p">);</span>
-    <span class="n">helper_set_tscoord</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">c</span><span class="p">);</span>
-
-    <span class="k">return</span> <span class="n">obj</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="cm">/* 保存全局 TSCoord 的信息，便于后续检索成员 */</span>
+</span></span><span class="line"><span class="cl"><span class="k">struct</span> <span class="n">TSCoordJNIInfo</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="cm">/* ICS 4.0 之后，jclass 可能会变化，所以在获取后，调用 NewGlobalRef 保存引用，然后就不再变化 */</span>
+</span></span><span class="line"><span class="cl">    <span class="n">jclass</span> <span class="n">cls</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="cm">/* ID 一般不会变化 */</span>
+</span></span><span class="line"><span class="cl">    <span class="n">jfieldID</span> <span class="n">fid_n</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">jfieldID</span> <span class="n">fid_e</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">jfieldID</span> <span class="n">fid_z</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">jmethodID</span> <span class="n">mid_init</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span> <span class="n">g_tscoord_jni</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">static</span> <span class="kt">int</span> <span class="nf">helper_init_tscoord_jniinfo</span><span class="p">(</span><span class="n">JNIEnv</span> <span class="o">*</span><span class="n">env</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">jclass</span> <span class="n">cls</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="nf">FindClass</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="s">&#34;com/zhdgps/ts/TSCoord&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">jfieldID</span> <span class="n">fid_n</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="nf">GetFieldID</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">cls</span><span class="p">,</span> <span class="s">&#34;N&#34;</span><span class="p">,</span> <span class="s">&#34;D&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">jfieldID</span> <span class="n">fid_e</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="nf">GetFieldID</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">cls</span><span class="p">,</span> <span class="s">&#34;E&#34;</span><span class="p">,</span> <span class="s">&#34;D&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">jfieldID</span> <span class="n">fid_z</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="nf">GetFieldID</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">cls</span><span class="p">,</span> <span class="s">&#34;Z&#34;</span><span class="p">,</span> <span class="s">&#34;D&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">jmethodID</span> <span class="n">mid_init</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="nf">GetMethodID</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">cls</span><span class="p">,</span> <span class="s">&#34;&lt;init&gt;&#34;</span><span class="p">,</span> <span class="s">&#34;()V&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="cm">/* ICS 4.0 之后保存全局引用需要调用此函数，后续需要解除引用，使用函数 DeleteGlobalRef */</span>
+</span></span><span class="line"><span class="cl">    <span class="n">cls</span> <span class="o">=</span> <span class="p">(</span><span class="n">jclass</span><span class="p">)((</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="nf">NewGlobalRef</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">cls</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">    <span class="n">g_tscoord_jni</span><span class="p">.</span><span class="n">cls</span> <span class="o">=</span> <span class="n">cls</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">g_tscoord_jni</span><span class="p">.</span><span class="n">fid_n</span> <span class="o">=</span> <span class="n">fid_n</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">g_tscoord_jni</span><span class="p">.</span><span class="n">fid_e</span> <span class="o">=</span> <span class="n">fid_e</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">g_tscoord_jni</span><span class="p">.</span><span class="n">fid_z</span> <span class="o">=</span> <span class="n">fid_z</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">g_tscoord_jni</span><span class="p">.</span><span class="n">mid_init</span> <span class="o">=</span> <span class="n">mid_init</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">static</span> <span class="n">jobject</span> <span class="nf">helper_new_tscoord</span><span class="p">(</span><span class="n">JNIEnv</span> <span class="o">*</span><span class="n">env</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">jobject</span> <span class="n">tscoord</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="nf">NewObject</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">g_tscoord_jni</span><span class="p">.</span><span class="n">cls</span><span class="p">,</span> <span class="n">g_tscoord_jni</span><span class="p">.</span><span class="n">mid_init</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">tscoord</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">static</span> <span class="n">TSCoord</span> <span class="nf">helper_get_tscoord</span><span class="p">(</span><span class="n">JNIEnv</span> <span class="o">*</span><span class="n">env</span><span class="p">,</span> <span class="n">jobject</span> <span class="n">coord</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">TSCoord</span> <span class="n">res_coord</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">jdouble</span> <span class="n">n</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="nf">GetDoubleField</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">coord</span><span class="p">,</span> <span class="n">g_tscoord_jni</span><span class="p">.</span><span class="n">fid_n</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">jdouble</span> <span class="n">e</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="nf">GetDoubleField</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">coord</span><span class="p">,</span> <span class="n">g_tscoord_jni</span><span class="p">.</span><span class="n">fid_e</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">jdouble</span> <span class="n">z</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="nf">GetDoubleField</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">coord</span><span class="p">,</span> <span class="n">g_tscoord_jni</span><span class="p">.</span><span class="n">fid_z</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">res_coord</span><span class="p">.</span><span class="n">N</span> <span class="o">=</span> <span class="n">n</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">res_coord</span><span class="p">.</span><span class="n">E</span> <span class="o">=</span> <span class="n">e</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">res_coord</span><span class="p">.</span><span class="n">Z</span> <span class="o">=</span> <span class="n">z</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">res_coord</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">static</span> <span class="kt">void</span> <span class="nf">helper_set_tscoord</span><span class="p">(</span><span class="n">JNIEnv</span> <span class="o">*</span><span class="n">env</span><span class="p">,</span> <span class="n">jobject</span> <span class="n">coord</span><span class="p">,</span> <span class="k">const</span> <span class="n">TSCoord</span> <span class="o">*</span><span class="n">source</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="nf">SetDoubleField</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">coord</span><span class="p">,</span> <span class="n">g_tscoord_jni</span><span class="p">.</span><span class="n">fid_n</span><span class="p">,</span> <span class="n">source</span><span class="o">-&gt;</span><span class="n">N</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="nf">SetDoubleField</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">coord</span><span class="p">,</span> <span class="n">g_tscoord_jni</span><span class="p">.</span><span class="n">fid_e</span><span class="p">,</span> <span class="n">source</span><span class="o">-&gt;</span><span class="n">E</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="nf">SetDoubleField</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">coord</span><span class="p">,</span> <span class="n">g_tscoord_jni</span><span class="p">.</span><span class="n">fid_z</span><span class="p">,</span> <span class="n">source</span><span class="o">-&gt;</span><span class="n">Z</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">JNIEXPORT</span> <span class="n">jobject</span> <span class="n">JNICALL</span> <span class="nf">native_calc_center</span><span class="p">(</span><span class="n">JNIEnv</span> <span class="o">*</span><span class="n">env</span><span class="p">,</span> <span class="n">jobject</span> <span class="n">thiz</span><span class="p">,</span> <span class="n">jobject</span> <span class="n">coorda</span><span class="p">,</span> <span class="n">jobject</span> <span class="n">coordb</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">TSCoord</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">jobject</span> <span class="n">obj</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">a</span> <span class="o">=</span> <span class="nf">helper_get_tscoord</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">coorda</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">b</span> <span class="o">=</span> <span class="nf">helper_get_tscoord</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">coordb</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nf">TSAlgo_CalcCenter</span><span class="p">(</span><span class="o">&amp;</span><span class="n">a</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">b</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">c</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">obj</span> <span class="o">=</span> <span class="nf">helper_new_tscoord</span><span class="p">(</span><span class="n">env</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">helper_set_tscoord</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">c</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">obj</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>我们定义了一个结构体 <code>struct TSCoordJNIInfo</code> 用于保存 Java 类 <code>com.zhdgps.ts.TSCoord</code> 保存在 JVM 中的信息，包括类句柄、各字段ID（N，E，Z）以及构造函数ID。这些信息到后面获取/设置类对象字段时会用到，用全局结构体保存这些信息是为了效率，对于 <code>FieldID</code> 和 <code>MethodID</code> 来说，一旦类初始化后就不再变化，如果每次需要获取类对象信息时都去调用 <code>GetFieldID</code> 和 <code>GetMethodID</code> ，会给 JVM 带来负担，而且代码也有冗余。这里需要注意的是类句柄，对于 ICS4.0 以后的安卓系统，内存中的句柄可能会因为内存整理而移动，这意味着类句柄是会变化的，需要使用函数 <code>NewGlobalRef</code> 来保证句柄不变。</p>
 <p>函数 <code>helper_init_tscoord_jniinfo</code> 用于获取类信息，这个函数需要在 <code>JNI_OnLoad</code> 中调用，保证在函数被调用前初始化全局信息。</p>
@@ -613,33 +622,33 @@
 </span><span class="lnt">26
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="cm">/* System.loadLibrary 时调用，成功返回 JNI 版本，失败返回 -1
-</span><span class="cm"> *
-</span><span class="cm"> * 可在此函数中进行初始化等操作
-</span><span class="cm"> * */</span>
-<span class="n">JNIEXPORT</span> <span class="n">jint</span> <span class="n">JNICALL</span> <span class="nf">JNI_OnLoad</span><span class="p">(</span><span class="n">JavaVM</span> <span class="o">*</span><span class="n">vm</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="n">reserved</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="n">JNIEnv</span> <span class="o">*</span><span class="n">env</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
-    <span class="n">jint</span> <span class="n">result</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
-
-    <span class="k">if</span><span class="p">((</span><span class="o">*</span><span class="n">vm</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetEnv</span><span class="p">(</span><span class="n">vm</span><span class="p">,</span> <span class="p">(</span><span class="kt">void</span> <span class="o">**</span><span class="p">)</span><span class="o">&amp;</span><span class="n">env</span><span class="p">,</span> <span class="n">JNI_VERSION_1_4</span><span class="p">)</span> <span class="o">!=</span> <span class="n">JNI_OK</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">D_LOG</span><span class="p">(</span><span class="s">&#34;Get env failed!&#34;</span><span class="p">);</span>
-        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="k">if</span><span class="p">(</span><span class="n">register_natives</span><span class="p">(</span><span class="n">env</span><span class="p">)</span> <span class="o">!=</span> <span class="n">JNI_TRUE</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">D_LOG</span><span class="p">(</span><span class="s">&#34;Register failed!&#34;</span><span class="p">);</span>
-        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="cm">/* 填充TSCoord JNI Info */</span>
-    <span class="n">helper_init_tscoord_jniinfo</span><span class="p">(</span><span class="n">env</span><span class="p">);</span>
-    <span class="n">D_LOG</span><span class="p">(</span><span class="s">&#34;Init TSCoord succ!&#34;</span><span class="p">);</span>
-
-    <span class="n">result</span> <span class="o">=</span> <span class="n">JNI_VERSION_1_4</span><span class="p">;</span>
-    <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="cm">/* System.loadLibrary 时调用，成功返回 JNI 版本，失败返回 -1
+</span></span></span><span class="line"><span class="cl"><span class="cm"> *
+</span></span></span><span class="line"><span class="cl"><span class="cm"> * 可在此函数中进行初始化等操作
+</span></span></span><span class="line"><span class="cl"><span class="cm"> * */</span>
+</span></span><span class="line"><span class="cl"><span class="n">JNIEXPORT</span> <span class="n">jint</span> <span class="n">JNICALL</span> <span class="nf">JNI_OnLoad</span><span class="p">(</span><span class="n">JavaVM</span> <span class="o">*</span><span class="n">vm</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="n">reserved</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">JNIEnv</span> <span class="o">*</span><span class="n">env</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">jint</span> <span class="n">result</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">if</span><span class="p">((</span><span class="o">*</span><span class="n">vm</span><span class="p">)</span><span class="o">-&gt;</span><span class="nf">GetEnv</span><span class="p">(</span><span class="n">vm</span><span class="p">,</span> <span class="p">(</span><span class="kt">void</span> <span class="o">**</span><span class="p">)</span><span class="o">&amp;</span><span class="n">env</span><span class="p">,</span> <span class="n">JNI_VERSION_1_4</span><span class="p">)</span> <span class="o">!=</span> <span class="n">JNI_OK</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nf">D_LOG</span><span class="p">(</span><span class="s">&#34;Get env failed!&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">if</span><span class="p">(</span><span class="nf">register_natives</span><span class="p">(</span><span class="n">env</span><span class="p">)</span> <span class="o">!=</span> <span class="n">JNI_TRUE</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nf">D_LOG</span><span class="p">(</span><span class="s">&#34;Register failed!&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="cm">/* 填充TSCoord JNI Info */</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">helper_init_tscoord_jniinfo</span><span class="p">(</span><span class="n">env</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">D_LOG</span><span class="p">(</span><span class="s">&#34;Init TSCoord succ!&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">result</span> <span class="o">=</span> <span class="n">JNI_VERSION_1_4</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><h3 id="23-编译-so-库">2.3 编译 so 库</h3>
 <p>编辑 <code>Android.mk</code> 文件</p>
@@ -661,21 +670,21 @@
 </span><span class="lnt">14
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-makefile" data-lang="makefile"><span class="nv">LOCAL_PATH</span> <span class="o">:=</span> <span class="k">$(</span>call my-dir<span class="k">)</span>
-<span class="err">include</span> <span class="k">$(</span><span class="nv">CLEAR_VARS</span><span class="k">)</span>
-
-<span class="c"># 架构
-</span><span class="c"></span><span class="nv">LOCAL_ARM_MODE</span> <span class="o">:=</span> arm
-<span class="c"># 模块名
-</span><span class="c"></span><span class="nv">LOCAL_MODULE</span> <span class="o">:=</span> tsmath
-<span class="c"># 模块编译源文件
-</span><span class="c"></span><span class="nv">LOCAL_SRC_FILES</span> <span class="o">:=</span> tsmath.c algorithm.c
-<span class="c"># 模块依赖的库，比如要使用 android log 库
-</span><span class="c"></span><span class="nv">LOCAL_LDLIBS</span> <span class="o">:=</span> -llog
-
-<span class="c"># 编译为动态库
-</span><span class="c"></span><span class="err">include</span> <span class="k">$(</span><span class="nv">BUILD_SHARED_LIBRARY</span><span class="k">)</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-makefile" data-lang="makefile"><span class="line"><span class="cl"><span class="nv">LOCAL_PATH</span> <span class="o">:=</span> <span class="k">$(</span>call my-dir<span class="k">)</span>
+</span></span><span class="line"><span class="cl"><span class="err">include</span> <span class="k">$(</span><span class="nv">CLEAR_VARS</span><span class="k">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c"># 架构
+</span></span></span><span class="line"><span class="cl"><span class="c"></span><span class="nv">LOCAL_ARM_MODE</span> <span class="o">:=</span> arm
+</span></span><span class="line"><span class="cl"><span class="c"># 模块名
+</span></span></span><span class="line"><span class="cl"><span class="c"></span><span class="nv">LOCAL_MODULE</span> <span class="o">:=</span> tsmath
+</span></span><span class="line"><span class="cl"><span class="c"># 模块编译源文件
+</span></span></span><span class="line"><span class="cl"><span class="c"></span><span class="nv">LOCAL_SRC_FILES</span> <span class="o">:=</span> tsmath.c algorithm.c
+</span></span><span class="line"><span class="cl"><span class="c"># 模块依赖的库，比如要使用 android log 库
+</span></span></span><span class="line"><span class="cl"><span class="c"></span><span class="nv">LOCAL_LDLIBS</span> <span class="o">:=</span> -llog
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c"># 编译为动态库
+</span></span></span><span class="line"><span class="cl"><span class="c"></span><span class="err">include</span> <span class="k">$(</span><span class="nv">BUILD_SHARED_LIBRARY</span><span class="k">)</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>这个文件是用于 so 模块的编译，其中模块名为 <code>tsmath</code>，这样编译出的文件会自动加前后缀，输出为 <code>libtsmath.so</code>。源文件部分加上项目使用的所有 C 文件，头文件不必加入其中。如果有依赖的安卓库，则加到 <code>LOCAL_LDLIBS</code> 链接部分。</p>
 <p>编辑 <code>Application.mk</code> 文件</p>
@@ -684,8 +693,8 @@
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-makefile" data-lang="makefile"><span class="nv">APP_OPTIM</span> <span class="o">:=</span> release
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-makefile" data-lang="makefile"><span class="line"><span class="cl"><span class="nv">APP_OPTIM</span> <span class="o">:=</span> release
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>这里指定生成 release 版本的 so 库。如果这里如果需要生成其他平台库，则需要设置 <code>APP_ABI</code> 字段。比如要生成全平台，则添加一句 <code>APP_ABI := all</code>，这样会同时生成其他平台（x86 等）。</p>
 <p>下载 NDK ，完成安装并设置好系统 <code>Path</code> 变量。下载地址 <a href="http://developer.android.com/ndk/index.html">Android NDK</a>.</p>
@@ -717,26 +726,26 @@
 </span><span class="lnt">19
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="n">TSCoord</span> <span class="n">a</span> <span class="o">=</span> <span class="k">new</span> <span class="n">TSCoord</span><span class="o">();</span>
-<span class="n">a</span><span class="o">.</span><span class="na">N</span> <span class="o">=</span> <span class="n">1</span><span class="o">.</span><span class="na">0</span><span class="o">;</span>
-<span class="n">a</span><span class="o">.</span><span class="na">E</span> <span class="o">=</span> <span class="n">2</span><span class="o">.</span><span class="na">0</span><span class="o">;</span>
-<span class="n">a</span><span class="o">.</span><span class="na">Z</span> <span class="o">=</span> <span class="n">3</span><span class="o">.</span><span class="na">0</span><span class="o">;</span>
-
-<span class="n">TSCoord</span> <span class="n">b</span> <span class="o">=</span> <span class="k">new</span> <span class="n">TSCoord</span><span class="o">();</span>
-
-<span class="n">b</span><span class="o">.</span><span class="na">N</span> <span class="o">=</span> <span class="n">3</span><span class="o">.</span><span class="na">0</span><span class="o">;</span>
-<span class="n">b</span><span class="o">.</span><span class="na">E</span> <span class="o">=</span> <span class="n">6</span><span class="o">.</span><span class="na">0</span><span class="o">;</span>
-<span class="n">b</span><span class="o">.</span><span class="na">Z</span> <span class="o">=</span> <span class="n">9</span><span class="o">.</span><span class="na">0</span><span class="o">;</span>
-
-<span class="n">TSCoord</span> <span class="n">c</span> <span class="o">=</span> <span class="n">TSMath</span><span class="o">.</span><span class="na">calcCenter</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">b</span><span class="o">);</span>
-<span class="n">String</span> <span class="n">output</span> <span class="o">=</span> <span class="n">String</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&#34;A(%f, %f, %f), B(%f, %f, %f) center: (%f, %f, %f)&#34;</span><span class="o">,</span>
-				<span class="n">a</span><span class="o">.</span><span class="na">N</span><span class="o">,</span> <span class="n">a</span><span class="o">.</span><span class="na">E</span><span class="o">,</span> <span class="n">a</span><span class="o">.</span><span class="na">Z</span><span class="o">,</span>
-				<span class="n">b</span><span class="o">.</span><span class="na">N</span><span class="o">,</span> <span class="n">b</span><span class="o">.</span><span class="na">E</span><span class="o">,</span> <span class="n">b</span><span class="o">.</span><span class="na">Z</span><span class="o">,</span>
-				<span class="n">c</span><span class="o">.</span><span class="na">N</span><span class="o">,</span> <span class="n">c</span><span class="o">.</span><span class="na">E</span><span class="o">,</span> <span class="n">c</span><span class="o">.</span><span class="na">Z</span><span class="o">);</span>
-
-<span class="n">TextView</span> <span class="n">view</span> <span class="o">=</span> <span class="o">(</span><span class="n">TextView</span><span class="o">)</span><span class="n">findViewById</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">message</span><span class="o">);</span>
-<span class="n">view</span><span class="o">.</span><span class="na">setText</span><span class="o">(</span><span class="n">output</span><span class="o">);</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">TSCoord</span> <span class="n">a</span> <span class="o">=</span> <span class="k">new</span> <span class="n">TSCoord</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl"><span class="n">a</span><span class="o">.</span><span class="na">N</span> <span class="o">=</span> <span class="n">1</span><span class="o">.</span><span class="na">0</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">a</span><span class="o">.</span><span class="na">E</span> <span class="o">=</span> <span class="n">2</span><span class="o">.</span><span class="na">0</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">a</span><span class="o">.</span><span class="na">Z</span> <span class="o">=</span> <span class="n">3</span><span class="o">.</span><span class="na">0</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">TSCoord</span> <span class="n">b</span> <span class="o">=</span> <span class="k">new</span> <span class="n">TSCoord</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">b</span><span class="o">.</span><span class="na">N</span> <span class="o">=</span> <span class="n">3</span><span class="o">.</span><span class="na">0</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">b</span><span class="o">.</span><span class="na">E</span> <span class="o">=</span> <span class="n">6</span><span class="o">.</span><span class="na">0</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">b</span><span class="o">.</span><span class="na">Z</span> <span class="o">=</span> <span class="n">9</span><span class="o">.</span><span class="na">0</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">TSCoord</span> <span class="n">c</span> <span class="o">=</span> <span class="n">TSMath</span><span class="o">.</span><span class="na">calcCenter</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">b</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">String</span> <span class="n">output</span> <span class="o">=</span> <span class="n">String</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&#34;A(%f, %f, %f), B(%f, %f, %f) center: (%f, %f, %f)&#34;</span><span class="o">,</span>
+</span></span><span class="line"><span class="cl">				<span class="n">a</span><span class="o">.</span><span class="na">N</span><span class="o">,</span> <span class="n">a</span><span class="o">.</span><span class="na">E</span><span class="o">,</span> <span class="n">a</span><span class="o">.</span><span class="na">Z</span><span class="o">,</span>
+</span></span><span class="line"><span class="cl">				<span class="n">b</span><span class="o">.</span><span class="na">N</span><span class="o">,</span> <span class="n">b</span><span class="o">.</span><span class="na">E</span><span class="o">,</span> <span class="n">b</span><span class="o">.</span><span class="na">Z</span><span class="o">,</span>
+</span></span><span class="line"><span class="cl">				<span class="n">c</span><span class="o">.</span><span class="na">N</span><span class="o">,</span> <span class="n">c</span><span class="o">.</span><span class="na">E</span><span class="o">,</span> <span class="n">c</span><span class="o">.</span><span class="na">Z</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">TextView</span> <span class="n">view</span> <span class="o">=</span> <span class="o">(</span><span class="n">TextView</span><span class="o">)</span><span class="n">findViewById</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">message</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">view</span><span class="o">.</span><span class="na">setText</span><span class="o">(</span><span class="n">output</span><span class="o">);</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>这里测试了函数 <code>TSMath.calcCenter</code>。编译项目并运行，就可以看到结果了。</p>
 <p>源码可以点击这里<a href="/download/ndk_sample.zip">下载</a></p>
@@ -772,7 +781,7 @@
     <footer id="footer" class="footer">
       <div class="social-links">
       <a href="https://github.com/tisyang" class="iconfont icon-github" title="github"></a>
-  <a href="https://tisyang.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+  
 </div>
 
 <div class="copyright">
@@ -790,9 +799,17 @@
   <span class="copyright-year">
     &copy; 
     2016 - 
-    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>TyK</span>
+    2023<span class="heart"><i class="iconfont icon-heart"></i></span><span>TyK</span>
   </span>
 </div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>
+    mermaid.initialize({ startOnLoad: true });
+</script>
+
+<script src="/js/copy-to-clipboard.js"></script>
 
     </footer>
 
@@ -806,7 +823,7 @@
 
 
 
-<script type="text/javascript" src="/js/main.min.c99b103c33d1539acf3025e1913697534542c4a5aa5af0ccc20475ed2863603b.js"></script>
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
 
 
 

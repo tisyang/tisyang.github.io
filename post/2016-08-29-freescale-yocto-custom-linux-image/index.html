@@ -25,7 +25,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.92.2 with theme even" />
+<meta name="generator" content="Hugo 0.111.3 with theme even" />
 
 
 <link rel="canonical" href="https://tisyang.github.io/post/2016-08-29-freescale-yocto-custom-linux-image/" />
@@ -37,7 +37,7 @@
 
 
 
-<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link href="/sass/main.min.d4d0dce78b3ec6333437bc36540c4749ae9a27ff4ca2d7562da2dbfbf991dde3.css" rel="stylesheet">
 <link href="/lib/fancybox/jquery.fancybox-3.1.20.min.css" rel="stylesheet">
 
 
@@ -48,7 +48,6 @@
 <meta property="og:url" content="https://tisyang.github.io/post/2016-08-29-freescale-yocto-custom-linux-image/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2016-08-29T00:00:00+00:00" />
 <meta property="article:modified_time" content="2016-08-29T00:00:00+00:00" />
-
 <meta itemprop="name" content="Freescale Yocto 编译自定义 Linux 系统镜像">
 <meta itemprop="description" content="Yocto Project 是一个开源的协作软件，提供模板、工具和方法帮你创建定制的 Linux 系统和嵌入式产品，而无需关心硬件体系。适合嵌入式Linux开发人员使用。
 下面来以 Freescale 的 i.MX6UL 开发板为例，详细叙述如何搭建 Yocto 环境以及 Linux 镜像的定制编译和烧录。"><meta itemprop="datePublished" content="2016-08-29T00:00:00+00:00" />
@@ -67,6 +66,17 @@
   <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
 <![endif]-->
+
+<script>
+    (function(){
+     if(''){
+     if (prompt('请输入文章密码') !== ''){
+     alert('密码错误！');
+     history.back();
+     }
+     }
+     })();
+</script>
 
 </head>
 <body>
@@ -100,12 +110,8 @@
     <header id="header" class="header">
         <div class="logo-wrapper">
   <a href="/" class="logo">碎片</a>
+  
 </div>
-
-
-
-
-
 <nav class="site-navbar">
   <ul id="menu" class="menu">
     <li class="menu-item">
@@ -117,6 +123,10 @@
       </li>
   </ul>
 </nav>
+
+
+
+
 
     </header>
 
@@ -132,6 +142,7 @@
         <span class="post-time"> 2016-08-29 </span>
         
         
+        <span class="more-meta"> by </span>
       </div>
     </header>
 
@@ -170,8 +181,8 @@
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash">sudo apt-get install gawk wget git-core diffstat unzip texinfo  build-essential chrpath libsdl1.2-dev xterm curl
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sudo apt-get install gawk wget git-core diffstat unzip texinfo  build-essential chrpath libsdl1.2-dev xterm curl
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>其他发行版可以参照此 <a href="http://www.yoctoproject.org/docs/current/yocto-project-qs/yocto-project-qs.html#packages" title="Yocto Project Quick Start - The Build Host Packages">链接</a> 来安装依赖包。</p>
 <h3 id="12-下载-freescale-bsp-包">1.2 下载 Freescale BSP 包</h3>
@@ -185,10 +196,10 @@
 </span><span class="lnt">3
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash">mkdir ~/bin
-curl https://commondatastorage.googleapis.com/git-repo-downloads/repo &gt; ~/bin/repo
-chmod a+x ~/bin/repo
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">mkdir ~/bin
+</span></span><span class="line"><span class="cl">curl https://commondatastorage.googleapis.com/git-repo-downloads/repo &gt; ~/bin/repo
+</span></span><span class="line"><span class="cl">chmod a+x ~/bin/repo
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>备注：如果因为 GFW 的原因无法下载 <code>repo</code>，那么可以通过修改 <code>hosts</code> 文件来绕过：</p>
 <div class="highlight"><div class="chroma">
@@ -199,11 +210,11 @@ chmod a+x ~/bin/repo
 </span><span class="lnt">4
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># 也可以通过访问项目 https://github.com/racaljk/hosts 手动下载</span>
-curl https://raw.githubusercontent.com/racaljk/hosts/master/hosts &gt; ~/hosts
-<span class="c1"># 请勿直接覆盖 /etc/hosts，否则会影响 apt-get 工具的使用</span>
-sudo cat ~/hosts &gt;&gt; /etc/hosts
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># 也可以通过访问项目 https://github.com/racaljk/hosts 手动下载</span>
+</span></span><span class="line"><span class="cl">curl https://raw.githubusercontent.com/racaljk/hosts/master/hosts &gt; ~/hosts
+</span></span><span class="line"><span class="cl"><span class="c1"># 请勿直接覆盖 /etc/hosts，否则会影响 apt-get 工具的使用</span>
+</span></span><span class="line"><span class="cl">sudo cat ~/hosts &gt;&gt; /etc/hosts
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>下载 BSP 源码：</p>
 <div class="highlight"><div class="chroma">
@@ -215,12 +226,12 @@ sudo cat ~/hosts &gt;&gt; /etc/hosts
 </span><span class="lnt">5
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="nv">PATH</span><span class="o">=</span><span class="si">${</span><span class="nv">PATH</span><span class="si">}</span>:~/bin
-mkdir fsl-community-bsp
-<span class="nb">cd</span> fsl-community-bsp
-repo init -u https://github.com/Freescale/fsl-community-bsp-platform -b jethro
-repo sync
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nv">PATH</span><span class="o">=</span><span class="si">${</span><span class="nv">PATH</span><span class="si">}</span>:~/bin
+</span></span><span class="line"><span class="cl">mkdir fsl-community-bsp
+</span></span><span class="line"><span class="cl"><span class="nb">cd</span> fsl-community-bsp
+</span></span><span class="line"><span class="cl">repo init -u https://github.com/Freescale/fsl-community-bsp-platform -b jethro
+</span></span><span class="line"><span class="cl">repo sync
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>这一步会下载大量数据，完成后 Yocto 所需要的所有元数据已经齐备。</p>
 <h2 id="2-镜像编译及自定义配置">2. 镜像编译及自定义配置</h2>
@@ -230,8 +241,8 @@ repo sync
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="nb">source</span> ./setup-environment build
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nb">source</span> ./setup-environment build
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>这条命令用于初始化编译环境，其中 <code>build</code> 为指定的编译目录，也可以使用其他目录来当做编译目录。</p>
 <p>编辑 <code>build</code> 目录下的 <code>conf/local.conf</code> 文件，指定开发板型号和配置并行编译参数：</p>
@@ -242,10 +253,10 @@ repo sync
 </span><span class="lnt">3
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text">MACHINE ?= &#34;imx6ulevk&#34;
-BB_NUMBER_THREADS = &#34;4&#34;
-PARALLEL_MAKE = &#34;-j 4&#34;
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">MACHINE ?= &#34;imx6ulevk&#34;
+</span></span><span class="line"><span class="cl">BB_NUMBER_THREADS = &#34;4&#34;
+</span></span><span class="line"><span class="cl">PARALLEL_MAKE = &#34;-j 4&#34;
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>根据实际情况来配置，如果主机 CPU 核心数更多，可以将并行编译参数修改为 8.</p>
 <p>备注：这里也可以使用图形化的工具 <code>hob</code> 而不是手动修改来指定开发板型号和其他配置， <code>hob</code> 可以输入命令 <code>hob</code> 启动。</p>
@@ -255,8 +266,8 @@ PARALLEL_MAKE = &#34;-j 4&#34;
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash">bitbake core-image-minimal
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">bitbake core-image-minimal
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>编译过程中会下载所有需要的包的源码，编译过程比较耗时，也会占用不少硬盘空间。</p>
 <h3 id="21-自定义配置">2.1 自定义配置</h3>
@@ -270,8 +281,8 @@ PARALLEL_MAKE = &#34;-j 4&#34;
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash">yocto-layer create foobar
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">yocto-layer create foobar
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>命令提示一路回车确认即可。</p>
 <p>添加完空 layer 后，在 <code>meta-foobar</code> 目录下，用如下命令创建目录树：</p>
@@ -280,8 +291,8 @@ PARALLEL_MAKE = &#34;-j 4&#34;
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash">mkdir -p recipes-foobar/images
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">mkdir -p recipes-foobar/images
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>在新创建的目录下，创建一个 <code>foobar-image.bb</code> 文件，文件内容填写如下：</p>
 <div class="highlight"><div class="chroma">
@@ -289,8 +300,8 @@ PARALLEL_MAKE = &#34;-j 4&#34;
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text">require recipes-core/images/core-image-minimal.bb
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">require recipes-core/images/core-image-minimal.bb
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>意思是我们以 <code>core-image-minimal</code> 为模板，给 <code>foobar</code> layer 添加了一个镜像目标，后续对镜像的自定义配置也是针对此镜像目标来操作，而不是直接去修改预定义的 <code>core-image-minimal</code>。</p>
 <p>如果要编译 <code>foobar</code> 的镜像，切换到 <code>build</code> 编译目录下，并修改 <code>conf/bblayers.conf</code> 文件，按照已有的格式，将我们创建的 <code>meta-foobar</code> layer 添加到 <code>BBLAYERS</code> 变量中。</p>
@@ -300,8 +311,8 @@ PARALLEL_MAKE = &#34;-j 4&#34;
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash">bitbake foobar-image
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">bitbake foobar-image
+</span></span></code></pre></td></tr></table>
 </div>
 </div><h4 id="2-修改-busybox-配置">2) 修改 busybox 配置</h4>
 <p>Busybox 是一个很有用的组件，提供了很多系统工具，但是默认并不激活所有工具，我们也要根据情况来激活/禁用某些工具(比如激活 telnetd)。</p>
@@ -311,8 +322,8 @@ PARALLEL_MAKE = &#34;-j 4&#34;
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash">bitbake -c menuconfig busybox
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">bitbake -c menuconfig busybox
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>根据界面提示和实际需要来进行配置操作。</p>
 <p>使用如下命令来输出配置变更内容：</p>
@@ -321,8 +332,8 @@ PARALLEL_MAKE = &#34;-j 4&#34;
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash">bitbake -c diffconfig busybox
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">bitbake -c diffconfig busybox
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>保存路径设置为 <code>~/busybox.conf</code></p>
 <p>在 <code>meta-foobar</code> 路径下创建目录树 <code>recipes-core/busybox/files</code>，将 <code>busybox.conf</code> 文件复制到此目录下保存。
@@ -333,9 +344,9 @@ PARALLEL_MAKE = &#34;-j 4&#34;
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text">FILESEXTRAPATHS_prepend := &#34;${THISDIR}/files:&#34;
-SRC_URI += &#34;file://busybox.cfg&#34;
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">FILESEXTRAPATHS_prepend := &#34;${THISDIR}/files:&#34;
+</span></span><span class="line"><span class="cl">SRC_URI += &#34;file://busybox.cfg&#34;
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>重新编译 <code>foobar-image</code>，这样我们自定义的 busybox 配置就生效了。</p>
 <p>从这里可以看出，如果我们要修改一个 Yocto 自带的一个组件，那么我们就通过添加 layer，同时使用相同的 <code>recipes</code> 路径配合 <code>bbappend</code> 文件，来对默认的配置进修改即可。(<code>bbappend</code> 文件名中的 <code>%</code> 符号是版本号的占位符)</p>
@@ -347,8 +358,8 @@ SRC_URI += &#34;file://busybox.cfg&#34;
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text">hostname = &#34;foobar&#34;
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">hostname = &#34;foobar&#34;
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>这样子就修改了默认系统名为 <code>foobar</code>。</p>
 <h4 id="4-修改-root-默认密码">4) 修改 root 默认密码</h4>
@@ -360,9 +371,9 @@ SRC_URI += &#34;file://busybox.cfg&#34;
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text">inherit extrausers
-EXTRA_USERS_PARAMS = &#34;usermod -P 123456 root;&#34;
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">inherit extrausers
+</span></span><span class="line"><span class="cl">EXTRA_USERS_PARAMS = &#34;usermod -P 123456 root;&#34;
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>其中 123456 即为设置的 root 密码。</p>
 <p>备注：如果要使 root 密码生效，需要修改 <code>build</code> 目录下的 <code>conf/local.conf</code> 文件，注释掉 <code>EXTRA_IMAGE_FEATURES = &quot;debug-tweaks</code> 这个选项。</p>
@@ -376,8 +387,8 @@ EXTRA_USERS_PARAMS = &#34;usermod -P 123456 root;&#34;
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text">FILESEXTRAPATHS_prepend := &#34;${THISDIR}/files:&#34;
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">FILESEXTRAPATHS_prepend := &#34;${THISDIR}/files:&#34;
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>这样子我们修改过的 <code>sshd_config</code> 文件配置会覆盖默认配置。</p>
 <h4 id="6-修改默认时区">6) 修改默认时区</h4>
@@ -389,8 +400,8 @@ EXTRA_USERS_PARAMS = &#34;usermod -P 123456 root;&#34;
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text">DEFAULT_TIMEZONE = &#34;PRC&#34;
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">DEFAULT_TIMEZONE = &#34;PRC&#34;
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>这样就将默认时区设置为中国。</p>
 <p>以上 1-6 就详细叙述了常见的配置修改，修改模式基本都是通过自定义的配置去覆盖默认配置实现，用 <code>bbappend</code> 文件去调整默认配置，而不是直接去修改默认配置文件。</p>
@@ -402,8 +413,8 @@ EXTRA_USERS_PARAMS = &#34;usermod -P 123456 root;&#34;
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash">sudo dd <span class="k">if</span><span class="o">=</span>foobar-image-xxx.sdcard <span class="nv">of</span><span class="o">=</span>/dev/sdb
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sudo dd <span class="k">if</span><span class="o">=</span>foobar-image-xxx.sdcard <span class="nv">of</span><span class="o">=</span>/dev/sdb
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>在 Windows 上，可以使用 <a href="http://www.alexpage.de/usb-image-tool/" title="USB Image Tool">USB Image Tool</a> 来烧录镜像。</p>
 <p>需要注意的是，Yocto 默认编译生成的镜像只占用 SD 卡上的一个小分区，如果想让系统使用全部的 SD 卡空间，需要使用工具来调整。这里推荐使用  <code>GParted</code> 工具的 <code>resize/move</code> 功能，此工具为图形化工具，非常方便。</p>
@@ -413,8 +424,8 @@ EXTRA_USERS_PARAMS = &#34;usermod -P 123456 root;&#34;
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash">sudo apt-get install gparted
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sudo apt-get install gparted
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>GParted 运行：</p>
 <div class="highlight"><div class="chroma">
@@ -422,8 +433,8 @@ EXTRA_USERS_PARAMS = &#34;usermod -P 123456 root;&#34;
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash">sudo gparted
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sudo gparted
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>（完）</p>
     </div>
@@ -458,7 +469,7 @@ EXTRA_USERS_PARAMS = &#34;usermod -P 123456 root;&#34;
     <footer id="footer" class="footer">
       <div class="social-links">
       <a href="https://github.com/tisyang" class="iconfont icon-github" title="github"></a>
-  <a href="https://tisyang.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+  
 </div>
 
 <div class="copyright">
@@ -476,9 +487,17 @@ EXTRA_USERS_PARAMS = &#34;usermod -P 123456 root;&#34;
   <span class="copyright-year">
     &copy; 
     2016 - 
-    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>TyK</span>
+    2023<span class="heart"><i class="iconfont icon-heart"></i></span><span>TyK</span>
   </span>
 </div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>
+    mermaid.initialize({ startOnLoad: true });
+</script>
+
+<script src="/js/copy-to-clipboard.js"></script>
 
     </footer>
 
@@ -492,7 +511,7 @@ EXTRA_USERS_PARAMS = &#34;usermod -P 123456 root;&#34;
 
 
 
-<script type="text/javascript" src="/js/main.min.c99b103c33d1539acf3025e1913697534542c4a5aa5af0ccc20475ed2863603b.js"></script>
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
 
 
 

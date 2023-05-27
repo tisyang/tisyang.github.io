@@ -25,7 +25,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.92.2 with theme even" />
+<meta name="generator" content="Hugo 0.111.3 with theme even" />
 
 
 <link rel="canonical" href="https://tisyang.github.io/post/2016-05-27-bluetooth-serialport-with-32feet-net-library/" />
@@ -37,7 +37,7 @@
 
 
 
-<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link href="/sass/main.min.d4d0dce78b3ec6333437bc36540c4749ae9a27ff4ca2d7562da2dbfbf991dde3.css" rel="stylesheet">
 <link href="/lib/fancybox/jquery.fancybox-3.1.20.min.css" rel="stylesheet">
 
 
@@ -48,7 +48,6 @@
 <meta property="og:url" content="https://tisyang.github.io/post/2016-05-27-bluetooth-serialport-with-32feet-net-library/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2016-05-27T00:00:00+00:00" />
 <meta property="article:modified_time" content="2016-05-27T00:00:00+00:00" />
-
 <meta itemprop="name" content="32feet.net 蓝牙虚拟串口编程">
 <meta itemprop="description" content="Windows 上的蓝牙编程并不方便，由于操作系统并没有提供统一的蓝牙操作接口，通常是由各个蓝牙设备商提供蓝牙栈，所以要想编程兼容这些不同的厂商蓝牙是一个问题。好在有个软件项目 32feet.NET 针对主流蓝牙协议栈提供了支持，包括 Microsfot, Widcomm, BlueSolei 等，同时还支持红外传输协议。
 蓝牙虚拟串口是一个较为常见的需求，为了兼容已有使用串口设备的程序，需要将蓝牙连接转为系统上的虚拟串口，然后提供给其他程序或库使用。32feet.NET 对此也提供了支持。"><meta itemprop="datePublished" content="2016-05-27T00:00:00+00:00" />
@@ -67,6 +66,17 @@
   <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
 <![endif]-->
+
+<script>
+    (function(){
+     if(''){
+     if (prompt('请输入文章密码') !== ''){
+     alert('密码错误！');
+     history.back();
+     }
+     }
+     })();
+</script>
 
 </head>
 <body>
@@ -100,12 +110,8 @@
     <header id="header" class="header">
         <div class="logo-wrapper">
   <a href="/" class="logo">碎片</a>
+  
 </div>
-
-
-
-
-
 <nav class="site-navbar">
   <ul id="menu" class="menu">
     <li class="menu-item">
@@ -117,6 +123,10 @@
       </li>
   </ul>
 </nav>
+
+
+
+
 
     </header>
 
@@ -132,6 +142,7 @@
         <span class="post-time"> 2016-05-27 </span>
         
         
+        <span class="more-meta"> by </span>
       </div>
     </header>
 
@@ -167,8 +178,8 @@
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="nb">Install-Package</span> <span class="n">32feet</span><span class="p">.</span><span class="n">NET</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="nb">Install-Package</span> <span class="n">32feet</span><span class="p">.</span><span class="py">NET</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>这样 NuGet 会自动下载安装并添加到当前 .NET 项目中。可以检查项目 <code>References</code> 项，如果存在 <code>InTheHand.Net.Personal</code> 则表明已成功加入到项目中，如果没有，可以手动添加引用，NuGet 下载存放在 <code>SolutionName\packages\32feet.NET.x.x.x.x\</code> 路径下。</p>
 <h2 id="使用">使用</h2>
@@ -194,22 +205,22 @@
 </span><span class="lnt">15
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cs" data-lang="cs"><span class="cm">/* 定义于类 BTHelper 中 */</span>
-<span class="k">public</span> <span class="k">static</span> <span class="kt">bool</span> <span class="n">IsPlatformSupportBT</span><span class="p">()</span>
-<span class="p">{</span>
-    <span class="n">BluetoothClient</span> <span class="n">bc</span><span class="p">;</span>
-    <span class="k">try</span>
-    <span class="p">{</span>
-        <span class="n">bc</span> <span class="p">=</span> <span class="k">new</span> <span class="n">BluetoothClient</span><span class="p">();</span>
-    <span class="p">}</span>
-    <span class="k">catch</span> <span class="p">(</span><span class="n">PlatformNotSupportedException</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="k">return</span> <span class="k">false</span><span class="p">;</span>
-    <span class="p">}</span>
-    <span class="n">bc</span><span class="p">.</span><span class="n">Close</span><span class="p">();</span>
-    <span class="k">return</span> <span class="k">true</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-cs" data-lang="cs"><span class="line"><span class="cl"><span class="cm">/* 定义于类 BTHelper 中 */</span>
+</span></span><span class="line"><span class="cl"><span class="k">public</span> <span class="k">static</span> <span class="kt">bool</span> <span class="n">IsPlatformSupportBT</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">BluetoothClient</span> <span class="n">bc</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">try</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">bc</span> <span class="p">=</span> <span class="k">new</span> <span class="n">BluetoothClient</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="k">catch</span> <span class="p">(</span><span class="n">PlatformNotSupportedException</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="k">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="n">bc</span><span class="p">.</span><span class="n">Close</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="k">true</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>如果系统不支持蓝牙设备，那么 <code>new BluetoothClient</code> 会抛出 <code>PlatformNotSupportedException</code> 异常，通过捕获这个异常，来检测系统蓝牙设备可用性。</p>
 <h3 id="2-蓝牙搜索">2. 蓝牙搜索</h3>
@@ -219,8 +230,8 @@
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cs" data-lang="cs"><span class="k">public</span> <span class="n">BluetoothDeviceInfo</span><span class="p">[]</span> <span class="n">DiscoverDevices</span><span class="p">(</span><span class="kt">int</span> <span class="n">maxDevices</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">authenticated</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">remembered</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">unknown</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">discoverableOnly</span><span class="p">);</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-cs" data-lang="cs"><span class="line"><span class="cl"><span class="k">public</span> <span class="n">BluetoothDeviceInfo</span><span class="p">[]</span> <span class="n">DiscoverDevices</span><span class="p">(</span><span class="kt">int</span> <span class="n">maxDevices</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">authenticated</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">remembered</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">unknown</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">discoverableOnly</span><span class="p">);</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>第一个参数表明搜索的最大设备数，第二个参数表示是否搜索已配对设备，第三个表示是否搜索记住的设备，第四个表示是否搜索未知设备，第五个参数表示是搜索范围内可被发现的设备。</p>
 <p>这里面重要的是第二和第五个参数，第二个代表搜索系统中已配对列表中的设备，即使它们现在并不在线。第五个参数 XP 系统上不支持，表示搜索范围内可被发现的设备。</p>
@@ -256,26 +267,26 @@
 </span><span class="lnt">19
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cs" data-lang="cs"><span class="cm">/* 定义于类 BTHelper 中 */</span>
-<span class="k">public</span> <span class="k">static</span> <span class="kt">bool</span> <span class="n">TestingIfInRange</span><span class="p">(</span><span class="n">BluetoothAddress</span> <span class="n">addr</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="kt">bool</span> <span class="n">inRange</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-    <span class="n">Guid</span> <span class="n">fakeUuid</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Guid</span><span class="p">(</span><span class="s">&#34;{F13F471D-47CB-41d6-9609-BAD0690BF891}&#34;</span><span class="p">);</span>
-    <span class="n">BluetoothDeviceInfo</span> <span class="n">device</span> <span class="p">=</span> <span class="k">new</span> <span class="n">BluetoothDeviceInfo</span><span class="p">(</span><span class="n">addr</span><span class="p">);</span>
-
-    <span class="k">try</span>
-    <span class="p">{</span>
-        <span class="n">ServiceRecord</span><span class="p">[]</span> <span class="n">records</span> <span class="p">=</span> <span class="n">device</span><span class="p">.</span><span class="n">GetServiceRecords</span><span class="p">(</span><span class="n">fakeUuid</span><span class="p">);</span>
-        <span class="n">Debug</span><span class="p">.</span><span class="n">Assert</span><span class="p">(</span><span class="n">records</span><span class="p">.</span><span class="n">Length</span> <span class="p">==</span> <span class="m">0</span><span class="p">,</span> <span class="s">&#34;Why are we getting any records? len: &#34;</span> <span class="p">+</span> <span class="n">records</span><span class="p">.</span><span class="n">Length</span><span class="p">);</span>
-        <span class="n">inRange</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-    <span class="p">}</span>
-    <span class="k">catch</span> <span class="p">(</span><span class="n">SocketException</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="n">inRange</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-    <span class="p">}</span>
-    <span class="k">return</span> <span class="n">inRange</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-cs" data-lang="cs"><span class="line"><span class="cl"><span class="cm">/* 定义于类 BTHelper 中 */</span>
+</span></span><span class="line"><span class="cl"><span class="k">public</span> <span class="k">static</span> <span class="kt">bool</span> <span class="n">TestingIfInRange</span><span class="p">(</span><span class="n">BluetoothAddress</span> <span class="n">addr</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">bool</span> <span class="n">inRange</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Guid</span> <span class="n">fakeUuid</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Guid</span><span class="p">(</span><span class="s">&#34;{F13F471D-47CB-41d6-9609-BAD0690BF891}&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">BluetoothDeviceInfo</span> <span class="n">device</span> <span class="p">=</span> <span class="k">new</span> <span class="n">BluetoothDeviceInfo</span><span class="p">(</span><span class="n">addr</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">try</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">ServiceRecord</span><span class="p">[]</span> <span class="n">records</span> <span class="p">=</span> <span class="n">device</span><span class="p">.</span><span class="n">GetServiceRecords</span><span class="p">(</span><span class="n">fakeUuid</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Debug</span><span class="p">.</span><span class="n">Assert</span><span class="p">(</span><span class="n">records</span><span class="p">.</span><span class="n">Length</span> <span class="p">==</span> <span class="m">0</span><span class="p">,</span> <span class="s">&#34;Why are we getting any records? len: &#34;</span> <span class="p">+</span> <span class="n">records</span><span class="p">.</span><span class="n">Length</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">inRange</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="k">catch</span> <span class="p">(</span><span class="n">SocketException</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">inRange</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">inRange</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>需要注意的是，因为蓝牙设备通信需要时间，所以这个调用也需要较长时间才能完成，未完成之前进入阻塞不返回，所以这个方法也需要放入工作线程中执行。</p>
 <p>这部分内容可以参考官方文档： <a href="http://32feet.codeplex.com/wikipage?title=Testing%20if%20a%20device%20is%20in%20range" title="Testing if a device is in range">Tesing if a device is in rage</a>.</p>
@@ -301,18 +312,18 @@
 </span><span class="lnt">11
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cs" data-lang="cs"><span class="n">BluetoothAddress</span> <span class="n">addr</span> <span class="p">=</span> <span class="n">BluetoothAddress</span><span class="p">.</span><span class="n">Parse</span><span class="p">(</span><span class="s">&#34;001122334455&#34;</span><span class="p">);</span>
-<span class="n">Guid</span> <span class="n">serviceClass</span><span class="p">;</span>
-<span class="n">serviceClass</span> <span class="p">=</span> <span class="n">BluetoothService</span><span class="p">.</span><span class="n">SerialPort</span><span class="p">;</span>
-<span class="c1">// - or - etc
-</span><span class="c1">// serviceClass = MyConsts.MyServiceUuid
-</span><span class="c1">//
-</span><span class="c1"></span><span class="kt">var</span> <span class="n">ep</span> <span class="p">=</span> <span class="k">new</span> <span class="n">BluetoothEndPoint</span><span class="p">(</span><span class="n">addr</span><span class="p">,</span> <span class="n">serviceClass</span><span class="p">);</span>
-<span class="kt">var</span> <span class="n">cli</span> <span class="p">=</span> <span class="k">new</span> <span class="n">BluetoothClient</span><span class="p">();</span>
-<span class="n">cli</span><span class="p">.</span><span class="n">Connect</span><span class="p">(</span><span class="n">ep</span><span class="p">);</span>
-<span class="n">Stream</span> <span class="n">peerStream</span> <span class="p">=</span> <span class="n">cli</span><span class="p">.</span><span class="n">GetStream</span><span class="p">();</span>
-<span class="c1">// peerStream.Write/Read ...
-</span></code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-cs" data-lang="cs"><span class="line"><span class="cl"><span class="n">BluetoothAddress</span> <span class="n">addr</span> <span class="p">=</span> <span class="n">BluetoothAddress</span><span class="p">.</span><span class="n">Parse</span><span class="p">(</span><span class="s">&#34;001122334455&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">Guid</span> <span class="n">serviceClass</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">serviceClass</span> <span class="p">=</span> <span class="n">BluetoothService</span><span class="p">.</span><span class="n">SerialPort</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// - or - etc</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// serviceClass = MyConsts.MyServiceUuid</span>
+</span></span><span class="line"><span class="cl"><span class="p">//</span>
+</span></span><span class="line"><span class="cl"><span class="kt">var</span> <span class="n">ep</span> <span class="p">=</span> <span class="k">new</span> <span class="n">BluetoothEndPoint</span><span class="p">(</span><span class="n">addr</span><span class="p">,</span> <span class="n">serviceClass</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="kt">var</span> <span class="n">cli</span> <span class="p">=</span> <span class="k">new</span> <span class="n">BluetoothClient</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl"><span class="n">cli</span><span class="p">.</span><span class="n">Connect</span><span class="p">(</span><span class="n">ep</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">Stream</span> <span class="n">peerStream</span> <span class="p">=</span> <span class="n">cli</span><span class="p">.</span><span class="n">GetStream</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// peerStream.Write/Read ...</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><h3 id="6-蓝牙虚拟串口">6. 蓝牙虚拟串口</h3>
 <p>这部分讲解如何实现将蓝牙连接转为系统上的虚拟串口并获取串口名，还可以参阅官方文档： <a href="http://32feet.codeplex.com/wikipage?title=Bluetooth%20Serial%20Ports" title="Bluetooth Seiral Ports">Bluetooth Serial Ports</a>.</p>
@@ -326,11 +337,11 @@
 </span><span class="lnt">4
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cs" data-lang="cs"><span class="n">BluetoothAddress</span> <span class="n">addr</span> <span class="p">=</span> <span class="n">BluetoothAddress</span><span class="p">.</span><span class="n">Parse</span><span class="p">(</span><span class="s">&#34;123456789012&#34;</span><span class="p">);</span>
-<span class="n">BluetoothDeviceInfo</span> <span class="n">device</span> <span class="p">=</span> <span class="k">new</span> <span class="n">BluetoothDeviceInfo</span><span class="p">(</span><span class="n">addr</span><span class="p">);</span>  <span class="c1">// Or from discovery etc
-</span><span class="c1"></span><span class="kt">bool</span> <span class="n">state</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-<span class="n">device</span><span class="p">.</span><span class="n">SetServiceState</span><span class="p">(</span><span class="n">BluetoothService</span><span class="p">.</span><span class="n">SerialPort</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="k">true</span><span class="p">);</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-cs" data-lang="cs"><span class="line"><span class="cl"><span class="n">BluetoothAddress</span> <span class="n">addr</span> <span class="p">=</span> <span class="n">BluetoothAddress</span><span class="p">.</span><span class="n">Parse</span><span class="p">(</span><span class="s">&#34;123456789012&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">BluetoothDeviceInfo</span> <span class="n">device</span> <span class="p">=</span> <span class="k">new</span> <span class="n">BluetoothDeviceInfo</span><span class="p">(</span><span class="n">addr</span><span class="p">);</span>  <span class="c1">// Or from discovery etc</span>
+</span></span><span class="line"><span class="cl"><span class="kt">bool</span> <span class="n">state</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">device</span><span class="p">.</span><span class="n">SetServiceState</span><span class="p">(</span><span class="n">BluetoothService</span><span class="p">.</span><span class="n">SerialPort</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="k">true</span><span class="p">);</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p><code>SetServiceState</code> 的第一个函数表示服务标识，第二个表示要设置的服务状态，<code>true</code> 为启用， <code>false</code> 为禁用，第三个参数表示如果设置失败是否抛出异常。</p>
 <p>但在实际使用中，某些双模蓝牙在设置时，虽然设置成功但是依然会抛出 <code>Win32Exception</code> 异常，所以这里建议调用此函数的重载版本 <code>SetServiceState(System.Guid service, bool state)</code>，而想要知道是否设置成功，下面会介绍其他方法来获得。</p>
@@ -345,8 +356,8 @@
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="n">C:</span><span class="p">\&gt;</span> <span class="nb">Get-WmiObject</span> <span class="n">-query</span> <span class="s2">&#34;select DeviceID,PNPDeviceID from Win32_SerialPort&#34;</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="n">C:</span><span class="p">\&gt;</span> <span class="nb">Get-WmiObject</span> <span class="n">-query</span> <span class="s2">&#34;select DeviceID,PNPDeviceID from Win32_SerialPort&#34;</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>输出样例（其中 <code>COM66</code> 对应的蓝牙设备地址为 <code>00803A686519</code>）：</p>
 <div class="highlight"><div class="chroma">
@@ -357,11 +368,11 @@
 </span><span class="lnt">4
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text">DeviceID     : COM66
-PNPDeviceID  : BTHENUM\{00001101-0000-1000-8000-00805F9B34FB}\7&amp;1D80ECD3&amp;0&amp;00803A686519_C00000003
-
-......
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">DeviceID     : COM66
+</span></span><span class="line"><span class="cl">PNPDeviceID  : BTHENUM\{00001101-0000-1000-8000-00805F9B34FB}\7&amp;1D80ECD3&amp;0&amp;00803A686519_C00000003
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">......
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>可以看出蓝牙虚拟串口的 <code>PNPDeviceID</code> 是以 <code>BTHENUM</code> 开头，并且会将蓝牙地址存放其中。</p>
 <p>这个查询也可以通过 C# 代码实现：</p>
@@ -382,20 +393,20 @@ PNPDeviceID  : BTHENUM\{00001101-0000-1000-8000-00805F9B34FB}\7&amp;1D80ECD3&amp
 </span><span class="lnt">13
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cs" data-lang="cs"><span class="k">using</span> <span class="nn">System.Management</span><span class="p">;</span>
-
-<span class="k">const</span> <span class="kt">string</span> <span class="n">Win32_SerialPort</span> <span class="p">=</span> <span class="s">&#34;Win32_SerialPort&#34;</span><span class="p">;</span>
-<span class="n">SelectQuery</span> <span class="n">q</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SelectQuery</span><span class="p">(</span><span class="n">Win32_SerialPort</span><span class="p">);</span>
-<span class="n">ManagementObjectSearcher</span> <span class="n">s</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ManagementObjectSearcher</span><span class="p">(</span><span class="n">q</span><span class="p">);</span>
-<span class="k">foreach</span> <span class="p">(</span><span class="kt">object</span> <span class="n">cur</span> <span class="k">in</span> <span class="n">s</span><span class="p">.</span><span class="n">Get</span><span class="p">())</span> <span class="p">{</span>
-    <span class="n">ManagementObject</span> <span class="n">mo</span> <span class="p">=</span> <span class="p">(</span><span class="n">ManagementObject</span><span class="p">)</span><span class="n">cur</span><span class="p">;</span>
-    <span class="kt">object</span> <span class="n">id</span> <span class="p">=</span> <span class="n">mo</span><span class="p">.</span><span class="n">GetPropertyValue</span><span class="p">(</span><span class="s">&#34;DeviceID&#34;</span><span class="p">);</span>
-    <span class="kt">object</span> <span class="n">pnpId</span> <span class="p">=</span> <span class="n">mo</span><span class="p">.</span><span class="n">GetPropertyValue</span><span class="p">(</span><span class="s">&#34;PNPDeviceID&#34;</span><span class="p">);</span>
-    <span class="n">console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&#34;DeviceID:    {0} &#34;</span><span class="p">,</span> <span class="n">id</span><span class="p">);</span>
-    <span class="n">console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&#34;PNPDeviceID: {0} &#34;</span><span class="p">,</span> <span class="n">pnpId</span><span class="p">);</span>
-    <span class="n">console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&#34;&#34;</span><span class="p">);</span>
-<span class="p">}</span><span class="c1">//for
-</span></code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-cs" data-lang="cs"><span class="line"><span class="cl"><span class="k">using</span> <span class="nn">System.Management</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">const</span> <span class="kt">string</span> <span class="n">Win32_SerialPort</span> <span class="p">=</span> <span class="s">&#34;Win32_SerialPort&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">SelectQuery</span> <span class="n">q</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SelectQuery</span><span class="p">(</span><span class="n">Win32_SerialPort</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">ManagementObjectSearcher</span> <span class="n">s</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ManagementObjectSearcher</span><span class="p">(</span><span class="n">q</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="k">foreach</span> <span class="p">(</span><span class="kt">object</span> <span class="n">cur</span> <span class="k">in</span> <span class="n">s</span><span class="p">.</span><span class="n">Get</span><span class="p">())</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">ManagementObject</span> <span class="n">mo</span> <span class="p">=</span> <span class="p">(</span><span class="n">ManagementObject</span><span class="p">)</span><span class="n">cur</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">object</span> <span class="n">id</span> <span class="p">=</span> <span class="n">mo</span><span class="p">.</span><span class="n">GetPropertyValue</span><span class="p">(</span><span class="s">&#34;DeviceID&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">object</span> <span class="n">pnpId</span> <span class="p">=</span> <span class="n">mo</span><span class="p">.</span><span class="n">GetPropertyValue</span><span class="p">(</span><span class="s">&#34;PNPDeviceID&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&#34;DeviceID:    {0} &#34;</span><span class="p">,</span> <span class="n">id</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&#34;PNPDeviceID: {0} &#34;</span><span class="p">,</span> <span class="n">pnpId</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&#34;&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span><span class="c1">//for</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>综上，我们可以定义一个函数，这个函数通过 WMI 检索所有串口设备信息，然后返回一个 <code>Hashtable</code>，其中存储的键为蓝牙设备地址，存储的值为串口名。</p>
 <p>函数定义如下：</p>
@@ -442,46 +453,46 @@ PNPDeviceID  : BTHENUM\{00001101-0000-1000-8000-00805F9B34FB}\7&amp;1D80ECD3&amp
 </span><span class="lnt">39
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cs" data-lang="cs"><span class="cm">/* 定义于类 BTHelper 中 */</span>
-<span class="k">public</span> <span class="k">static</span> <span class="n">Hashtable</span> <span class="n">QueryBTHPorts</span><span class="p">()</span>
-<span class="p">{</span>
-    <span class="k">const</span> <span class="kt">string</span> <span class="n">Win32_SerialPort</span> <span class="p">=</span> <span class="s">&#34;Win32_SerialPort&#34;</span><span class="p">;</span>
-    <span class="n">SelectQuery</span> <span class="n">q</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SelectQuery</span><span class="p">(</span><span class="n">Win32_SerialPort</span><span class="p">);</span>
-    <span class="n">ManagementObjectSearcher</span> <span class="n">s</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ManagementObjectSearcher</span><span class="p">(</span><span class="n">q</span><span class="p">);</span>
-
-    <span class="n">Hashtable</span> <span class="n">hashResult</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Hashtable</span><span class="p">();</span>
-    <span class="k">foreach</span> <span class="p">(</span><span class="kt">object</span> <span class="n">cur</span> <span class="k">in</span> <span class="n">s</span><span class="p">.</span><span class="n">Get</span><span class="p">())</span>
-    <span class="p">{</span>
-        <span class="n">ManagementObject</span> <span class="n">mo</span> <span class="p">=</span> <span class="p">(</span><span class="n">ManagementObject</span><span class="p">)</span><span class="n">cur</span><span class="p">;</span>
-        <span class="kt">string</span> <span class="n">id</span> <span class="p">=</span> <span class="n">mo</span><span class="p">.</span><span class="n">GetPropertyValue</span><span class="p">(</span><span class="s">&#34;DeviceID&#34;</span><span class="p">).</span><span class="n">ToString</span><span class="p">();</span>
-        <span class="kt">string</span> <span class="n">pnpId</span> <span class="p">=</span> <span class="n">mo</span><span class="p">.</span><span class="n">GetPropertyValue</span><span class="p">(</span><span class="s">&#34;PNPDeviceID&#34;</span><span class="p">).</span><span class="n">ToString</span><span class="p">();</span>
-        <span class="n">Debug</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&#34;WMI&gt;&gt;DeviceID: &#34;</span> <span class="p">+</span> <span class="n">id</span><span class="p">);</span>
-        <span class="n">Debug</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&#34;WMI&gt;&gt;PNPDeviceID: &#34;</span> <span class="p">+</span> <span class="n">pnpId</span><span class="p">);</span>
-        <span class="n">Debug</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&#34;&#34;</span><span class="p">);</span>
-
-        <span class="cm">/* 仅处理蓝牙串口 */</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">pnpId</span><span class="p">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="s">&#34;BTHENUM&#34;</span><span class="p">))</span>
-        <span class="p">{</span>
-            <span class="cm">/* 从 PNPDeviceID 中提取出蓝牙地址，策略是逆序字符串  &amp; 后 _ 之前 */</span>
-            <span class="cm">/* 蓝牙地址为6字节，HEX为12位字符 */</span>
-            <span class="kt">int</span> <span class="n">rBound</span> <span class="p">=</span> <span class="n">pnpId</span><span class="p">.</span><span class="n">LastIndexOf</span><span class="p">(</span><span class="sc">&#39;_&#39;</span><span class="p">);</span>
-            <span class="kt">int</span> <span class="n">lBound</span> <span class="p">=</span> <span class="n">pnpId</span><span class="p">.</span><span class="n">LastIndexOf</span><span class="p">(</span><span class="sc">&#39;&amp;&#39;</span><span class="p">);</span>
-            <span class="n">Debug</span><span class="p">.</span><span class="n">Assert</span><span class="p">(</span><span class="n">rBound</span> <span class="p">-</span> <span class="n">lBound</span> <span class="p">==</span> <span class="m">13</span><span class="p">,</span> <span class="s">&#34;Get BT Addr, this will nevery happened.&#34;</span><span class="p">);</span>
-            <span class="kt">string</span> <span class="n">addr</span> <span class="p">=</span> <span class="n">pnpId</span><span class="p">.</span><span class="n">Substring</span><span class="p">(</span><span class="n">lBound</span> <span class="p">+</span> <span class="m">1</span><span class="p">,</span> <span class="m">12</span><span class="p">);</span>
-            <span class="k">if</span> <span class="p">(!</span><span class="n">hashResult</span><span class="p">.</span><span class="n">Contains</span><span class="p">(</span><span class="n">addr</span><span class="p">))</span>
-            <span class="p">{</span>
-                <span class="n">hashResult</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">addr</span><span class="p">,</span> <span class="n">id</span><span class="p">);</span>
-            <span class="p">}</span>
-            <span class="k">else</span>
-            <span class="p">{</span>
-                <span class="n">Debug</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&#34;Get BT Addr, addr&#34;</span> <span class="p">+</span> <span class="n">addr</span> <span class="p">+</span> <span class="s">&#34; has more than 1 ports&#34;</span><span class="p">);</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-
-    <span class="k">return</span> <span class="n">hashResult</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-cs" data-lang="cs"><span class="line"><span class="cl"><span class="cm">/* 定义于类 BTHelper 中 */</span>
+</span></span><span class="line"><span class="cl"><span class="k">public</span> <span class="k">static</span> <span class="n">Hashtable</span> <span class="n">QueryBTHPorts</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">const</span> <span class="kt">string</span> <span class="n">Win32_SerialPort</span> <span class="p">=</span> <span class="s">&#34;Win32_SerialPort&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">SelectQuery</span> <span class="n">q</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SelectQuery</span><span class="p">(</span><span class="n">Win32_SerialPort</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">ManagementObjectSearcher</span> <span class="n">s</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ManagementObjectSearcher</span><span class="p">(</span><span class="n">q</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">Hashtable</span> <span class="n">hashResult</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Hashtable</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="k">foreach</span> <span class="p">(</span><span class="kt">object</span> <span class="n">cur</span> <span class="k">in</span> <span class="n">s</span><span class="p">.</span><span class="n">Get</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">ManagementObject</span> <span class="n">mo</span> <span class="p">=</span> <span class="p">(</span><span class="n">ManagementObject</span><span class="p">)</span><span class="n">cur</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="kt">string</span> <span class="n">id</span> <span class="p">=</span> <span class="n">mo</span><span class="p">.</span><span class="n">GetPropertyValue</span><span class="p">(</span><span class="s">&#34;DeviceID&#34;</span><span class="p">).</span><span class="n">ToString</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">        <span class="kt">string</span> <span class="n">pnpId</span> <span class="p">=</span> <span class="n">mo</span><span class="p">.</span><span class="n">GetPropertyValue</span><span class="p">(</span><span class="s">&#34;PNPDeviceID&#34;</span><span class="p">).</span><span class="n">ToString</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Debug</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&#34;WMI&gt;&gt;DeviceID: &#34;</span> <span class="p">+</span> <span class="n">id</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Debug</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&#34;WMI&gt;&gt;PNPDeviceID: &#34;</span> <span class="p">+</span> <span class="n">pnpId</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Debug</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&#34;&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="cm">/* 仅处理蓝牙串口 */</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="n">pnpId</span><span class="p">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="s">&#34;BTHENUM&#34;</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="cm">/* 从 PNPDeviceID 中提取出蓝牙地址，策略是逆序字符串  &amp; 后 _ 之前 */</span>
+</span></span><span class="line"><span class="cl">            <span class="cm">/* 蓝牙地址为6字节，HEX为12位字符 */</span>
+</span></span><span class="line"><span class="cl">            <span class="kt">int</span> <span class="n">rBound</span> <span class="p">=</span> <span class="n">pnpId</span><span class="p">.</span><span class="n">LastIndexOf</span><span class="p">(</span><span class="sc">&#39;_&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="kt">int</span> <span class="n">lBound</span> <span class="p">=</span> <span class="n">pnpId</span><span class="p">.</span><span class="n">LastIndexOf</span><span class="p">(</span><span class="sc">&#39;&amp;&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="n">Debug</span><span class="p">.</span><span class="n">Assert</span><span class="p">(</span><span class="n">rBound</span> <span class="p">-</span> <span class="n">lBound</span> <span class="p">==</span> <span class="m">13</span><span class="p">,</span> <span class="s">&#34;Get BT Addr, this will nevery happened.&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="kt">string</span> <span class="n">addr</span> <span class="p">=</span> <span class="n">pnpId</span><span class="p">.</span><span class="n">Substring</span><span class="p">(</span><span class="n">lBound</span> <span class="p">+</span> <span class="m">1</span><span class="p">,</span> <span class="m">12</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="p">(!</span><span class="n">hashResult</span><span class="p">.</span><span class="n">Contains</span><span class="p">(</span><span class="n">addr</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">            <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">hashResult</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">addr</span><span class="p">,</span> <span class="n">id</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">            <span class="k">else</span>
+</span></span><span class="line"><span class="cl">            <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">Debug</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&#34;Get BT Addr, addr&#34;</span> <span class="p">+</span> <span class="n">addr</span> <span class="p">+</span> <span class="s">&#34; has more than 1 ports&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">hashResult</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>同样，WMI 检索也比较耗时，所以这个函数调用需要放入工作线程中执行。</p>
 <p>有了这个函数，我们可以通过结果中查找我们设置的蓝牙设备地址，就可以得知对应的虚拟串口名，而如果结果中没有我们设置的蓝牙设备地址，那么就可以认定设置虚拟串口服务失败了。</p>
@@ -588,102 +599,102 @@ PNPDeviceID  : BTHENUM\{00001101-0000-1000-8000-00805F9B34FB}\7&amp;1D80ECD3&amp
 </span><span class="lnt">95
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cs" data-lang="cs"><span class="cm">/* 进行蓝牙连接操作的后台线程执行函数 */</span>
-<span class="cm">/* 传入 蓝牙地址字符串 作为参数 */</span>
-<span class="cm">/* 利用 ReportProgress 报告进度 */</span>
-<span class="cm">/* 利用 DoWorkEventArgs.Result 报告状态 */</span>
-<span class="k">void</span> <span class="n">bgworkerConnection_DoWork</span><span class="p">(</span><span class="kt">object</span> <span class="n">sender</span><span class="p">,</span> <span class="n">DoWorkEventArgs</span> <span class="n">e</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="n">BackgroundWorker</span> <span class="n">worker</span> <span class="p">=</span> <span class="n">sender</span> <span class="k">as</span> <span class="n">BackgroundWorker</span><span class="p">;</span>
-    <span class="kt">string</span> <span class="n">args</span> <span class="p">=</span> <span class="n">e</span><span class="p">.</span><span class="n">Argument</span> <span class="k">as</span> <span class="kt">string</span><span class="p">;</span>
-    <span class="kt">string</span> <span class="n">finalportname</span> <span class="p">=</span> <span class="s">&#34;&#34;</span><span class="p">;</span>
-
-    <span class="k">do</span>
-    <span class="p">{</span>
-        <span class="n">BluetoothAddress</span> <span class="n">addr</span> <span class="p">=</span> <span class="n">BluetoothAddress</span><span class="p">.</span><span class="n">Parse</span><span class="p">(</span><span class="n">args</span><span class="p">);</span>
-        <span class="n">BluetoothDeviceInfo</span> <span class="n">deviceinfo</span> <span class="p">=</span> <span class="k">new</span> <span class="n">BluetoothDeviceInfo</span><span class="p">(</span><span class="n">addr</span><span class="p">);</span>
-
-        <span class="cm">/* 检测设备是否在服务范围内，有些设备能被发现但不能被配对连接（如果已经被其他终端配对连接） */</span>
-        <span class="cm">/* 不在范围内则报告错误信息 */</span>
-        <span class="n">worker</span><span class="p">.</span><span class="n">ReportProgress</span><span class="p">(</span><span class="m">10</span><span class="p">,</span> <span class="s">&#34;Testing if device in range...&#34;</span><span class="p">);</span>
-        <span class="k">if</span> <span class="p">(!</span><span class="n">BTHelper</span><span class="p">.</span><span class="n">TestingIfInRange</span><span class="p">(</span><span class="n">addr</span><span class="p">))</span>
-        <span class="p">{</span>
-            <span class="kt">string</span> <span class="n">msg</span> <span class="p">=</span> <span class="kt">string</span><span class="p">.</span><span class="n">Format</span><span class="p">(</span><span class="s">&#34;Error: Device {0}({1}) is not reachable!&#34;</span><span class="p">,</span>
-                    <span class="n">deviceinfo</span><span class="p">.</span><span class="n">DeviceName</span><span class="p">,</span>
-                    <span class="n">deviceinfo</span><span class="p">.</span><span class="n">DeviceAddress</span><span class="p">.</span><span class="n">ToString</span><span class="p">());</span>
-            <span class="n">e</span><span class="p">.</span><span class="n">Result</span> <span class="p">=</span> <span class="n">msg</span><span class="p">;</span>
-            <span class="k">return</span><span class="p">;</span>
-        <span class="p">}</span>
-
-        <span class="n">worker</span><span class="p">.</span><span class="n">ReportProgress</span><span class="p">(</span><span class="m">10</span><span class="p">,</span> <span class="s">&#34;Device is in range.&#34;</span><span class="p">);</span>
-
-        <span class="cm">/* 检测设备是否是已配对设备 */</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">deviceinfo</span><span class="p">.</span><span class="n">Authenticated</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="cm">/* 已配对设备枚举系统蓝牙串口，检测是否已绑定虚拟串口 */</span>
-            <span class="n">worker</span><span class="p">.</span><span class="n">ReportProgress</span><span class="p">(</span><span class="m">10</span><span class="p">,</span> <span class="s">&#34;Querying Bluetooth serialport...&#34;</span><span class="p">);</span>
-            <span class="n">Hashtable</span> <span class="n">bthTable1</span> <span class="p">=</span> <span class="n">BTHelper</span><span class="p">.</span><span class="n">QueryBTHPorts</span><span class="p">();</span>
-            <span class="k">if</span> <span class="p">(</span><span class="n">bthTable1</span><span class="p">.</span><span class="n">ContainsKey</span><span class="p">(</span><span class="n">addr</span><span class="p">.</span><span class="n">ToString</span><span class="p">()))</span>
-            <span class="p">{</span>   <span class="cm">/* 获取绑定串口 */</span>
-                <span class="n">finalportname</span> <span class="p">=</span> <span class="n">bthTable1</span><span class="p">[</span><span class="n">addr</span><span class="p">.</span><span class="n">ToString</span><span class="p">()]</span> <span class="k">as</span> <span class="kt">string</span><span class="p">;</span>
-                <span class="cm">/* !!! 跳出 !!! */</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
-            <span class="cm">/* 此处 else 需考虑枚举结果中没有绑定串口的处理，如果没有绑定串口，那么重新设置串口服务 */</span>
-            <span class="cm">/* 此处 else 部分会在下面的流程处理，见下方设置串口服务部分 */</span>
-        <span class="p">}</span>
-        <span class="k">else</span> <span class="cm">/* 需要进行配对 */</span>
-        <span class="p">{</span>
-            <span class="n">worker</span><span class="p">.</span><span class="n">ReportProgress</span><span class="p">(</span><span class="m">10</span><span class="p">,</span> <span class="s">&#34;Start pairing...&#34;</span><span class="p">);</span>
-            <span class="k">if</span> <span class="p">(!</span><span class="n">BluetoothSecurity</span><span class="p">.</span><span class="n">PairRequest</span><span class="p">(</span><span class="n">addr</span><span class="p">,</span> <span class="s">&#34;1234&#34;</span><span class="p">))</span>
-            <span class="p">{</span>  <span class="cm">/* 配对失败 */</span>
-                <span class="kt">string</span> <span class="n">msg</span> <span class="p">=</span> <span class="kt">string</span><span class="p">.</span><span class="n">Format</span><span class="p">(</span><span class="s">&#34;Error: Can not pair to Device {0}({1})!&#34;</span><span class="p">,</span>
-                        <span class="n">deviceinfo</span><span class="p">.</span><span class="n">DeviceName</span><span class="p">,</span>
-                        <span class="n">deviceinfo</span><span class="p">.</span><span class="n">DeviceAddress</span><span class="p">.</span><span class="n">ToString</span><span class="p">());</span>
-                <span class="n">e</span><span class="p">.</span><span class="n">Result</span> <span class="p">=</span> <span class="n">msg</span><span class="p">;</span>
-                <span class="k">return</span><span class="p">;</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-
-        <span class="cm">/* 设置串口服务 */</span>
-        <span class="cm">/* SLC蓝牙设置串口服务时，如果 SetServiceState */</span>
-        <span class="cm">/* 第三个参数为 true (允许异常) 那么则一定会抛出异常，即使虚拟串口创建成功 */</span>
-        <span class="cm">/* 所以这里调用2个参数的重载版本 */</span>
-        <span class="cm">/* 之后检查串口服务是否设置成功的方法就是 设置后检索蓝牙串口 */</span>
-        <span class="n">worker</span><span class="p">.</span><span class="n">ReportProgress</span><span class="p">(</span><span class="m">10</span><span class="p">,</span> <span class="s">&#34;Enable serialport service...&#34;</span><span class="p">);</span>
-
-        <span class="n">deviceinfo</span><span class="p">.</span><span class="n">SetServiceState</span><span class="p">(</span><span class="n">BluetoothService</span><span class="p">.</span><span class="n">SerialPort</span><span class="p">,</span> <span class="k">true</span><span class="p">);</span>
-
-        <span class="cm">/* 枚举系统蓝牙串口，检查对应蓝牙是否有串口绑定 */</span>
-        <span class="n">Hashtable</span> <span class="n">bthTable2</span> <span class="p">=</span> <span class="n">BTHelper</span><span class="p">.</span><span class="n">QueryBTHPorts</span><span class="p">();</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">bthTable2</span><span class="p">.</span><span class="n">ContainsKey</span><span class="p">(</span><span class="n">addr</span><span class="p">.</span><span class="n">ToString</span><span class="p">()))</span>
-        <span class="p">{</span>
-            <span class="cm">/* 获取绑定的串口 */</span>
-            <span class="n">finalportname</span> <span class="p">=</span> <span class="n">bthTable2</span><span class="p">[</span><span class="n">addr</span><span class="p">.</span><span class="n">ToString</span><span class="p">()]</span> <span class="k">as</span> <span class="kt">string</span><span class="p">;</span>
-            <span class="cm">/* !!! 跳出 !!! */</span>
-            <span class="k">break</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">else</span>
-        <span class="p">{</span>   <span class="cm">/* 启用串口服务失败或者无法检测到绑定串口 */</span>
-            <span class="kt">string</span> <span class="n">msg</span> <span class="p">=</span> <span class="kt">string</span><span class="p">.</span><span class="n">Format</span><span class="p">(</span><span class="s">&#34;Error: Failed to set Serialport service for Device {0}({1})!&#34;</span><span class="p">,</span>
-                    <span class="n">deviceinfo</span><span class="p">.</span><span class="n">DeviceName</span><span class="p">,</span>
-                    <span class="n">deviceinfo</span><span class="p">.</span><span class="n">DeviceAddress</span><span class="p">.</span><span class="n">ToString</span><span class="p">());</span>
-            <span class="n">e</span><span class="p">.</span><span class="n">Result</span> <span class="p">=</span> <span class="n">msg</span><span class="p">;</span>
-            <span class="k">return</span><span class="p">;</span>
-        <span class="p">}</span>
-
-    <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="k">false</span><span class="p">);</span>
-
-    <span class="n">worker</span><span class="p">.</span><span class="n">ReportProgress</span><span class="p">(</span><span class="m">10</span><span class="p">,</span> <span class="s">&#34;Open serialport...&#34;</span><span class="p">);</span>
-
-    <span class="n">Debug</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="kt">string</span><span class="p">.</span><span class="n">Format</span><span class="p">(</span><span class="s">&#34;&gt;&gt;PORT NMAE: {0}&#34;</span><span class="p">,</span> <span class="n">finalportname</span><span class="p">));</span>
-
-    <span class="cm">/* 成功 */</span>
-    <span class="cm">/* 将串口名放入消息中返回 */</span>
-    <span class="kt">string</span> <span class="n">okmsg</span> <span class="p">=</span> <span class="kt">string</span><span class="p">.</span><span class="n">Format</span><span class="p">(</span><span class="s">&#34;OK: {0}&#34;</span><span class="p">,</span> <span class="n">finalportname</span><span class="p">);</span>
-    <span class="n">e</span><span class="p">.</span><span class="n">Result</span> <span class="p">=</span> <span class="n">okmsg</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-cs" data-lang="cs"><span class="line"><span class="cl"><span class="cm">/* 进行蓝牙连接操作的后台线程执行函数 */</span>
+</span></span><span class="line"><span class="cl"><span class="cm">/* 传入 蓝牙地址字符串 作为参数 */</span>
+</span></span><span class="line"><span class="cl"><span class="cm">/* 利用 ReportProgress 报告进度 */</span>
+</span></span><span class="line"><span class="cl"><span class="cm">/* 利用 DoWorkEventArgs.Result 报告状态 */</span>
+</span></span><span class="line"><span class="cl"><span class="k">void</span> <span class="n">bgworkerConnection_DoWork</span><span class="p">(</span><span class="kt">object</span> <span class="n">sender</span><span class="p">,</span> <span class="n">DoWorkEventArgs</span> <span class="n">e</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">BackgroundWorker</span> <span class="n">worker</span> <span class="p">=</span> <span class="n">sender</span> <span class="k">as</span> <span class="n">BackgroundWorker</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">string</span> <span class="n">args</span> <span class="p">=</span> <span class="n">e</span><span class="p">.</span><span class="n">Argument</span> <span class="k">as</span> <span class="kt">string</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">string</span> <span class="n">finalportname</span> <span class="p">=</span> <span class="s">&#34;&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">do</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">BluetoothAddress</span> <span class="n">addr</span> <span class="p">=</span> <span class="n">BluetoothAddress</span><span class="p">.</span><span class="n">Parse</span><span class="p">(</span><span class="n">args</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">BluetoothDeviceInfo</span> <span class="n">deviceinfo</span> <span class="p">=</span> <span class="k">new</span> <span class="n">BluetoothDeviceInfo</span><span class="p">(</span><span class="n">addr</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="cm">/* 检测设备是否在服务范围内，有些设备能被发现但不能被配对连接（如果已经被其他终端配对连接） */</span>
+</span></span><span class="line"><span class="cl">        <span class="cm">/* 不在范围内则报告错误信息 */</span>
+</span></span><span class="line"><span class="cl">        <span class="n">worker</span><span class="p">.</span><span class="n">ReportProgress</span><span class="p">(</span><span class="m">10</span><span class="p">,</span> <span class="s">&#34;Testing if device in range...&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(!</span><span class="n">BTHelper</span><span class="p">.</span><span class="n">TestingIfInRange</span><span class="p">(</span><span class="n">addr</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="kt">string</span> <span class="n">msg</span> <span class="p">=</span> <span class="kt">string</span><span class="p">.</span><span class="n">Format</span><span class="p">(</span><span class="s">&#34;Error: Device {0}({1}) is not reachable!&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">deviceinfo</span><span class="p">.</span><span class="n">DeviceName</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">deviceinfo</span><span class="p">.</span><span class="n">DeviceAddress</span><span class="p">.</span><span class="n">ToString</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">            <span class="n">e</span><span class="p">.</span><span class="n">Result</span> <span class="p">=</span> <span class="n">msg</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="n">worker</span><span class="p">.</span><span class="n">ReportProgress</span><span class="p">(</span><span class="m">10</span><span class="p">,</span> <span class="s">&#34;Device is in range.&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="cm">/* 检测设备是否是已配对设备 */</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="n">deviceinfo</span><span class="p">.</span><span class="n">Authenticated</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="cm">/* 已配对设备枚举系统蓝牙串口，检测是否已绑定虚拟串口 */</span>
+</span></span><span class="line"><span class="cl">            <span class="n">worker</span><span class="p">.</span><span class="n">ReportProgress</span><span class="p">(</span><span class="m">10</span><span class="p">,</span> <span class="s">&#34;Querying Bluetooth serialport...&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="n">Hashtable</span> <span class="n">bthTable1</span> <span class="p">=</span> <span class="n">BTHelper</span><span class="p">.</span><span class="n">QueryBTHPorts</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="p">(</span><span class="n">bthTable1</span><span class="p">.</span><span class="n">ContainsKey</span><span class="p">(</span><span class="n">addr</span><span class="p">.</span><span class="n">ToString</span><span class="p">()))</span>
+</span></span><span class="line"><span class="cl">            <span class="p">{</span>   <span class="cm">/* 获取绑定串口 */</span>
+</span></span><span class="line"><span class="cl">                <span class="n">finalportname</span> <span class="p">=</span> <span class="n">bthTable1</span><span class="p">[</span><span class="n">addr</span><span class="p">.</span><span class="n">ToString</span><span class="p">()]</span> <span class="k">as</span> <span class="kt">string</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                <span class="cm">/* !!! 跳出 !!! */</span>
+</span></span><span class="line"><span class="cl">                <span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">            <span class="cm">/* 此处 else 需考虑枚举结果中没有绑定串口的处理，如果没有绑定串口，那么重新设置串口服务 */</span>
+</span></span><span class="line"><span class="cl">            <span class="cm">/* 此处 else 部分会在下面的流程处理，见下方设置串口服务部分 */</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="k">else</span> <span class="cm">/* 需要进行配对 */</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">worker</span><span class="p">.</span><span class="n">ReportProgress</span><span class="p">(</span><span class="m">10</span><span class="p">,</span> <span class="s">&#34;Start pairing...&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="p">(!</span><span class="n">BluetoothSecurity</span><span class="p">.</span><span class="n">PairRequest</span><span class="p">(</span><span class="n">addr</span><span class="p">,</span> <span class="s">&#34;1234&#34;</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">            <span class="p">{</span>  <span class="cm">/* 配对失败 */</span>
+</span></span><span class="line"><span class="cl">                <span class="kt">string</span> <span class="n">msg</span> <span class="p">=</span> <span class="kt">string</span><span class="p">.</span><span class="n">Format</span><span class="p">(</span><span class="s">&#34;Error: Can not pair to Device {0}({1})!&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                        <span class="n">deviceinfo</span><span class="p">.</span><span class="n">DeviceName</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                        <span class="n">deviceinfo</span><span class="p">.</span><span class="n">DeviceAddress</span><span class="p">.</span><span class="n">ToString</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">                <span class="n">e</span><span class="p">.</span><span class="n">Result</span> <span class="p">=</span> <span class="n">msg</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                <span class="k">return</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="cm">/* 设置串口服务 */</span>
+</span></span><span class="line"><span class="cl">        <span class="cm">/* SLC蓝牙设置串口服务时，如果 SetServiceState */</span>
+</span></span><span class="line"><span class="cl">        <span class="cm">/* 第三个参数为 true (允许异常) 那么则一定会抛出异常，即使虚拟串口创建成功 */</span>
+</span></span><span class="line"><span class="cl">        <span class="cm">/* 所以这里调用2个参数的重载版本 */</span>
+</span></span><span class="line"><span class="cl">        <span class="cm">/* 之后检查串口服务是否设置成功的方法就是 设置后检索蓝牙串口 */</span>
+</span></span><span class="line"><span class="cl">        <span class="n">worker</span><span class="p">.</span><span class="n">ReportProgress</span><span class="p">(</span><span class="m">10</span><span class="p">,</span> <span class="s">&#34;Enable serialport service...&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="n">deviceinfo</span><span class="p">.</span><span class="n">SetServiceState</span><span class="p">(</span><span class="n">BluetoothService</span><span class="p">.</span><span class="n">SerialPort</span><span class="p">,</span> <span class="k">true</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="cm">/* 枚举系统蓝牙串口，检查对应蓝牙是否有串口绑定 */</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Hashtable</span> <span class="n">bthTable2</span> <span class="p">=</span> <span class="n">BTHelper</span><span class="p">.</span><span class="n">QueryBTHPorts</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="n">bthTable2</span><span class="p">.</span><span class="n">ContainsKey</span><span class="p">(</span><span class="n">addr</span><span class="p">.</span><span class="n">ToString</span><span class="p">()))</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="cm">/* 获取绑定的串口 */</span>
+</span></span><span class="line"><span class="cl">            <span class="n">finalportname</span> <span class="p">=</span> <span class="n">bthTable2</span><span class="p">[</span><span class="n">addr</span><span class="p">.</span><span class="n">ToString</span><span class="p">()]</span> <span class="k">as</span> <span class="kt">string</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="cm">/* !!! 跳出 !!! */</span>
+</span></span><span class="line"><span class="cl">            <span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="k">else</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span>   <span class="cm">/* 启用串口服务失败或者无法检测到绑定串口 */</span>
+</span></span><span class="line"><span class="cl">            <span class="kt">string</span> <span class="n">msg</span> <span class="p">=</span> <span class="kt">string</span><span class="p">.</span><span class="n">Format</span><span class="p">(</span><span class="s">&#34;Error: Failed to set Serialport service for Device {0}({1})!&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">deviceinfo</span><span class="p">.</span><span class="n">DeviceName</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">deviceinfo</span><span class="p">.</span><span class="n">DeviceAddress</span><span class="p">.</span><span class="n">ToString</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">            <span class="n">e</span><span class="p">.</span><span class="n">Result</span> <span class="p">=</span> <span class="n">msg</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="k">false</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">worker</span><span class="p">.</span><span class="n">ReportProgress</span><span class="p">(</span><span class="m">10</span><span class="p">,</span> <span class="s">&#34;Open serialport...&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">Debug</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="kt">string</span><span class="p">.</span><span class="n">Format</span><span class="p">(</span><span class="s">&#34;&gt;&gt;PORT NMAE: {0}&#34;</span><span class="p">,</span> <span class="n">finalportname</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="cm">/* 成功 */</span>
+</span></span><span class="line"><span class="cl">    <span class="cm">/* 将串口名放入消息中返回 */</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">string</span> <span class="n">okmsg</span> <span class="p">=</span> <span class="kt">string</span><span class="p">.</span><span class="n">Format</span><span class="p">(</span><span class="s">&#34;OK: {0}&#34;</span><span class="p">,</span> <span class="n">finalportname</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">e</span><span class="p">.</span><span class="n">Result</span> <span class="p">=</span> <span class="n">okmsg</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>代码中通过灵活使用 <code>string</code> 作为 <code>Result</code> 来表明执行结果。</p>
 <p>worker 的 <code>RunCompleted</code> 事件代码：</p>
@@ -703,19 +714,19 @@ PNPDeviceID  : BTHENUM\{00001101-0000-1000-8000-00805F9B34FB}\7&amp;1D80ECD3&amp
 </span><span class="lnt">12
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cs" data-lang="cs"><span class="k">void</span> <span class="n">bgworkerConnection_RunCompleted</span><span class="p">(</span><span class="kt">object</span> <span class="n">sender</span><span class="p">,</span> <span class="n">RunWorkerCompletedEventArgs</span> <span class="n">e</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="kt">string</span> <span class="n">msg</span> <span class="p">=</span> <span class="n">e</span><span class="p">.</span><span class="n">Result</span> <span class="k">as</span> <span class="kt">string</span><span class="p">;</span>
-    <span class="k">if</span><span class="p">(</span><span class="n">msg</span><span class="p">.</span><span class="n">StartsWidth</span><span class="p">(</span><span class="s">&#34;OK&#34;</span><span class="p">))</span>
-    <span class="p">{</span>   <span class="cm">/* OK */</span>
-        <span class="n">MessageBox</span><span class="p">.</span><span class="n">Show</span><span class="p">(</span><span class="n">msg</span><span class="p">);</span>
-    <span class="p">}</span>
-    <span class="k">else</span>
-    <span class="p">{</span>  <span class="cm">/* Error */</span>
-        <span class="n">MessageBox</span><span class="p">.</span><span class="n">Show</span><span class="p">(</span><span class="n">msg</span><span class="p">);</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-cs" data-lang="cs"><span class="line"><span class="cl"><span class="k">void</span> <span class="n">bgworkerConnection_RunCompleted</span><span class="p">(</span><span class="kt">object</span> <span class="n">sender</span><span class="p">,</span> <span class="n">RunWorkerCompletedEventArgs</span> <span class="n">e</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">string</span> <span class="n">msg</span> <span class="p">=</span> <span class="n">e</span><span class="p">.</span><span class="n">Result</span> <span class="k">as</span> <span class="kt">string</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span><span class="p">(</span><span class="n">msg</span><span class="p">.</span><span class="n">StartsWidth</span><span class="p">(</span><span class="s">&#34;OK&#34;</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>   <span class="cm">/* OK */</span>
+</span></span><span class="line"><span class="cl">        <span class="n">MessageBox</span><span class="p">.</span><span class="n">Show</span><span class="p">(</span><span class="n">msg</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="k">else</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>  <span class="cm">/* Error */</span>
+</span></span><span class="line"><span class="cl">        <span class="n">MessageBox</span><span class="p">.</span><span class="n">Show</span><span class="p">(</span><span class="n">msg</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>后续可以通过字符串处理提取出生成的串口名。</p>
 <p>worker 的启动代码：</p>
@@ -724,8 +735,8 @@ PNPDeviceID  : BTHENUM\{00001101-0000-1000-8000-00805F9B34FB}\7&amp;1D80ECD3&amp
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cs" data-lang="cs"><span class="n">bgworkerConnection</span><span class="p">.</span><span class="n">RunWorkerAsync</span><span class="p">(</span><span class="n">addrstring</span><span class="p">);</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-cs" data-lang="cs"><span class="line"><span class="cl"><span class="n">bgworkerConnection</span><span class="p">.</span><span class="n">RunWorkerAsync</span><span class="p">(</span><span class="n">addrstring</span><span class="p">);</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>这样子我们就获取到了绑定的虚拟串口名，但是在使用串口中要注意的是，虚拟串口打开过程中，本质上还是发起了一个蓝牙数据连接，所以打开过程会耗时较长，所以这个虚拟串口打开过程也需要放入工作线程中处理。如果虚拟串口对应的蓝牙设备没有在线或者其他原因造成不可用，那么打开时会抛出异常，需要在代码上进行处理。</p>
 <p>一旦蓝牙设备经过绑定并且设置虚拟串口服务成功，那么对应的串口会一直存在与系统的串口列表中，但这并不代表它是可用的，请在打开这类串口时添加异常处理代码。</p>
@@ -762,7 +773,7 @@ PNPDeviceID  : BTHENUM\{00001101-0000-1000-8000-00805F9B34FB}\7&amp;1D80ECD3&amp
     <footer id="footer" class="footer">
       <div class="social-links">
       <a href="https://github.com/tisyang" class="iconfont icon-github" title="github"></a>
-  <a href="https://tisyang.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+  
 </div>
 
 <div class="copyright">
@@ -780,9 +791,17 @@ PNPDeviceID  : BTHENUM\{00001101-0000-1000-8000-00805F9B34FB}\7&amp;1D80ECD3&amp
   <span class="copyright-year">
     &copy; 
     2016 - 
-    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>TyK</span>
+    2023<span class="heart"><i class="iconfont icon-heart"></i></span><span>TyK</span>
   </span>
 </div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>
+    mermaid.initialize({ startOnLoad: true });
+</script>
+
+<script src="/js/copy-to-clipboard.js"></script>
 
     </footer>
 
@@ -796,7 +815,7 @@ PNPDeviceID  : BTHENUM\{00001101-0000-1000-8000-00805F9B34FB}\7&amp;1D80ECD3&amp
 
 
 
-<script type="text/javascript" src="/js/main.min.c99b103c33d1539acf3025e1913697534542c4a5aa5af0ccc20475ed2863603b.js"></script>
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
 
 
 

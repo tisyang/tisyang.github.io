@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Linux 移动硬盘安全关闭 - 碎片</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="TyK" /><meta name="description" content="最近固态价格越来越便宜了，就买了一个航雄M2移动硬盘盒，方案是 RTL9120B，支持 Nvme/Sata 双协议，然后弄了一块 1T 的大杯固态。然后把用了2年多的 U" /><meta name="keywords" content="程序员, 博客, blog, programming" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.111.3 with theme even" />
+
+
+<link rel="canonical" href="https://tisyang.github.io/post/2023-05-25-linux-usb-storage-safe-shutdown/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.d4d0dce78b3ec6333437bc36540c4749ae9a27ff4ca2d7562da2dbfbf991dde3.css" rel="stylesheet">
+<link href="/lib/fancybox/jquery.fancybox-3.1.20.min.css" rel="stylesheet">
+
+
+<meta property="og:title" content="Linux 移动硬盘安全关闭" />
+<meta property="og:description" content="最近固态价格越来越便宜了，就买了一个航雄M2移动硬盘盒，方案是 RTL9120B，支持 Nvme/Sata 双协议，然后弄了一块 1T 的大杯固态。然后把用了2年多的 U" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://tisyang.github.io/post/2023-05-25-linux-usb-storage-safe-shutdown/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-05-25T00:00:00+00:00" />
+<meta property="article:modified_time" content="2023-05-25T00:00:00+00:00" />
+<meta itemprop="name" content="Linux 移动硬盘安全关闭">
+<meta itemprop="description" content="最近固态价格越来越便宜了，就买了一个航雄M2移动硬盘盒，方案是 RTL9120B，支持 Nvme/Sata 双协议，然后弄了一块 1T 的大杯固态。然后把用了2年多的 U"><meta itemprop="datePublished" content="2023-05-25T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2023-05-25T00:00:00+00:00" />
+<meta itemprop="wordCount" content="876">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Linux 移动硬盘安全关闭"/>
+<meta name="twitter:description" content="最近固态价格越来越便宜了，就买了一个航雄M2移动硬盘盒，方案是 RTL9120B，支持 Nvme/Sata 双协议，然后弄了一块 1T 的大杯固态。然后把用了2年多的 U"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+<script>
+    (function(){
+     if(''){
+     if (prompt('请输入文章密码') !== ''){
+     alert('密码错误！');
+     history.back();
+     }
+     }
+     })();
+</script>
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">碎片</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/index.xml">
+        <li class="mobile-menu-item">RSS</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">碎片</a>
+  
+</div>
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/index.xml">RSS</a>
+      </li>
+  </ul>
+</nav>
+
+
+
+
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Linux 移动硬盘安全关闭</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2023-05-25 </span>
+        
+        
+        <span class="more-meta"> by </span>
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents"></nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>最近固态价格越来越便宜了，就买了一个航雄M2移动硬盘盒，方案是 RTL9120B，支持 Nvme/Sata 双协议，然后弄了一块 1T 的大杯固态。然后把用了2年多的 U盘 Debian系统迁移过去。具体迁移方法过后再写篇文章仔细描述，GPT/UEFI 系统迁移实在是太简单了。</p>
+<!-- raw HTML omitted -->
+<p>之前用的 U盘，没有 SMART 信息，换移动硬盘后就发现，当笔记本关机后，移动硬盘还是工作状态，我这个硬盘盒指示灯是双色，绿色代表工作（总线桥接中），蓝色代表待机（Nvme电源关闭），关机后直到电脑 USB 自动断电，硬盘盒断电，再进入系统看 SMART 就可以看到“不安全关机（Unsafe Shutown Counts”会递增 1。虽然固态硬盘这个计数实际不会损害，但是过于膈应，而且我觉得系统本身不可能不支持自动给移动硬盘自动弹出。</p>
+<p>这个跟旧固件的 RTK9210B 硬盘盒 bug 不同，我的硬盘盒固件是比较新的 1.31，弹出硬盘不安全关机次数递增的 bug 已经修正了。我这种情况是 Linux 系统装在移动硬盘上，然后关机时系统没有通知 USB 设备进入待机（Standby）状态。查询了许多资料，都是让在 <code>/lib/systemd/system-shutdown</code> 中使用 <code>udisksctl</code> 或者 <code>hdparm</code> 去卸载/关闭 USB 存储，实际操作下来并没有什么用，直到看到论坛帖子 <a href="https://forum.manjaro.org/t/graceful-way-to-spin-down-unload-head-usb-attached-mobile-hard-drive-before-shutdown-poweroff-reboot-halt/136844">Graceful way to spin down (unload head) USB attached mobile hard drive BEFRORE shutdown(poweroff/reboot/halt)</a>，才找到正确的解决方案。</p>
+<p>具体就是，需要使能系统 <code>scsi_disk</code> 模块对于 USB 存储的 <code>manage_start_stop</code> 标志，这样系统就会管理这些设备的启动和停止任务。对于一般的外置移动硬盘而言，通常是用户自行加载移除设备，但是对于运行了系统的移动硬盘而言，用户无法自行处理移除，需要系统自己在关机时处理。比较奇怪的是为什么 Linux 没有默认使能这个标志。</p>
+<p>解决方案：</p>
+<ol>
+<li>手动处理（需要root权限，重启失效）：</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># 使能 manage_start_stop, [...] 为硬盘节点，可以补全</span>
+</span></span><span class="line"><span class="cl"><span class="nb">echo</span> <span class="m">1</span> <span class="p">|</span> sudo tee /sys/class/scsi_disk/<span class="o">[</span>...<span class="o">]</span>/manage_start_stop
+</span></span><span class="line"><span class="cl"><span class="c1"># 检查</span>
+</span></span><span class="line"><span class="cl">cat /sys/class/scsi_disk/<span class="o">[</span>...<span class="o">]</span>/manage_start_stop
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol start="2">
+<li>利用 <code>udev</code> 规则，自动处理：</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># 创建文件 /etc/udev/rules.d/01-manage-start-stop.rules</span>
+</span></span><span class="line"><span class="cl"><span class="nb">echo</span> <span class="s1">&#39;ACTION==&#34;add|change&#34;, DRIVERS==&#34;usb-storage|uas&#34;, SUBSYSTEM==&#34;scsi_disk&#34;, ATTR{manage_start_stop}=&#34;1&#34;&#39;</span> <span class="p">|</span> sudo tee /etc/udev/rules.d/01-manage-start-stop.rules
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>另外，对于使用 RTL9210b 方案，Linux 系统默认状态下固态并不支持 TRIM 指令，可以通过一个 <code>udev</code> 规则来默认激活 TRIM 支持:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nb">echo</span> <span class="s1">&#39;ACTION==&#34;add|change&#34;, ATTRS{idVendor}==&#34;0bda&#34;, ATTRS{idProduct}==&#34;9210&#34;, SUBSYSTEM==&#34;scsi_disk&#34;, ATTR{provisioning_mode}=&#34;unmap&#34;&#39;</span> <span class="p">|</span> sudo tee /etc/udev/rules.d/10-uas-discard.rules
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>然后通过命令 <code>lsblk -D</code> 检查 TRIM 支持：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">$ lsblk -D
+</span></span><span class="line"><span class="cl">NAME        DISC-ALN DISC-GRAN DISC-MAX DISC-ZERO
+</span></span><span class="line"><span class="cl">sda                0      512B       4G         0
+</span></span><span class="line"><span class="cl">├─sda1             0      512B       4G         0
+</span></span><span class="line"><span class="cl">├─sda2             0      512B       4G         0
+</span></span><span class="line"><span class="cl">├─sda3             0      512B       4G         0
+</span></span><span class="line"><span class="cl">└─sda4             0      512B       4G         0
+</span></span></code></pre></td></tr></table>
+</div>
+</div>
+    </div>
+
+    
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        
+        <a class="next" href="/post/2022-03-15-logitech-g29-linux/">
+            <span class="next-text nav-default">Linux 下 Logitech G29 编程</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="https://github.com/tisyang" class="iconfont icon-github" title="github"></a>
+  
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2016 - 
+    2023<span class="heart"><i class="iconfont icon-heart"></i></span><span>TyK</span>
+  </span>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>
+    mermaid.initialize({ startOnLoad: true });
+</script>
+
+<script src="/js/copy-to-clipboard.js"></script>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  <script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  <script type="text/javascript" src="/lib/fancybox/jquery.fancybox-3.1.20.min.js"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

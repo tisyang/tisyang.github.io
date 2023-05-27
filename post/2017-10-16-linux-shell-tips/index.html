@@ -24,7 +24,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.92.2 with theme even" />
+<meta name="generator" content="Hugo 0.111.3 with theme even" />
 
 
 <link rel="canonical" href="https://tisyang.github.io/post/2017-10-16-linux-shell-tips/" />
@@ -36,7 +36,7 @@
 
 
 
-<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link href="/sass/main.min.d4d0dce78b3ec6333437bc36540c4749ae9a27ff4ca2d7562da2dbfbf991dde3.css" rel="stylesheet">
 <link href="/lib/fancybox/jquery.fancybox-3.1.20.min.css" rel="stylesheet">
 
 
@@ -46,7 +46,6 @@
 <meta property="og:url" content="https://tisyang.github.io/post/2017-10-16-linux-shell-tips/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2017-10-16T00:00:00+00:00" />
 <meta property="article:modified_time" content="2017-10-16T00:00:00+00:00" />
-
 <meta itemprop="name" content="Linux Shell Tips">
 <meta itemprop="description" content="适用于桌面以及嵌入式 Linux 环境脚本编程。"><meta itemprop="datePublished" content="2017-10-16T00:00:00+00:00" />
 <meta itemprop="dateModified" content="2017-10-16T00:00:00+00:00" />
@@ -63,6 +62,17 @@
   <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
 <![endif]-->
+
+<script>
+    (function(){
+     if(''){
+     if (prompt('请输入文章密码') !== ''){
+     alert('密码错误！');
+     history.back();
+     }
+     }
+     })();
+</script>
 
 </head>
 <body>
@@ -96,12 +106,8 @@
     <header id="header" class="header">
         <div class="logo-wrapper">
   <a href="/" class="logo">碎片</a>
+  
 </div>
-
-
-
-
-
 <nav class="site-navbar">
   <ul id="menu" class="menu">
     <li class="menu-item">
@@ -113,6 +119,10 @@
       </li>
   </ul>
 </nav>
+
+
+
+
 
     </header>
 
@@ -128,6 +138,7 @@
         <span class="post-time"> 2017-10-16 </span>
         
         
+        <span class="more-meta"> by </span>
       </div>
     </header>
 
@@ -152,8 +163,8 @@
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash">stty -F /dev/ttyS0 <span class="m">9600</span> cs8 -cstopb -parenb
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">stty -F /dev/ttyS0 <span class="m">9600</span> cs8 -cstopb -parenb
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>具体可以通过 <code>man stty</code> 来了解其他配置。</p>
 <p>按行读取串口文本：</p>
@@ -166,12 +177,12 @@
 </span><span class="lnt">5
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash">cat /dev/ttyS0 <span class="p">|</span> <span class="k">while</span> <span class="nb">read</span> line
-<span class="k">do</span>
-    <span class="c1"># do somehing with $line</span>
-    <span class="nb">echo</span> <span class="s2">&#34;</span><span class="nv">$line</span><span class="s2">&#34;</span>
-<span class="k">done</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">cat /dev/ttyS0 <span class="p">|</span> <span class="k">while</span> <span class="nb">read</span> line
+</span></span><span class="line"><span class="cl"><span class="k">do</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># do somehing with $line</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">echo</span> <span class="s2">&#34;</span><span class="nv">$line</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="k">done</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><h2 id="2-数值操作">2. 数值操作</h2>
 <p>整数变量累加可以参考以下示范：</p>
@@ -184,12 +195,12 @@
 </span><span class="lnt">5
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="nv">count</span><span class="o">=</span><span class="m">0</span>
-<span class="nb">echo</span> <span class="nv">$count</span>     <span class="c1"># =&gt; 1</span>
-
-<span class="nb">let</span> <span class="nv">count</span><span class="o">+=</span><span class="m">1</span>
-<span class="nb">echo</span> <span class="nv">$count</span>     <span class="c1"># =&gt; 2</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nv">count</span><span class="o">=</span><span class="m">0</span>
+</span></span><span class="line"><span class="cl"><span class="nb">echo</span> <span class="nv">$count</span>     <span class="c1"># =&gt; 1</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nb">let</span> <span class="nv">count</span><span class="o">+=</span><span class="m">1</span>
+</span></span><span class="line"><span class="cl"><span class="nb">echo</span> <span class="nv">$count</span>     <span class="c1"># =&gt; 2</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>计算平均数可以参考以下示范：</p>
 <div class="highlight"><div class="chroma">
@@ -210,21 +221,21 @@
 </span><span class="lnt">14
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># 计算数值列平均数</span>
-<span class="c1"># 文件 data.txt 存放如下文本</span>
-<span class="c1"># 31 41 59</span>
-<span class="c1"># 26 53 58</span>
-<span class="c1"># 97 93 23</span>
-<span class="c1"># </span>
-
-<span class="c1"># 过滤空行</span>
-<span class="nv">data</span><span class="o">=</span><span class="k">$(</span>cat data.txt <span class="p">|</span> sed <span class="s1">&#39;/^\s*$/d&#39;</span><span class="k">)</span>
-<span class="c1"># 计算列和 以及 列平均数</span>
-<span class="nb">echo</span> <span class="s2">&#34;</span><span class="nv">$data</span><span class="s2">&#34;</span> <span class="p">|</span> awk <span class="s1">&#39;{ c1+=$1; c2+=$2; c3+=$3 } END { printf &#34;sum=%d, %d, %d\navg=%f, %f, %f\n&#34;, c1, c2, c3, c1/NR, c2/NR, c3/NR}&#39;</span>
-
-<span class="c1"># =&gt; sum=154, 187, 140</span>
-<span class="c1">#    avg=51.333333, 62.333333, 46.666667</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># 计算数值列平均数</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 文件 data.txt 存放如下文本</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 31 41 59</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 26 53 58</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 97 93 23</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># </span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 过滤空行</span>
+</span></span><span class="line"><span class="cl"><span class="nv">data</span><span class="o">=</span><span class="k">$(</span>cat data.txt <span class="p">|</span> sed <span class="s1">&#39;/^\s*$/d&#39;</span><span class="k">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 计算列和 以及 列平均数</span>
+</span></span><span class="line"><span class="cl"><span class="nb">echo</span> <span class="s2">&#34;</span><span class="nv">$data</span><span class="s2">&#34;</span> <span class="p">|</span> awk <span class="s1">&#39;{ c1+=$1; c2+=$2; c3+=$3 } END { printf &#34;sum=%d, %d, %d\navg=%f, %f, %f\n&#34;, c1, c2, c3, c1/NR, c2/NR, c3/NR}&#39;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># =&gt; sum=154, 187, 140</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#    avg=51.333333, 62.333333, 46.666667</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><h2 id="3-字符串处理">3. 字符串处理</h2>
 <p>字符串变量使用时尽量用双引号包含起来。</p>
@@ -236,10 +247,10 @@
 </span><span class="lnt">3
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="nv">a</span><span class="o">=</span><span class="s2">&#34; ab cde fg &#34;</span>
-<span class="nv">a</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span> <span class="s2">&#34;</span><span class="nv">$a</span><span class="s2">&#34;</span> <span class="p">|</span> xargs<span class="k">)</span>
-<span class="nb">echo</span> <span class="s2">&#34;^</span><span class="nv">$a</span>$<span class="s2">&#34;</span>  <span class="c1"># =&gt; ^ab cde fg$</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nv">a</span><span class="o">=</span><span class="s2">&#34; ab cde fg &#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">a</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span> <span class="s2">&#34;</span><span class="nv">$a</span><span class="s2">&#34;</span> <span class="p">|</span> xargs<span class="k">)</span>
+</span></span><span class="line"><span class="cl"><span class="nb">echo</span> <span class="s2">&#34;^</span><span class="nv">$a</span>$<span class="s2">&#34;</span>  <span class="c1"># =&gt; ^ab cde fg$</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>字符串判断：</p>
 <div class="highlight"><div class="chroma">
@@ -277,38 +288,38 @@
 </span><span class="lnt">31
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="nv">empty</span><span class="o">=</span><span class="s2">&#34;&#34;</span>
-<span class="nv">ok</span><span class="o">=</span><span class="s2">&#34;ok&#34;</span>
-<span class="nv">hello</span><span class="o">=</span><span class="s2">&#34;hello&#34;</span>
-
-<span class="c1"># 判断字符串为空</span>
-<span class="k">if</span> <span class="o">[</span> -z <span class="s2">&#34;</span><span class="nv">$empty</span><span class="s2">&#34;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
-        <span class="nb">echo</span> <span class="s2">&#34;Empty String&#34;</span>
-<span class="k">fi</span>
-<span class="c1"># =&gt; Empty String</span>
-
-<span class="c1"># 判断字符串非空</span>
-<span class="k">if</span> <span class="o">[</span> -n <span class="s2">&#34;</span><span class="nv">$hello</span><span class="s2">&#34;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
-        <span class="nb">echo</span> <span class="s2">&#34;Non-empty String&#34;</span>
-<span class="k">fi</span>
-<span class="c1"># =&gt; Non-empty String</span>
-
-<span class="c1"># 判断字符串相等</span>
-<span class="k">if</span> <span class="o">[</span> <span class="s2">&#34;</span><span class="nv">$ok</span><span class="s2">&#34;</span> <span class="o">=</span> <span class="s2">&#34;ok&#34;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
-        <span class="nb">echo</span> <span class="s2">&#34;OK&#34;</span>
-<span class="k">else</span>
-        <span class="nb">echo</span> <span class="s2">&#34;FAIL&#34;</span>
-<span class="k">fi</span>
-<span class="c1"># =&gt; OK</span>
-
-<span class="c1"># 判断字符串不等</span>
-<span class="k">if</span> <span class="o">[</span> <span class="s2">&#34;</span><span class="nv">$ok</span><span class="s2">&#34;</span> !<span class="o">=</span> <span class="s2">&#34;ok&#34;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
-        <span class="nb">echo</span> <span class="s2">&#34;Not Same&#34;</span>
-<span class="k">else</span>
-        <span class="nb">echo</span> <span class="s2">&#34;Same&#34;</span>
-<span class="k">fi</span>
-<span class="c1"># =&gt; Same</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nv">empty</span><span class="o">=</span><span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">ok</span><span class="o">=</span><span class="s2">&#34;ok&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">hello</span><span class="o">=</span><span class="s2">&#34;hello&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 判断字符串为空</span>
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="o">[</span> -z <span class="s2">&#34;</span><span class="nv">$empty</span><span class="s2">&#34;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">echo</span> <span class="s2">&#34;Empty String&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="k">fi</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># =&gt; Empty String</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 判断字符串非空</span>
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="o">[</span> -n <span class="s2">&#34;</span><span class="nv">$hello</span><span class="s2">&#34;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">echo</span> <span class="s2">&#34;Non-empty String&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="k">fi</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># =&gt; Non-empty String</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 判断字符串相等</span>
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="o">[</span> <span class="s2">&#34;</span><span class="nv">$ok</span><span class="s2">&#34;</span> <span class="o">=</span> <span class="s2">&#34;ok&#34;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">echo</span> <span class="s2">&#34;OK&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="k">else</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">echo</span> <span class="s2">&#34;FAIL&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="k">fi</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># =&gt; OK</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 判断字符串不等</span>
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="o">[</span> <span class="s2">&#34;</span><span class="nv">$ok</span><span class="s2">&#34;</span> !<span class="o">=</span> <span class="s2">&#34;ok&#34;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">echo</span> <span class="s2">&#34;Not Same&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="k">else</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">echo</span> <span class="s2">&#34;Same&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="k">fi</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># =&gt; Same</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div>
     </div>
@@ -343,7 +354,7 @@
     <footer id="footer" class="footer">
       <div class="social-links">
       <a href="https://github.com/tisyang" class="iconfont icon-github" title="github"></a>
-  <a href="https://tisyang.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+  
 </div>
 
 <div class="copyright">
@@ -361,9 +372,17 @@
   <span class="copyright-year">
     &copy; 
     2016 - 
-    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>TyK</span>
+    2023<span class="heart"><i class="iconfont icon-heart"></i></span><span>TyK</span>
   </span>
 </div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>
+    mermaid.initialize({ startOnLoad: true });
+</script>
+
+<script src="/js/copy-to-clipboard.js"></script>
 
     </footer>
 
@@ -377,7 +396,7 @@
 
 
 
-<script type="text/javascript" src="/js/main.min.c99b103c33d1539acf3025e1913697534542c4a5aa5af0ccc20475ed2863603b.js"></script>
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
 
 
 

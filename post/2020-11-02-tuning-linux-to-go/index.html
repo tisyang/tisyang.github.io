@@ -25,7 +25,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.92.2 with theme even" />
+<meta name="generator" content="Hugo 0.111.3 with theme even" />
 
 
 <link rel="canonical" href="https://tisyang.github.io/post/2020-11-02-tuning-linux-to-go/" />
@@ -37,7 +37,7 @@
 
 
 
-<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link href="/sass/main.min.d4d0dce78b3ec6333437bc36540c4749ae9a27ff4ca2d7562da2dbfbf991dde3.css" rel="stylesheet">
 <link href="/lib/fancybox/jquery.fancybox-3.1.20.min.css" rel="stylesheet">
 
 
@@ -48,7 +48,6 @@
 <meta property="og:url" content="https://tisyang.github.io/post/2020-11-02-tuning-linux-to-go/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2020-11-02T00:00:00+00:00" />
 <meta property="article:modified_time" content="2020-11-02T00:00:00+00:00" />
-
 <meta itemprop="name" content="Linux To Go 系统优化">
 <meta itemprop="description" content="本文主要讲述如何优化配置 U 盘上安装的 Debian/Linux 系统，使其适配各种硬件主机并优化 U 盘上性能。
 在高速 U 盘上安装 Linux 系统随身携带使用是很方便的事情，这跟 LiveCD 模式不同，所有的系统配置和文件都是随盘保存，不会随着重启重置，也不会因为更换机器而产生差异。"><meta itemprop="datePublished" content="2020-11-02T00:00:00+00:00" />
@@ -67,6 +66,17 @@
   <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
 <![endif]-->
+
+<script>
+    (function(){
+     if(''){
+     if (prompt('请输入文章密码') !== ''){
+     alert('密码错误！');
+     history.back();
+     }
+     }
+     })();
+</script>
 
 </head>
 <body>
@@ -100,12 +110,8 @@
     <header id="header" class="header">
         <div class="logo-wrapper">
   <a href="/" class="logo">碎片</a>
+  
 </div>
-
-
-
-
-
 <nav class="site-navbar">
   <ul id="menu" class="menu">
     <li class="menu-item">
@@ -117,6 +123,10 @@
       </li>
   </ul>
 </nav>
+
+
+
+
 
     </header>
 
@@ -132,6 +142,7 @@
         <span class="post-time"> 2020-11-02 </span>
         
         
+        <span class="more-meta"> by </span>
       </div>
     </header>
 
@@ -164,8 +175,8 @@
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">defaults,noatime,compress<span class="o">=</span>lzo,ssd_spread,autodefrag
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">defaults,noatime,compress<span class="o">=</span>lzo,ssd_spread,autodefrag
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>其中：</p>
 <ul>
@@ -181,9 +192,9 @@
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">sudo btrfs filesystem defragment -v -r /
-sudo btrfs filesystem defragment -v -r /home/
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">sudo btrfs filesystem defragment -v -r /
+</span></span><span class="line"><span class="cl">sudo btrfs filesystem defragment -v -r /home/
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>想要粗略知道 <code>btrfs</code> 文件系统大小和占用磁盘大小，可以执行如下指令：</p>
 <div class="highlight"><div class="chroma">
@@ -192,9 +203,9 @@ sudo btrfs filesystem defragment -v -r /home/
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">sudo btrfs filesystem show /
-sudo btrfs filesystem show /home
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">sudo btrfs filesystem show /
+</span></span><span class="line"><span class="cl">sudo btrfs filesystem show /home
+</span></span></code></pre></td></tr></table>
 </div>
 </div><h2 id="源及驱动安装">源及驱动安装</h2>
 <p>针对 Debian testing 系统的更新源建议使用清华大学开源镜像站的源（国内）：</p>
@@ -209,14 +220,14 @@ sudo btrfs filesystem show /home
 </span><span class="lnt">7
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># /etc/apt/sources.list</span>
-deb http://mirrors.tuna.tsinghua.edu.cn/debian/ testing main contrib non-free
-<span class="c1"># deb-src http://mirrors.tuna.tsinghua.edu.cn/debian/ testing main contrib non-free</span>
-deb http://mirrors.tuna.tsinghua.edu.cn/debian/ testing-updates main contrib non-free
-<span class="c1"># deb-src http://mirrors.tuna.tsinghua.edu.cn/debian/ testing-updates main contrib non-free</span>
-deb http://mirrors.tuna.tsinghua.edu.cn/debian-security testing-security main
-<span class="c1"># deb-src http://mirrors.tuna.tsinghua.edu.cn/debian-security testing-security main</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1"># /etc/apt/sources.list</span>
+</span></span><span class="line"><span class="cl">deb http://mirrors.tuna.tsinghua.edu.cn/debian/ testing main contrib non-free
+</span></span><span class="line"><span class="cl"><span class="c1"># deb-src http://mirrors.tuna.tsinghua.edu.cn/debian/ testing main contrib non-free</span>
+</span></span><span class="line"><span class="cl">deb http://mirrors.tuna.tsinghua.edu.cn/debian/ testing-updates main contrib non-free
+</span></span><span class="line"><span class="cl"><span class="c1"># deb-src http://mirrors.tuna.tsinghua.edu.cn/debian/ testing-updates main contrib non-free</span>
+</span></span><span class="line"><span class="cl">deb http://mirrors.tuna.tsinghua.edu.cn/debian-security testing-security main
+</span></span><span class="line"><span class="cl"><span class="c1"># deb-src http://mirrors.tuna.tsinghua.edu.cn/debian-security testing-security main</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>建议在系统中安装如下额外驱动包，以适配广泛的平台硬件：</p>
 <div class="highlight"><div class="chroma">
@@ -229,13 +240,13 @@ deb http://mirrors.tuna.tsinghua.edu.cn/debian-security testing-security main
 </span><span class="lnt">6
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">sudo apt-get install  <span class="se">\
-</span><span class="se"></span>        firmware-amd-graphics <span class="se">\
-</span><span class="se"></span>        firmware-brcm80211 <span class="se">\
-</span><span class="se"></span>        firmware-iwlwifi <span class="se">\
-</span><span class="se"></span>        firmware-misc-nonfree <span class="se">\
-</span><span class="se"></span>        firmware-realtek
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">sudo apt-get install  <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>        firmware-amd-graphics <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>        firmware-brcm80211 <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>        firmware-iwlwifi <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>        firmware-misc-nonfree <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>        firmware-realtek
+</span></span></code></pre></td></tr></table>
 </div>
 </div>
     </div>
@@ -270,7 +281,7 @@ deb http://mirrors.tuna.tsinghua.edu.cn/debian-security testing-security main
     <footer id="footer" class="footer">
       <div class="social-links">
       <a href="https://github.com/tisyang" class="iconfont icon-github" title="github"></a>
-  <a href="https://tisyang.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+  
 </div>
 
 <div class="copyright">
@@ -288,9 +299,17 @@ deb http://mirrors.tuna.tsinghua.edu.cn/debian-security testing-security main
   <span class="copyright-year">
     &copy; 
     2016 - 
-    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>TyK</span>
+    2023<span class="heart"><i class="iconfont icon-heart"></i></span><span>TyK</span>
   </span>
 </div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>
+    mermaid.initialize({ startOnLoad: true });
+</script>
+
+<script src="/js/copy-to-clipboard.js"></script>
 
     </footer>
 
@@ -304,7 +323,7 @@ deb http://mirrors.tuna.tsinghua.edu.cn/debian-security testing-security main
 
 
 
-<script type="text/javascript" src="/js/main.min.c99b103c33d1539acf3025e1913697534542c4a5aa5af0ccc20475ed2863603b.js"></script>
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
 
 
 
