@@ -6,7 +6,16 @@
     <description>Recent content in Posts on 碎片</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Thu, 25 May 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://tisyang.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 26 Sep 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://tisyang.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>使用 LXC 创建用于构建 BSP 的容器机</title>
+      <link>https://tisyang.github.io/post/2023-09-26-setup-lxc-vm-on-debian/</link>
+      <pubDate>Tue, 26 Sep 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://tisyang.github.io/post/2023-09-26-setup-lxc-vm-on-debian/</guid>
+      <description>工作电脑用的系统是 Debian Sid(当前代号 trixie, Debian 13)，工作内容中经常需要构建 BSP，厂商提供的构建要求通常为指定版本的 Ubuntu，如果不想换掉系</description>
+    </item>
+    
     <item>
       <title>Linux 移动硬盘安全关闭</title>
       <link>https://tisyang.github.io/post/2023-05-25-linux-usb-storage-safe-shutdown/</link>

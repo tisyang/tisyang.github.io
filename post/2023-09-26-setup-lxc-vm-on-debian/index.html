@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>使用 LXC 创建用于构建 BSP 的容器机 - 碎片</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="TyK" /><meta name="description" content="工作电脑用的系统是 Debian Sid(当前代号 trixie, Debian 13)，工作内容中经常需要构建 BSP，厂商提供的构建要求通常为指定版本的 Ubuntu，如果不想换掉系" /><meta name="keywords" content="程序员, 博客, blog, programming" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.113.0 with theme even" />
+
+
+<link rel="canonical" href="https://tisyang.github.io/post/2023-09-26-setup-lxc-vm-on-debian/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.d4d0dce78b3ec6333437bc36540c4749ae9a27ff4ca2d7562da2dbfbf991dde3.css" rel="stylesheet">
+<link href="/lib/fancybox/jquery.fancybox-3.1.20.min.css" rel="stylesheet">
+
+
+<meta property="og:title" content="使用 LXC 创建用于构建 BSP 的容器机" />
+<meta property="og:description" content="工作电脑用的系统是 Debian Sid(当前代号 trixie, Debian 13)，工作内容中经常需要构建 BSP，厂商提供的构建要求通常为指定版本的 Ubuntu，如果不想换掉系" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://tisyang.github.io/post/2023-09-26-setup-lxc-vm-on-debian/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-09-26T00:00:00+00:00" />
+<meta property="article:modified_time" content="2023-09-26T00:00:00+00:00" />
+<meta itemprop="name" content="使用 LXC 创建用于构建 BSP 的容器机">
+<meta itemprop="description" content="工作电脑用的系统是 Debian Sid(当前代号 trixie, Debian 13)，工作内容中经常需要构建 BSP，厂商提供的构建要求通常为指定版本的 Ubuntu，如果不想换掉系"><meta itemprop="datePublished" content="2023-09-26T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2023-09-26T00:00:00+00:00" />
+<meta itemprop="wordCount" content="872">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="使用 LXC 创建用于构建 BSP 的容器机"/>
+<meta name="twitter:description" content="工作电脑用的系统是 Debian Sid(当前代号 trixie, Debian 13)，工作内容中经常需要构建 BSP，厂商提供的构建要求通常为指定版本的 Ubuntu，如果不想换掉系"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+<script>
+    (function(){
+     if(''){
+     if (prompt('请输入文章密码') !== ''){
+     alert('密码错误！');
+     history.back();
+     }
+     }
+     })();
+</script>
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">碎片</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/index.xml">
+        <li class="mobile-menu-item">RSS</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">碎片</a>
+  
+</div>
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/index.xml">RSS</a>
+      </li>
+  </ul>
+</nav>
+
+
+
+
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">使用 LXC 创建用于构建 BSP 的容器机</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2023-09-26 </span>
+        
+        
+        <span class="more-meta"> by </span>
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#安装和配置">安装和配置</a></li>
+    <li><a href="#创建使用-vm">创建使用 VM</a></li>
+    <li><a href="#疑难问题">疑难问题</a></li>
+    <li><a href="#小结">小结</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>工作电脑用的系统是 Debian Sid(当前代号 trixie, Debian 13)，工作内容中经常需要构建 BSP，厂商提供的构建要求通常为指定版本的 Ubuntu，如果不想换掉系统或者使用 Docker，可以考虑使用 LXC 创建指定版本的 Ubuntu 用于构建。</p>
+<!-- raw HTML omitted -->
+<p>Debian 使用 LXC 可以参考<a href="https://wiki.debian.org/LXC">官方Wiki</a>，虽然 LXC VM 分为 Unprivileged 和 Privileged，前者隔离对主机更为安全，但是局限很多。在 BSP 构建中通常需要进行 <code>mount</code> 等操作，所以我们需要使用 Privileged VM。</p>
+<h2 id="安装和配置">安装和配置</h2>
+<p>安装 LXC：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sudo apt install lxc
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>容器默认使用主机共享网络。我们需要修改默认 <code>apparmor</code> 配置，在文件 <code>/etc/lxc/default.conf</code>：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-toml" data-lang="toml"><span class="line"><span class="cl"><span class="c"># /etc/lxc/default.conf</span>
+</span></span><span class="line"><span class="cl"><span class="nx">lxc</span><span class="p">.</span><span class="nx">net</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="nx">type</span> <span class="p">=</span> <span class="nx">veth</span>
+</span></span><span class="line"><span class="cl"><span class="nx">lxc</span><span class="p">.</span><span class="nx">net</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="nx">link</span> <span class="p">=</span> <span class="nx">lxcbr0</span>
+</span></span><span class="line"><span class="cl"><span class="nx">lxc</span><span class="p">.</span><span class="nx">net</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="nx">flags</span> <span class="p">=</span> <span class="nx">up</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c"># 修改如下内容</span>
+</span></span><span class="line"><span class="cl"><span class="nx">lxc</span><span class="p">.</span><span class="nx">apparmor</span><span class="p">.</span><span class="nx">allow_nesting</span> <span class="p">=</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl"><span class="nx">lxc</span><span class="p">.</span><span class="nx">apparmor</span><span class="p">.</span><span class="nx">profile</span> <span class="p">=</span> <span class="nx">unconfined</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="创建使用-vm">创建使用 VM</h2>
+<p>创建一个 ubuntu focal 的 VM，名称为 <code>ubuntu-focal</code>：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># -n 指定名称(name) -t 指定模板(template) -r 指定 发行版(release)</span>
+</span></span><span class="line"><span class="cl">sudo lxc-create -n ubuntu-focal -t ubuntu -- -r focal
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>检查当前存在的 VM：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sudo lxc-ls -f
+</span></span><span class="line"><span class="cl"><span class="c1"># 以下为输出示例</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># NAME         STATE   AUTOSTART GROUPS IPV4 IPV6 UNPRIVILEGED </span>
+</span></span><span class="line"><span class="cl"><span class="c1"># ubuntu-focal STOPPED 0         -      -    -    false        </span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>配置 <code>ubuntu-focal</code>，定义一些本地挂载，以及允许 <code>mount</code> 等一些操作，修改该 VM 的配置 <code>/var/lib/lxc/ubuntu-focal/config</code>：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-toml" data-lang="toml"><span class="line"><span class="cl"><span class="c"># 添加以下内容到 /var/lib/lxc/ubuntu-focal/config 文件中</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c"># allow  mount loop</span>
+</span></span><span class="line"><span class="cl"><span class="nx">lxc</span><span class="p">.</span><span class="nx">apparmor</span><span class="p">.</span><span class="nx">profile</span> <span class="p">=</span> <span class="nx">unconfined</span> 
+</span></span><span class="line"><span class="cl"><span class="nx">lxc</span><span class="p">.</span><span class="nx">cgroup2</span><span class="p">.</span><span class="nx">devices</span><span class="p">.</span><span class="nx">allow</span> <span class="p">=</span> <span class="nx">b</span> <span class="mi">7</span><span class="err">:*</span> <span class="nx">rwm</span>
+</span></span><span class="line"><span class="cl"><span class="nx">lxc</span><span class="p">.</span><span class="nx">cgroup2</span><span class="p">.</span><span class="nx">devices</span><span class="p">.</span><span class="nx">allow</span> <span class="p">=</span> <span class="nx">c</span> <span class="mi">10</span><span class="err">:</span><span class="mi">237</span> <span class="nx">rwm</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c"># 定义本地挂载点，将本地 /home/some_user/some_dir 自动挂载到 ubuntu-focal 的 /mnt 下</span>
+</span></span><span class="line"><span class="cl"><span class="c"># 注意 lxc.mount.entry VM 中挂载点不使用 `/` 前缀</span>
+</span></span><span class="line"><span class="cl"><span class="nx">lxc</span><span class="p">.</span><span class="nx">mount</span><span class="p">.</span><span class="nx">entry</span> <span class="p">=</span> <span class="err">/</span><span class="nx">home</span><span class="err">/</span><span class="nx">some_user</span><span class="err">/</span><span class="nx">some_dir</span>   <span class="nx">mnt</span>     <span class="nx">none</span>    <span class="nx">bind</span><span class="p">,</span><span class="nx">create</span><span class="p">=</span><span class="nx">file</span>        <span class="mi">0</span>       <span class="mi">0</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c"># 挂载 loop 设备</span>
+</span></span><span class="line"><span class="cl"><span class="nx">lxc</span><span class="p">.</span><span class="nx">mount</span><span class="p">.</span><span class="nx">entry</span> <span class="p">=</span> <span class="err">/</span><span class="nx">dev</span><span class="err">/</span><span class="nx">loop0</span>    <span class="nx">dev</span><span class="err">/</span><span class="nx">loop0</span>       <span class="nx">none</span>    <span class="nx">bind</span><span class="p">,</span><span class="nx">create</span><span class="p">=</span><span class="nx">file</span>        <span class="mi">0</span>       <span class="mi">0</span>
+</span></span><span class="line"><span class="cl"><span class="nx">lxc</span><span class="p">.</span><span class="nx">mount</span><span class="p">.</span><span class="nx">entry</span> <span class="p">=</span> <span class="err">/</span><span class="nx">dev</span><span class="err">/</span><span class="nx">loop1</span>    <span class="nx">dev</span><span class="err">/</span><span class="nx">loop1</span>       <span class="nx">none</span>    <span class="nx">bind</span><span class="p">,</span><span class="nx">create</span><span class="p">=</span><span class="nx">file</span>        <span class="mi">0</span>       <span class="mi">0</span>
+</span></span><span class="line"><span class="cl"><span class="nx">lxc</span><span class="p">.</span><span class="nx">mount</span><span class="p">.</span><span class="nx">entry</span> <span class="p">=</span> <span class="err">/</span><span class="nx">dev</span><span class="err">/</span><span class="nx">loop2</span>    <span class="nx">dev</span><span class="err">/</span><span class="nx">loop2</span>       <span class="nx">none</span>    <span class="nx">bind</span><span class="p">,</span><span class="nx">create</span><span class="p">=</span><span class="nx">file</span>        <span class="mi">0</span>       <span class="mi">0</span>
+</span></span><span class="line"><span class="cl"><span class="nx">lxc</span><span class="p">.</span><span class="nx">mount</span><span class="p">.</span><span class="nx">entry</span> <span class="p">=</span> <span class="err">/</span><span class="nx">dev</span><span class="err">/</span><span class="nx">loop3</span>    <span class="nx">dev</span><span class="err">/</span><span class="nx">loop3</span>       <span class="nx">none</span>    <span class="nx">bind</span><span class="p">,</span><span class="nx">create</span><span class="p">=</span><span class="nx">file</span>        <span class="mi">0</span>       <span class="mi">0</span>
+</span></span><span class="line"><span class="cl"><span class="nx">lxc</span><span class="p">.</span><span class="nx">mount</span><span class="p">.</span><span class="nx">entry</span> <span class="p">=</span> <span class="err">/</span><span class="nx">dev</span><span class="err">/</span><span class="nx">loop4</span>    <span class="nx">dev</span><span class="err">/</span><span class="nx">loop4</span>       <span class="nx">none</span>    <span class="nx">bind</span><span class="p">,</span><span class="nx">create</span><span class="p">=</span><span class="nx">file</span>        <span class="mi">0</span>       <span class="mi">0</span>
+</span></span><span class="line"><span class="cl"><span class="nx">lxc</span><span class="p">.</span><span class="nx">mount</span><span class="p">.</span><span class="nx">entry</span> <span class="p">=</span> <span class="err">/</span><span class="nx">dev</span><span class="err">/</span><span class="nx">loop5</span>    <span class="nx">dev</span><span class="err">/</span><span class="nx">loop5</span>       <span class="nx">none</span>    <span class="nx">bind</span><span class="p">,</span><span class="nx">create</span><span class="p">=</span><span class="nx">file</span>        <span class="mi">0</span>       <span class="mi">0</span>
+</span></span><span class="line"><span class="cl"><span class="nx">lxc</span><span class="p">.</span><span class="nx">mount</span><span class="p">.</span><span class="nx">entry</span> <span class="p">=</span> <span class="err">/</span><span class="nx">dev</span><span class="err">/</span><span class="nx">loop-control</span>     <span class="nx">dev</span><span class="err">/</span><span class="nx">loop-control</span>        <span class="nx">none</span>    <span class="nx">bind</span><span class="p">,</span><span class="nx">create</span><span class="p">=</span><span class="nx">file</span>        <span class="mi">0</span>       <span class="mi">0</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>启动 VM：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># 启动 ubuntu-focal</span>
+</span></span><span class="line"><span class="cl">sudo lxc-start ubuntu-focal
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 查看当前运行的 VM 和 IP</span>
+</span></span><span class="line"><span class="cl">sudo lxc-ls -f 
+</span></span><span class="line"><span class="cl"><span class="c1"># 以下为输出</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># NAME         STATE   AUTOSTART GROUPS IPV4       IPV6 UNPRIVILEGED </span>
+</span></span><span class="line"><span class="cl"><span class="c1"># ubuntu-focal RUNNING 0         -      10.0.3.179 -    false     </span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>现在可以通过 <code>ssh ubuntu@10.0.3.179</code> 进入 VM 进行操作了。
+不需要使用时可以用命令 <code>sudo lxc-stop ubuntu-focal</code> 关掉 VM。</p>
+<h2 id="疑难问题">疑难问题</h2>
+<ol>
+<li>
+<p>在构建 BSP 中提示 <code>binfmt_misc</code> 权限问题，请检查 VM 的配置中 <code>lxc.apparmor.profile</code> 字段，是否为 <code>unconfined</code>。</p>
+</li>
+<li>
+<p>在构建 BSP 中提示 <code>mount -o loop</code> 权限问题，请检查 VM 配置中 与上一章节示例中的有关 <code>allow mount loop</code> 相关的配置。</p>
+</li>
+</ol>
+<h2 id="小结">小结</h2>
+<p>使用 LXC 而不是 Docker 源于个人选择和使用场景，相对来说，支持同 VM 多进程的 LXC 更为适合用于构建 BSP 的 VM 工具，
+而 Docker 则适合部署使用。</p>
+
+    </div>
+
+    
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        
+        <a class="next" href="/post/2023-05-25-linux-usb-storage-safe-shutdown/">
+            <span class="next-text nav-default">Linux 移动硬盘安全关闭</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="https://github.com/tisyang" class="iconfont icon-github" title="github"></a>
+  
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2016 - 
+    2023<span class="heart"><i class="iconfont icon-heart"></i></span><span>TyK</span>
+  </span>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>
+    mermaid.initialize({ startOnLoad: true });
+</script>
+
+<script src="/js/copy-to-clipboard.js"></script>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  <script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  <script type="text/javascript" src="/lib/fancybox/jquery.fancybox-3.1.20.min.js"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>
