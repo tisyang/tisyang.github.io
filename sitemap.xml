@@ -3,20 +3,27 @@
   
   <url>
     <loc>https://tisyang.github.io/post/</loc>
-    <lastmod>2023-09-26T00:00:00+00:00</lastmod>
+    <lastmod>2023-10-12T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
-    <loc>https://tisyang.github.io/post/2023-09-26-setup-lxc-vm-on-debian/</loc>
-    <lastmod>2023-09-26T00:00:00+00:00</lastmod>
+    <loc>https://tisyang.github.io/post/2023-10-12-setup-crossbuild-lxc-vm/</loc>
+    <lastmod>2023-10-12T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
     <loc>https://tisyang.github.io/</loc>
+    <lastmod>2023-10-12T00:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://tisyang.github.io/post/2023-09-26-setup-lxc-vm-on-debian/</loc>
     <lastmod>2023-09-26T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>

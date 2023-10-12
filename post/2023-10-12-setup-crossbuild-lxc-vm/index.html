@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>使用 LXC 创建交叉架构的容器 - 碎片</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="TyK" /><meta name="description" content="如果部署程序的设备是 ARM 环境，通常程序编译要么交叉编译器，要么使用开发板进行编译。本文介绍一种利用 LXC 交叉架构创建一个用于编译程序的容器。 当使用" /><meta name="keywords" content="程序员, 博客, blog, programming" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.118.2 with theme even" />
+
+
+<link rel="canonical" href="https://tisyang.github.io/post/2023-10-12-setup-crossbuild-lxc-vm/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.d4d0dce78b3ec6333437bc36540c4749ae9a27ff4ca2d7562da2dbfbf991dde3.css" rel="stylesheet">
+<link href="/lib/fancybox/jquery.fancybox-3.1.20.min.css" rel="stylesheet">
+
+
+<meta property="og:title" content="使用 LXC 创建交叉架构的容器" />
+<meta property="og:description" content="如果部署程序的设备是 ARM 环境，通常程序编译要么交叉编译器，要么使用开发板进行编译。本文介绍一种利用 LXC 交叉架构创建一个用于编译程序的容器。 当使用" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://tisyang.github.io/post/2023-10-12-setup-crossbuild-lxc-vm/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-10-12T00:00:00+00:00" />
+<meta property="article:modified_time" content="2023-10-12T00:00:00+00:00" />
+<meta itemprop="name" content="使用 LXC 创建交叉架构的容器">
+<meta itemprop="description" content="如果部署程序的设备是 ARM 环境，通常程序编译要么交叉编译器，要么使用开发板进行编译。本文介绍一种利用 LXC 交叉架构创建一个用于编译程序的容器。 当使用"><meta itemprop="datePublished" content="2023-10-12T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2023-10-12T00:00:00+00:00" />
+<meta itemprop="wordCount" content="829">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="使用 LXC 创建交叉架构的容器"/>
+<meta name="twitter:description" content="如果部署程序的设备是 ARM 环境，通常程序编译要么交叉编译器，要么使用开发板进行编译。本文介绍一种利用 LXC 交叉架构创建一个用于编译程序的容器。 当使用"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+<script>
+    (function(){
+     if(''){
+     if (prompt('请输入文章密码') !== ''){
+     alert('密码错误！');
+     history.back();
+     }
+     }
+     })();
+</script>
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">碎片</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/index.xml">
+        <li class="mobile-menu-item">RSS</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">碎片</a>
+  
+</div>
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/index.xml">RSS</a>
+      </li>
+  </ul>
+</nav>
+
+
+
+
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">使用 LXC 创建交叉架构的容器</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2023-10-12 </span>
+        
+        
+        <span class="more-meta"> by </span>
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#创建容器">创建容器</a></li>
+    <li><a href="#配置容器系统">配置容器系统</a></li>
+    <li><a href="#备注">备注</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>如果部署程序的设备是 ARM 环境，通常程序编译要么交叉编译器，要么使用开发板进行编译。本文介绍一种利用 LXC 交叉架构创建一个用于编译程序的容器。</p>
+<!-- raw HTML omitted -->
+<p>当使用交叉编译器时，如果程序依赖很多包，维护交叉编译环境就特别麻烦，需要自己维护特定的 rootfs 。当使用开发板编译时，代码编辑到编译不方便，而且
+占用一块开发板。如果我们可以在开发主机上搭建一个与设备架构环境一致的系统，那么将大大提升开发的便捷性。比如设备上用的 aarch64 的 ubuntu focal(20.04)，
+我们可以在开发主机上使用 LXC 搭建一个 aarch64 的 ubuntu focal 系统容器，所有开发编译都可以在这个容器里进行，除了依赖板子设备硬件的程序，其他
+程序都还可以在这个容器里调试运行。</p>
+<p>LXC 的安装可以参考前一篇博文<a href="http://tisyang.github.io/post/2023-09-26-setup-lxc-vm-on-debian/">使用 LXC 创建用于构建 BSP 的容器机</a>。</p>
+<p>下面介绍搭建交叉架构的容器，以 aarch64 ubuntu focal 为例：</p>
+<h2 id="创建容器">创建容器</h2>
+<p>因为使用交叉架构，那么需要安装 qemu 的一个库，用来转义系统调用，然后创建容器：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># 交叉架构依赖 qemu-user-static</span>
+</span></span><span class="line"><span class="cl">sudo apt install qemu-user-static
+</span></span><span class="line"><span class="cl"><span class="c1"># 创建 arm64(aarch64)架构的容器</span>
+</span></span><span class="line"><span class="cl">sudo lxc-create -n ubuntu-aarch64 -t download  --  --dist ubuntu --release focal --arch arm64
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="配置容器系统">配置容器系统</h2>
+<p>默认安装的发行版本没有给出用户 ubuntu 密码，而且网络部分存在一些问题，都需要手动进行配置。</p>
+<p>首先，可以通过 <code>lxc-attach</code> 命令进入系统</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># 无密码进入系统</span>
+</span></span><span class="line"><span class="cl">sudo lxc-attach -n ubuntu-aarch64
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>修改 <code>ubuntu</code> 用户密码：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># 修改 ubuntu 用户密码</span>
+</span></span><span class="line"><span class="cl">passwd ubuntu
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>临时配置网络</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># 临时使用 dhcp 配置网络，然后就可以安装新包了</span>
+</span></span><span class="line"><span class="cl">dhclient eth0 -v
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>需要卸载模块中的 <code>netplan</code>，然后使用 <code>ifupdown</code> 来管理网络：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># 使用 ifupdown 代替 netplan</span>
+</span></span><span class="line"><span class="cl">apt remove netplan.io libnetplan0
+</span></span><span class="line"><span class="cl">apt install ifupdown
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>为了开发方便，还需要安装 ssh server:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># 安装 ssh server</span>
+</span></span><span class="line"><span class="cl">apt install openssh-server
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>然后可以编辑网络，创建 <code>/etc/network/</code> 文件夹并写入配置到 <code>/etc/network/interfaces</code> 文件中</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># 编辑网络</span>
+</span></span><span class="line"><span class="cl">mkdir /etc/network
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">cat <span class="s">&lt;&lt; EOF | sudo tee /etc/network/interfaces
+</span></span></span><span class="line"><span class="cl"><span class="s">auto lo
+</span></span></span><span class="line"><span class="cl"><span class="s">iface lo inet loopback
+</span></span></span><span class="line"><span class="cl"><span class="s">
+</span></span></span><span class="line"><span class="cl"><span class="s">auto eth0
+</span></span></span><span class="line"><span class="cl"><span class="s">iface eth0 inet dhcp
+</span></span></span><span class="line"><span class="cl"><span class="s">
+</span></span></span><span class="line"><span class="cl"><span class="s">source /etc/network/interface.d/*
+</span></span></span><span class="line"><span class="cl"><span class="s">EOF</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>然后就可以退出 lxc-attach ，来验证容器是否正常化。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># 首先退出 Lxc-AttacH</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 停止容器</span>
+</span></span><span class="line"><span class="cl">lxc-stop ubuntu-aarch64
+</span></span><span class="line"><span class="cl"><span class="c1"># 启动容器</span>
+</span></span><span class="line"><span class="cl">lxc-start ubuntu-aarch64
+</span></span><span class="line"><span class="cl"><span class="c1"># 等待几秒，查看容器是否已有 ip</span>
+</span></span><span class="line"><span class="cl">lxc-ls -f
+</span></span><span class="line"><span class="cl"><span class="c1"># 通过 ip 进入系统</span>
+</span></span><span class="line"><span class="cl">ssh ubuntu@10.0.3.x
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="备注">备注</h2>
+<p>为了编译方便，还可以挂在主机上的代码工程文件夹到容器中，参考前一篇博文，这样就可以在主机上编辑代码，在容器中进行编译测试了。</p>
+
+    </div>
+
+    
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        
+        <a class="next" href="/post/2023-09-26-setup-lxc-vm-on-debian/">
+            <span class="next-text nav-default">使用 LXC 创建用于构建 BSP 的容器机</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="https://github.com/tisyang" class="iconfont icon-github" title="github"></a>
+  
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2016 - 
+    2023<span class="heart"><i class="iconfont icon-heart"></i></span><span>TyK</span>
+  </span>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>
+    mermaid.initialize({ startOnLoad: true });
+</script>
+
+<script src="/js/copy-to-clipboard.js"></script>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  <script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  <script type="text/javascript" src="/lib/fancybox/jquery.fancybox-3.1.20.min.js"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>
