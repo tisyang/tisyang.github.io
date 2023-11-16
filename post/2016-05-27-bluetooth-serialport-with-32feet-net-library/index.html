@@ -25,7 +25,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.118.2 with theme even" />
+<meta name="generator" content="Hugo 0.120.3 with theme even" />
 
 
 <link rel="canonical" href="https://tisyang.github.io/post/2016-05-27-bluetooth-serialport-with-32feet-net-library/" />
@@ -48,6 +48,7 @@
 <meta property="og:url" content="https://tisyang.github.io/post/2016-05-27-bluetooth-serialport-with-32feet-net-library/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2016-05-27T00:00:00+00:00" />
 <meta property="article:modified_time" content="2016-05-27T00:00:00+00:00" />
+
 <meta itemprop="name" content="32feet.net 蓝牙虚拟串口编程">
 <meta itemprop="description" content="Windows 上的蓝牙编程并不方便，由于操作系统并没有提供统一的蓝牙操作接口，通常是由各个蓝牙设备商提供蓝牙栈，所以要想编程兼容这些不同的厂商蓝牙是一个问题。好在有个软件项目 32feet.NET 针对主流蓝牙协议栈提供了支持，包括 Microsfot, Widcomm, BlueSolei 等，同时还支持红外传输协议。
 蓝牙虚拟串口是一个较为常见的需求，为了兼容已有使用串口设备的程序，需要将蓝牙连接转为系统上的虚拟串口，然后提供给其他程序或库使用。32feet.NET 对此也提供了支持。"><meta itemprop="datePublished" content="2016-05-27T00:00:00+00:00" />
@@ -206,7 +207,7 @@
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-cs" data-lang="cs"><span class="line"><span class="cl"><span class="cm">/* 定义于类 BTHelper 中 */</span>
-</span></span><span class="line"><span class="cl"><span class="k">public</span> <span class="k">static</span> <span class="kt">bool</span> <span class="n">IsPlatformSupportBT</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="kd">public</span> <span class="kd">static</span> <span class="kt">bool</span> <span class="n">IsPlatformSupportBT</span><span class="p">()</span>
 </span></span><span class="line"><span class="cl"><span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="n">BluetoothClient</span> <span class="n">bc</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">    <span class="k">try</span>
@@ -215,10 +216,10 @@
 </span></span><span class="line"><span class="cl">    <span class="p">}</span>
 </span></span><span class="line"><span class="cl">    <span class="k">catch</span> <span class="p">(</span><span class="n">PlatformNotSupportedException</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">    <span class="p">{</span>
-</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="k">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">    <span class="p">}</span>
 </span></span><span class="line"><span class="cl">    <span class="n">bc</span><span class="p">.</span><span class="n">Close</span><span class="p">();</span>
-</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="k">true</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
@@ -230,7 +231,7 @@
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cs" data-lang="cs"><span class="line"><span class="cl"><span class="k">public</span> <span class="n">BluetoothDeviceInfo</span><span class="p">[]</span> <span class="n">DiscoverDevices</span><span class="p">(</span><span class="kt">int</span> <span class="n">maxDevices</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">authenticated</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">remembered</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">unknown</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">discoverableOnly</span><span class="p">);</span>
+<pre tabindex="0" class="chroma"><code class="language-cs" data-lang="cs"><span class="line"><span class="cl"><span class="kd">public</span> <span class="n">BluetoothDeviceInfo</span><span class="p">[]</span> <span class="n">DiscoverDevices</span><span class="p">(</span><span class="kt">int</span> <span class="n">maxDevices</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">authenticated</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">remembered</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">unknown</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">discoverableOnly</span><span class="p">);</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>第一个参数表明搜索的最大设备数，第二个参数表示是否搜索已配对设备，第三个表示是否搜索记住的设备，第四个表示是否搜索未知设备，第五个参数表示是搜索范围内可被发现的设备。</p>
@@ -268,9 +269,9 @@
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-cs" data-lang="cs"><span class="line"><span class="cl"><span class="cm">/* 定义于类 BTHelper 中 */</span>
-</span></span><span class="line"><span class="cl"><span class="k">public</span> <span class="k">static</span> <span class="kt">bool</span> <span class="n">TestingIfInRange</span><span class="p">(</span><span class="n">BluetoothAddress</span> <span class="n">addr</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="kd">public</span> <span class="kd">static</span> <span class="kt">bool</span> <span class="n">TestingIfInRange</span><span class="p">(</span><span class="n">BluetoothAddress</span> <span class="n">addr</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl"><span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="kt">bool</span> <span class="n">inRange</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">bool</span> <span class="n">inRange</span> <span class="p">=</span> <span class="kc">false</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">    <span class="n">Guid</span> <span class="n">fakeUuid</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Guid</span><span class="p">(</span><span class="s">&#34;{F13F471D-47CB-41d6-9609-BAD0690BF891}&#34;</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">    <span class="n">BluetoothDeviceInfo</span> <span class="n">device</span> <span class="p">=</span> <span class="k">new</span> <span class="n">BluetoothDeviceInfo</span><span class="p">(</span><span class="n">addr</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">
@@ -278,11 +279,11 @@
 </span></span><span class="line"><span class="cl">    <span class="p">{</span>
 </span></span><span class="line"><span class="cl">        <span class="n">ServiceRecord</span><span class="p">[]</span> <span class="n">records</span> <span class="p">=</span> <span class="n">device</span><span class="p">.</span><span class="n">GetServiceRecords</span><span class="p">(</span><span class="n">fakeUuid</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">        <span class="n">Debug</span><span class="p">.</span><span class="n">Assert</span><span class="p">(</span><span class="n">records</span><span class="p">.</span><span class="n">Length</span> <span class="p">==</span> <span class="m">0</span><span class="p">,</span> <span class="s">&#34;Why are we getting any records? len: &#34;</span> <span class="p">+</span> <span class="n">records</span><span class="p">.</span><span class="n">Length</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">        <span class="n">inRange</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">inRange</span> <span class="p">=</span> <span class="kc">true</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">    <span class="p">}</span>
 </span></span><span class="line"><span class="cl">    <span class="k">catch</span> <span class="p">(</span><span class="n">SocketException</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">    <span class="p">{</span>
-</span></span><span class="line"><span class="cl">        <span class="n">inRange</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">inRange</span> <span class="p">=</span> <span class="kc">false</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">    <span class="p">}</span>
 </span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">inRange</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
@@ -339,8 +340,8 @@
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-cs" data-lang="cs"><span class="line"><span class="cl"><span class="n">BluetoothAddress</span> <span class="n">addr</span> <span class="p">=</span> <span class="n">BluetoothAddress</span><span class="p">.</span><span class="n">Parse</span><span class="p">(</span><span class="s">&#34;123456789012&#34;</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl"><span class="n">BluetoothDeviceInfo</span> <span class="n">device</span> <span class="p">=</span> <span class="k">new</span> <span class="n">BluetoothDeviceInfo</span><span class="p">(</span><span class="n">addr</span><span class="p">);</span>  <span class="c1">// Or from discovery etc</span>
-</span></span><span class="line"><span class="cl"><span class="kt">bool</span> <span class="n">state</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl"><span class="n">device</span><span class="p">.</span><span class="n">SetServiceState</span><span class="p">(</span><span class="n">BluetoothService</span><span class="p">.</span><span class="n">SerialPort</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="k">true</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="kt">bool</span> <span class="n">state</span> <span class="p">=</span> <span class="kc">true</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">device</span><span class="p">.</span><span class="n">SetServiceState</span><span class="p">(</span><span class="n">BluetoothService</span><span class="p">.</span><span class="n">SerialPort</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p><code>SetServiceState</code> 的第一个函数表示服务标识，第二个表示要设置的服务状态，<code>true</code> 为启用， <code>false</code> 为禁用，第三个参数表示如果设置失败是否抛出异常。</p>
@@ -395,7 +396,7 @@
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-cs" data-lang="cs"><span class="line"><span class="cl"><span class="k">using</span> <span class="nn">System.Management</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="k">const</span> <span class="kt">string</span> <span class="n">Win32_SerialPort</span> <span class="p">=</span> <span class="s">&#34;Win32_SerialPort&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kd">const</span> <span class="kt">string</span> <span class="n">Win32_SerialPort</span> <span class="p">=</span> <span class="s">&#34;Win32_SerialPort&#34;</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="n">SelectQuery</span> <span class="n">q</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SelectQuery</span><span class="p">(</span><span class="n">Win32_SerialPort</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl"><span class="n">ManagementObjectSearcher</span> <span class="n">s</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ManagementObjectSearcher</span><span class="p">(</span><span class="n">q</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl"><span class="k">foreach</span> <span class="p">(</span><span class="kt">object</span> <span class="n">cur</span> <span class="k">in</span> <span class="n">s</span><span class="p">.</span><span class="n">Get</span><span class="p">())</span> <span class="p">{</span>
@@ -454,9 +455,9 @@
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-cs" data-lang="cs"><span class="line"><span class="cl"><span class="cm">/* 定义于类 BTHelper 中 */</span>
-</span></span><span class="line"><span class="cl"><span class="k">public</span> <span class="k">static</span> <span class="n">Hashtable</span> <span class="n">QueryBTHPorts</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="kd">public</span> <span class="kd">static</span> <span class="n">Hashtable</span> <span class="n">QueryBTHPorts</span><span class="p">()</span>
 </span></span><span class="line"><span class="cl"><span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="k">const</span> <span class="kt">string</span> <span class="n">Win32_SerialPort</span> <span class="p">=</span> <span class="s">&#34;Win32_SerialPort&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">const</span> <span class="kt">string</span> <span class="n">Win32_SerialPort</span> <span class="p">=</span> <span class="s">&#34;Win32_SerialPort&#34;</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">    <span class="n">SelectQuery</span> <span class="n">q</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SelectQuery</span><span class="p">(</span><span class="n">Win32_SerialPort</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">    <span class="n">ManagementObjectSearcher</span> <span class="n">s</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ManagementObjectSearcher</span><span class="p">(</span><span class="n">q</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">
@@ -663,7 +664,7 @@
 </span></span><span class="line"><span class="cl">        <span class="cm">/* 之后检查串口服务是否设置成功的方法就是 设置后检索蓝牙串口 */</span>
 </span></span><span class="line"><span class="cl">        <span class="n">worker</span><span class="p">.</span><span class="n">ReportProgress</span><span class="p">(</span><span class="m">10</span><span class="p">,</span> <span class="s">&#34;Enable serialport service...&#34;</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">        <span class="n">deviceinfo</span><span class="p">.</span><span class="n">SetServiceState</span><span class="p">(</span><span class="n">BluetoothService</span><span class="p">.</span><span class="n">SerialPort</span><span class="p">,</span> <span class="k">true</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">deviceinfo</span><span class="p">.</span><span class="n">SetServiceState</span><span class="p">(</span><span class="n">BluetoothService</span><span class="p">.</span><span class="n">SerialPort</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">        <span class="cm">/* 枚举系统蓝牙串口，检查对应蓝牙是否有串口绑定 */</span>
 </span></span><span class="line"><span class="cl">        <span class="n">Hashtable</span> <span class="n">bthTable2</span> <span class="p">=</span> <span class="n">BTHelper</span><span class="p">.</span><span class="n">QueryBTHPorts</span><span class="p">();</span>
@@ -683,7 +684,7 @@
 </span></span><span class="line"><span class="cl">            <span class="k">return</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">        <span class="p">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="k">false</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="kc">false</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    <span class="n">worker</span><span class="p">.</span><span class="n">ReportProgress</span><span class="p">(</span><span class="m">10</span><span class="p">,</span> <span class="s">&#34;Open serialport...&#34;</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">

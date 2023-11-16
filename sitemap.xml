@@ -3,20 +3,27 @@
   
   <url>
     <loc>https://tisyang.github.io/post/</loc>
-    <lastmod>2023-10-12T00:00:00+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://tisyang.github.io/post/2023-10-12-setup-crossbuild-lxc-vm/</loc>
-    <lastmod>2023-10-12T00:00:00+00:00</lastmod>
+    <lastmod>2023-11-16T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
     <loc>https://tisyang.github.io/</loc>
+    <lastmod>2023-11-16T00:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://tisyang.github.io/post/2023-11-16-port-alpine-linux-to-rv1106-board/</loc>
+    <lastmod>2023-11-16T00:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://tisyang.github.io/post/2023-10-12-setup-crossbuild-lxc-vm/</loc>
     <lastmod>2023-10-12T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>

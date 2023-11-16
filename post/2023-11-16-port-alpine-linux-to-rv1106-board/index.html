@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>给开发板适配 Alpine Linux - 碎片</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="TyK" /><meta name="description" content="本文主要记录如何将 Alpine Linux 的 rootfs 移植到 RV1106 开发板上，重点是细节坑的处理。 手头有一个 LuckFox（幸狐）的开发板，型号是 Luckfox Pico Max，SOC 是瑞芯微的" /><meta name="keywords" content="程序员, 博客, blog, programming" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.120.3 with theme even" />
+
+
+<link rel="canonical" href="https://tisyang.github.io/post/2023-11-16-port-alpine-linux-to-rv1106-board/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.d4d0dce78b3ec6333437bc36540c4749ae9a27ff4ca2d7562da2dbfbf991dde3.css" rel="stylesheet">
+<link href="/lib/fancybox/jquery.fancybox-3.1.20.min.css" rel="stylesheet">
+
+
+<meta property="og:title" content="给开发板适配 Alpine Linux" />
+<meta property="og:description" content="本文主要记录如何将 Alpine Linux 的 rootfs 移植到 RV1106 开发板上，重点是细节坑的处理。 手头有一个 LuckFox（幸狐）的开发板，型号是 Luckfox Pico Max，SOC 是瑞芯微的" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://tisyang.github.io/post/2023-11-16-port-alpine-linux-to-rv1106-board/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-11-16T00:00:00+00:00" />
+<meta property="article:modified_time" content="2023-11-16T00:00:00+00:00" />
+
+<meta itemprop="name" content="给开发板适配 Alpine Linux">
+<meta itemprop="description" content="本文主要记录如何将 Alpine Linux 的 rootfs 移植到 RV1106 开发板上，重点是细节坑的处理。 手头有一个 LuckFox（幸狐）的开发板，型号是 Luckfox Pico Max，SOC 是瑞芯微的"><meta itemprop="datePublished" content="2023-11-16T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2023-11-16T00:00:00+00:00" />
+<meta itemprop="wordCount" content="2764">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="给开发板适配 Alpine Linux"/>
+<meta name="twitter:description" content="本文主要记录如何将 Alpine Linux 的 rootfs 移植到 RV1106 开发板上，重点是细节坑的处理。 手头有一个 LuckFox（幸狐）的开发板，型号是 Luckfox Pico Max，SOC 是瑞芯微的"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+<script>
+    (function(){
+     if(''){
+     if (prompt('请输入文章密码') !== ''){
+     alert('密码错误！');
+     history.back();
+     }
+     }
+     })();
+</script>
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">碎片</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/index.xml">
+        <li class="mobile-menu-item">RSS</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">碎片</a>
+  
+</div>
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/index.xml">RSS</a>
+      </li>
+  </ul>
+</nav>
+
+
+
+
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">给开发板适配 Alpine Linux</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2023-11-16 </span>
+        
+        
+        <span class="more-meta"> by </span>
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#构建自己的-alpine-linux-rootfs">构建自己的 Alpine Linux rootfs</a></li>
+    <li><a href="#修改编译设置">修改编译设置</a></li>
+    <li><a href="#自定义系统配置">自定义系统配置</a></li>
+    <li><a href="#刷机注意事项">刷机注意事项</a></li>
+    <li><a href="#问题及方法">问题及方法</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>本文主要记录如何将 Alpine Linux 的 rootfs 移植到 RV1106 开发板上，重点是细节坑的处理。</p>
+<!-- raw HTML omitted -->
+<p>手头有一个 <a href="https://www.luckfox.com/">LuckFox（幸狐）</a>的开发板，型号是 Luckfox Pico Max，SOC 是瑞芯微的 RV1106，尺寸小巧，接口俱全，跟一个 U 盘差不多大小:</p>
+<p><img src="/image/luckfox-pico-max.png" alt="Luckfox Pico Max"></p>
+<p>规格方面，可以看<a href="https://wiki.luckfox.com/zh/Luckfox-Pico/Luckfox-Pico-quick-start">官方 Wiki 介绍</a>，主要是如下这些：</p>
+<ul>
+<li>瑞芯微 RV1106 Cortex A7 1.2G 单核</li>
+<li>0.5 TOPS NPU</li>
+<li>256MB DDR3L</li>
+<li>SPI NAND 256MB</li>
+<li>10/100M 以太网</li>
+<li>5M@30fps ISP + MIPI CS2 2-lane</li>
+<li>GPIO/UART/PWM/I2C/SPI/USB 等外设接口</li>
+</ul>
+<p>虽然 RV1106 是为 IPC 应用设计的，但是这个价格和外设，在低端工控/物联网领域，性价比十足，这个顶配的 LuckFox
+Pico Max 开发板，也才 ￥70 RMB 左右，加上 Linux 的开发效率，可以替代很多 MCU 的应用场景了。</p>
+<p>自带的系统带有很多程序，主要是 IPC 应用。我们可以移植 Alpine Linux 的 rootfs 给这个开发板，这样就可以方面的配置系统和包管理了，而无需自己来编译移植各种程序。</p>
+<p>Alpine Linux 的 rootfs 的移植主要参考社区的一篇文章<a href="http://bbs.eeworld.com.cn/thread-1259967-1-1.html" title="「当幸狐来敲门」适配Alpine Linux下篇--适配Alpine Linux的详细步骤">「当幸狐来敲门」适配Alpine Linux下篇&ndash;适配Alpine Linux的详细步骤</a>，但是实际操作起来有一些坑需要注意。</p>
+<h2 id="构建自己的-alpine-linux-rootfs">构建自己的 Alpine Linux rootfs</h2>
+<p>可以用 docker 镜像来提取 rootfs，也可以用 lxc 容器来做，这里介绍 lxc 的方法。</p>
+<ol>
+<li>首先需要更新 lxc 的 alpine 文件模板，这个跟系统 lxc-templates 版本有关。主要是因为 alpine 的验证 keys 更新，系统 apt 安装的 lxc-templates 还未引入这个变更。</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># 修改文件 /usr/share/lxc/templates/lxc-alpine</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 参考上游代码变更 &lt;https://github.com/lxc/lxc-templates/commit/2163a7e4e04383696bb88a9da2f7fa61ab4781b7&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 更新 APK_KEYS_SHA256 和 APK_KEYS_URI</span>
+</span></span><span class="line"><span class="cl">sudo vim /usr/share/lxc/templates/lxc-alpine
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol start="2">
+<li>创建一个兼容 arm A7 架构(armv7l/armhf) 的 lxc 容器，这里容器名称为 alpine-armhf:</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># debian 系系统中 lxc 中 armv7 架构已经改名为 armhf</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 这里默认会安装 alpine 3.18 版本，如果想使用滚动发行版本 edge</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 则命令为</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#     sudo lxc-create -n alpine-armhf -t alpine -- --release edge --arch armhf</span>
+</span></span><span class="line"><span class="cl">sudo lxc-create -n alpine-armhf -t alpine -- --arch armhf
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol start="3">
+<li>创建存储 rootfs 的文件并挂载到容器中：</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="c1"># 这部分参考文章中使用文件挂载。</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 其实在 lxc 中更为简单，因为每个容器的 rootfs 都存在系统中，可以直接访问</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#    /var/lib/lxc/[container-name]`/rootfs</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># </span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 创建临时文件，用来存储 rootfs</span>
+</span></span><span class="line"><span class="cl"><span class="n">dd</span> <span class="k">if</span><span class="o">=/</span><span class="n">dev</span><span class="o">/</span><span class="n">zero</span> <span class="n">of</span><span class="o">=</span><span class="n">rootfs</span><span class="o">.</span><span class="n">ext4</span> <span class="n">bs</span><span class="o">=</span><span class="mi">1</span><span class="n">M</span> <span class="n">count</span><span class="o">=</span><span class="mi">100</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 格式化文件，创建文件系统</span>
+</span></span><span class="line"><span class="cl"><span class="n">sudo</span> <span class="n">mkfs</span><span class="o">.</span><span class="n">ext4</span> <span class="n">rootfs</span><span class="o">.</span><span class="n">ext4</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 挂在临时文件到 /tmp/my-rootfs</span>
+</span></span><span class="line"><span class="cl"><span class="n">mkdir</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">my</span><span class="o">-</span><span class="n">rootfs</span>
+</span></span><span class="line"><span class="cl"><span class="n">sudo</span> <span class="n">mount</span> <span class="n">rootfs</span><span class="o">.</span><span class="n">ext4</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">my</span><span class="o">-</span><span class="n">rootfs</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 编辑 alpine-armhf config 文件，映射挂载点 LXC /mnt -&gt; HOST /tmp/my-rootfs</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 在 /var/lib/lxc/alpine-armhf/config 文件末尾添加如下行</span>
+</span></span><span class="line"><span class="cl"><span class="n">lxc</span><span class="o">.</span><span class="n">mount</span><span class="o">.</span><span class="n">entry</span> <span class="o">=</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">my</span><span class="o">-</span><span class="n">rootfs</span>  <span class="n">mnt</span> <span class="n">none</span>    <span class="n">bind</span><span class="p">,</span><span class="n">create</span><span class="o">=</span><span class="n">file</span>    <span class="mi">0</span>   <span class="mi">0</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol start="4">
+<li>启动 alpine-armhf 容器并登陆容器：</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># 启动 alpine-armhf 容器</span>
+</span></span><span class="line"><span class="cl">sudo lxc-start alpine-armhf
+</span></span><span class="line"><span class="cl"><span class="c1"># 进入 alpine-armhf 系统</span>
+</span></span><span class="line"><span class="cl">sudo lxc-attach -n alpine-armhf
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol start="5">
+<li>进行基本的配置：</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span><span class="lnt">73
+</span><span class="lnt">74
+</span><span class="lnt">75
+</span><span class="lnt">76
+</span><span class="lnt">77
+</span><span class="lnt">78
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># 注意，这里的命令都是在 alpine-armhf 容器中操作</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 使用 alpine 中科大镜像源</span>
+</span></span><span class="line"><span class="cl">sed -i <span class="s1">&#39;s/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g&#39;</span> /etc/apk/repositories
+</span></span><span class="line"><span class="cl">apk update
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 安装 openrc</span>
+</span></span><span class="line"><span class="cl">apk add openrc
+</span></span><span class="line"><span class="cl"><span class="c1"># 配置 openrc 添加必要启动服务</span>
+</span></span><span class="line"><span class="cl">rc-update add devfs boot
+</span></span><span class="line"><span class="cl">rc-update add procfs boot
+</span></span><span class="line"><span class="cl">rc-update add sysfs boot
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 配置串口登陆</span>
+</span></span><span class="line"><span class="cl"><span class="nb">echo</span> ttyFIQ0 &gt;&gt; /etc/securetty
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 编辑 /etc/inittab 文件</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 删除 tty1 到 tty6 的行</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 添加 ttyFIQ0 行</span>
+</span></span><span class="line"><span class="cl">ttyFIQ0::respawn:/sbin/getty -L ttyFIQ0 <span class="m">0</span> vt100
+</span></span><span class="line"><span class="cl"><span class="c1"># 如果需要 ttyFIQ0 自动登陆，则添加</span>
+</span></span><span class="line"><span class="cl">ttyFIQ0::respawn:/sbin/agetty --autologin root ttyFIQ0 vt100
+</span></span><span class="line"><span class="cl"><span class="c1"># 并安装 agettty 包</span>
+</span></span><span class="line"><span class="cl">apk add agetty 
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 修改 hostname</span>
+</span></span><span class="line"><span class="cl"><span class="nb">echo</span> <span class="s2">&#34;YourHostname&#34;</span> &gt; /etc/hostname
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 安装 dropbear ssh server</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># dropbear 比 openssh-server 更节省空间</span>
+</span></span><span class="line"><span class="cl">apk add dropbear dropbear-dbclient dropbear-openrc dropbear-scp
+</span></span><span class="line"><span class="cl"><span class="c1"># 添加 dropbear 自动启动</span>
+</span></span><span class="line"><span class="cl">rc-update add dropbear default
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 设置密码</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 需要注意的是，这里暂时需要指定 root 密码加密方法为 md5，否则会使用 sha256 </span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 但是 BSP 中编译的 busybox 版本只支持 md5，BSP 版本会覆盖安装 rootfs 中的 busybox</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 会导致 ssh 登陆失败</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 另外一种解决方法是，编译 BSP 时，修改 busybox 配置</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#   make busybox_menuconfig</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 重新设置 root 密码</span>
+</span></span><span class="line"><span class="cl">passwd -a md5
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 配置网络</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># alpine 使用 ifupdown-ng 来管理网络</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 可以编辑 /etc/network/interfaces </span>
+</span></span><span class="line"><span class="cl"><span class="c1"># DHCP:</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#   auto eth0</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#   iface eth0 inet dhcp</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 固定 IP</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#   auto eth0</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#   iface eth0 inet static</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#       address 192.168.100.100</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#       netmask 255.255.255.0</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#       gateway 192.168.100.1</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 根据需要修改，但是不建议修改容器本身的，因为容器需要 dhcp 来接入网络更新 apk</span>
+</span></span><span class="line"><span class="cl">vi /etc/network/interfaces
+</span></span><span class="line"><span class="cl"><span class="c1"># 添加网络自启动</span>
+</span></span><span class="line"><span class="cl">rc-update add networking default
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 设置时区</span>
+</span></span><span class="line"><span class="cl">apk add tzdata
+</span></span><span class="line"><span class="cl">cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+</span></span><span class="line"><span class="cl"><span class="nb">echo</span> <span class="s2">&#34;Asia/Shanghai&#34;</span> &gt; /etc/timezone
+</span></span><span class="line"><span class="cl"><span class="c1"># 节省空间</span>
+</span></span><span class="line"><span class="cl">apk del tzdata
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 添加基本包</span>
+</span></span><span class="line"><span class="cl">apk add bash bash-completion
+</span></span><span class="line"><span class="cl">apk add util-linux
+</span></span><span class="line"><span class="cl"><span class="c1"># 添加 mtd ubi 工具</span>
+</span></span><span class="line"><span class="cl">apk add mtd-ubi
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 修改默认 root 登陆 shell</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 修改 /etc/passwd 文件</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 将 root 行末尾的 /bin/ash 改为 /bin/bash</span>
+</span></span><span class="line"><span class="cl">vi /etc/passwd
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol start="6">
+<li>至此，我们需要的 rootfs 已经在容器中构建，现在需要进行打包和“最后的修改”：</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># 这里仍然在 alpine-armhf 容器中操作</span>
+</span></span><span class="line"><span class="cl"><span class="nb">cd</span> /
+</span></span><span class="line"><span class="cl"><span class="k">for</span> d in bin etc lib root sbin usr<span class="p">;</span> <span class="k">do</span> tar c <span class="s2">&#34;</span><span class="nv">$d</span><span class="s2">&#34;</span> <span class="p">|</span> tar x -C /mnt<span class="p">;</span> <span class="k">done</span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> dir in dev proc run sys var<span class="p">;</span> <span class="k">do</span> mkdir /mnt/<span class="si">${</span><span class="nv">dir</span><span class="si">}</span><span class="p">;</span> <span class="k">done</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 进行“最后的修改”</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># alpine 中程序是可以感知到在容器中运行，所以有些配置跟实际板子上不同，这里需要</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 做一些修改，但是这些修改不适合容器本身，所以在这里加上一些“最后的修改”</span>
+</span></span><span class="line"><span class="cl"><span class="nb">cd</span> /mnt
+</span></span><span class="line"><span class="cl"><span class="c1"># 以下操作均在 /mnt 进行，且文件前无 / 前缀</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 给 bbsuid rw 权限，否则 BSP 编译时会提示无法覆盖 /bin/bbsuid</span>
+</span></span><span class="line"><span class="cl">chmod u+rw bin/bbsuid
+</span></span><span class="line"><span class="cl"><span class="c1"># 修改 openrc 配置文件，去掉 lxc 模式 </span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 找到 rc_sys=&#34;lxc&#34; 行，改为</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># rc-sys=&#34;&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 否则有些服务会在板子上不启动，比如 sysfs，会导致其他问题</span>
+</span></span><span class="line"><span class="cl">vi etc/rc.conf
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># NOTE: 修改 /etc/inittab 文件，加上 root 重挂载命令:</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 官方的 BSP 中也有这个配置，否则板子启动后为默认为只读 root 文件系统</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 在 ::sysinit:/sbin/openrc sysinit 行前加上一行</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#   ::sysinit:/bin/mount -o remount,rw,noatime /</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 这行是将 root 重挂载为可读写模式 noatime 可以提高性能</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># </span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 同时，删除或用 # 注释掉最后两行的 Main LXC console console </span>
+</span></span><span class="line"><span class="cl"><span class="c1"># # Main LXC console console</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># #::respawn:/sbin/getty 38400 console</span>
+</span></span><span class="line"><span class="cl">vi etc/inittab
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 打包 rootfs</span>
+</span></span><span class="line"><span class="cl"><span class="nb">cd</span> /mnt
+</span></span><span class="line"><span class="cl">tar czf alpine.tar.gz *
+</span></span><span class="line"><span class="cl"><span class="c1"># 此时，/mnt/alpine.tar.gz 为我们打包好的 rootfs</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol start="7">
+<li>
+<p>此时退出 alpine-armhf 容器，在主机上 <code>/tmp/my-rootfs</code> 目录下有一个 alpine.tar.gz 文件，将其复制到 Luckfox 官方 BSP 的 <code>sysdrv/custom_rootfs</code> 目录下，没有则自行创建目录。</p>
+</li>
+<li>
+<p>关闭容器并取消挂载。</p>
+</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sudo lxc-stop alpine-armhf
+</span></span><span class="line"><span class="cl">sudo umount /tmp/my-roofs
+</span></span><span class="line"><span class="cl">rm rootfs.ext4
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="修改编译设置">修改编译设置</h2>
+<p>开发板官方 BSP 搭建可以参考 <a href="https://wiki.luckfox.com/zh/Luckfox-Pico/Core3566-SDK" title="SDK 环境部署">SDK 环境搭建</a>，我这里使用了 lxc 创建构建环境，没有使用虚拟机，BSP 仓库地址为 <a href="https://github.com/LuckfoxTECH/luckfox-pico.git">https://github.com/LuckfoxTECH/luckfox-pico.git</a>.</p>
+<ol>
+<li>根据官方 wiki 创建好环境后，修改 SDK 根目录的 build.sh 文件，找到 1044 行 <code>function __PACKAGE_ROOTFS()</code> 函数，将 <code>build_get_sdk_version</code> 前内容修改为</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="k">function</span> __PACKAGE_ROOTFS<span class="o">()</span>
+</span></span><span class="line"><span class="cl"><span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">local</span> rootfs_tarball _target_dir _install_dir
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="o">[</span> -f <span class="nv">$rootfs_tarball</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="o">[</span> -z <span class="nv">$RK_CUSTOM_ROOTFS</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+</span></span><span class="line"><span class="cl">                <span class="nv">rootfs_tarball</span><span class="o">=</span><span class="s2">&#34;</span><span class="nv">$RK_PROJECT_PATH_SYSDRV</span><span class="s2">/rootfs_</span><span class="si">${</span><span class="nv">RK_LIBC_TPYE</span><span class="si">}</span><span class="s2">_</span><span class="si">${</span><span class="nv">RK_CHIP</span><span class="si">}</span><span class="s2">.tar&#34;</span>
+</span></span><span class="line"><span class="cl">                    tar xf <span class="nv">$rootfs_tarball</span> -C <span class="nv">$RK_PROJECT_OUTPUT</span>
+</span></span><span class="line"><span class="cl">                <span class="k">else</span>
+</span></span><span class="line"><span class="cl">                    <span class="nv">rootfs_tarball</span><span class="o">=</span><span class="s2">&#34;</span><span class="nv">$RK_CUSTOM_ROOTFS</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">                    <span class="k">if</span> <span class="o">[</span> ! -d <span class="nv">$RK_PROJECT_PACKAGE_ROOTFS_DIR</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+</span></span><span class="line"><span class="cl">                        mkdir <span class="nv">$RK_PROJECT_PACKAGE_ROOTFS_DIR</span>
+</span></span><span class="line"><span class="cl">                    <span class="k">fi</span>
+</span></span><span class="line"><span class="cl">                    tar xf <span class="nv">$rootfs_tarball</span> -C <span class="nv">$RK_PROJECT_PACKAGE_ROOTFS_DIR</span>
+</span></span><span class="line"><span class="cl">                <span class="k">fi</span>
+</span></span><span class="line"><span class="cl">        <span class="k">else</span>
+</span></span><span class="line"><span class="cl">                msg_error <span class="s2">&#34;Not found rootfs tarball: </span><span class="nv">$rootfs_tarball</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">                <span class="nb">exit</span> <span class="m">1</span>
+</span></span><span class="line"><span class="cl">        <span class="k">fi</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        build_get_sdk_version
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol start="2">
+<li>修改 BSP 根目录下的 .BoardConfig.mk 文件（需要先 ./build.sh lunch 生成对应开发板配置).在文件末尾添加</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nb">export</span> <span class="nv">RK_CUSTOM_ROOTFS</span><span class="o">=</span>../sysdrv/custom_rootfs/alpine.tar.gz
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol start="3">
+<li>重新执行 ./build.sh 命令生成镜像即可。</li>
+</ol>
+<h2 id="自定义系统配置">自定义系统配置</h2>
+<p>结合了另外一篇文章 <a href="https://mediawiki.hyhsystem.cn/index.php/RV1103" title="RV1103 魔改">RV1103 魔改</a>，我也对开发板的配置进行了修改，主要也是减少 CMA 内存和调整 NAND 布局，将整个 NAND 都作为根分区使用，去掉了 oem 和 userdata. 这里要修改 BSP 目录下的 .BoardConfig.mk 文件:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># BoardConfig.mk 文件的介绍可以参见 BSP 目录下的 project/cfg-all-iterms-instroction.txt 文件</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 减少 CMA 内存，默认为 66 M，也可以配置更少，比如 1M</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 这个主要影响图像视频的 AI 处理</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># Config CMA size in environment</span>
+</span></span><span class="line"><span class="cl"><span class="nb">export</span> <span class="nv">RK_BOOTARGS_CMA_SIZE</span><span class="o">=</span><span class="s2">&#34;24M&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 配置分区布局，仅使用 rootfs 分区</span>
+</span></span><span class="line"><span class="cl"><span class="nb">export</span> <span class="nv">RK_PARTITION_CMD_IN_ENV</span><span class="o">=</span><span class="s2">&#34;256K(env),256K@256K(idblock),512K(uboot),12M(boot),232M(rootfs)&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nb">export</span> <span class="nv">RK_PARTITION_FS_TYPE_CFG</span><span class="o">=</span>rootfs@IGNORE@ubifs
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>更大的 rootfs 分区可以安装更多的包。修改配置后重新执行 ./build.sh 构建即可。</p>
+<h2 id="刷机注意事项">刷机注意事项</h2>
+<p>构建好镜像后，将 image 复制到 Windows 刷机时，需要注意 rootfs.img/oem.img/userdata.img 均为链接，其大小可能为 1kb，再使用刷机工具时，这几个 img 需要选择称对应的实际文件，而非链接本身，否则不会执行刷入。</p>
+<p>也可以在刷机工具下方选择更新固件，刷入 update.img.</p>
+<p>如果刷机工具一直无法找到 Maskrom 设备，则有可能是用的 typec 线有问题，尽量选择全芯数据线，而不是充电线。</p>
+<h2 id="问题及方法">问题及方法</h2>
+<ol>
+<li>
+<p>ssh 登陆开发板一直提示 <code>Permission denied, please try again</code>，哪怕 root 密码输入是对的。</p>
+<p>这个问题就是开发板 root 密码加密用的是 sha256/sha512 哈希算法，但是 busybox 不支持导致的。查看 rootfs
+<code>/etc/shadow</code> 文件 root 行，如果 <code>root:</code> 后是 <code>$1</code> 开头，那么则是 md5 加密，其他数字就是其他加密方法。
+要么 <code>passwd -a md5</code> 使用 md5 重新设置密码，要么就编译 BSP 时修改 busybox 配置，以支持这些加密方法。</p>
+</li>
+<li>
+<p>BSP 构建时，提示无法写入 <code>bin/bbsuid</code> 报错。</p>
+<p>这个问题参见 构建 rootfs 的第 6 步骤。</p>
+</li>
+<li>
+<p>进入开发板系统后， <code>mount</code> 显示 <code>ubi0:rootfs</code> 为 <code>ro</code> 只读模式。</p>
+<p>这个问题同样参见 构建 rootfs 的第 6 步骤。可以修改 <code>/etc/inittab</code> 添加重挂载选项。</p>
+</li>
+<li>
+<p>进入开发板系统后，<code>rc-status -a</code> 显示 <code>sysfs</code> 不在激活序列中，且已经 <code>rc-update add sysfs boot</code> 添加过了。</p>
+<p>修改 <code>/etc/rc.conf</code> 文件，将 <code>rc_sys=&quot;lxc&quot;</code> 修改为 <code>rc_sys=&quot;&quot;</code>.</p>
+</li>
+</ol>
+
+    </div>
+
+    
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        
+        <a class="next" href="/post/2023-10-12-setup-crossbuild-lxc-vm/">
+            <span class="next-text nav-default">使用 LXC 创建交叉架构的容器</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="https://github.com/tisyang" class="iconfont icon-github" title="github"></a>
+  
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2016 - 
+    2023<span class="heart"><i class="iconfont icon-heart"></i></span><span>TyK</span>
+  </span>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>
+    mermaid.initialize({ startOnLoad: true });
+</script>
+
+<script src="/js/copy-to-clipboard.js"></script>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  <script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  <script type="text/javascript" src="/lib/fancybox/jquery.fancybox-3.1.20.min.js"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

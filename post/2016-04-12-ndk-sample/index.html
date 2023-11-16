@@ -24,7 +24,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.118.2 with theme even" />
+<meta name="generator" content="Hugo 0.120.3 with theme even" />
 
 
 <link rel="canonical" href="https://tisyang.github.io/post/2016-04-12-ndk-sample/" />
@@ -46,6 +46,7 @@
 <meta property="og:url" content="https://tisyang.github.io/post/2016-04-12-ndk-sample/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2016-04-12T00:00:00+00:00" />
 <meta property="article:modified_time" content="2016-04-12T00:00:00+00:00" />
+
 <meta itemprop="name" content="NDK 实例">
 <meta itemprop="description" content="本文通过编写一个算法类二进制库以及示例App应用来介绍NDK开发，重点是二进制库编写、编译以及自定义参数的传递。"><meta itemprop="datePublished" content="2016-04-12T00:00:00+00:00" />
 <meta itemprop="dateModified" content="2016-04-12T00:00:00+00:00" />
@@ -182,19 +183,19 @@
 </span><span class="lnt">12
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kn">package</span> <span class="nn">com.zhdgps.ts</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">TSMath</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">	<span class="kd">static</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">		<span class="n">System</span><span class="o">.</span><span class="na">loadLibrary</span><span class="o">(</span><span class="s">&#34;tsmath&#34;</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">	<span class="o">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">	<span class="cm">/* 获取版本信息 */</span>
-</span></span><span class="line"><span class="cl">	<span class="kd">public</span> <span class="kd">static</span> <span class="kd">native</span> <span class="n">String</span> <span class="nf">getVersion</span><span class="o">();</span>
-</span></span><span class="line"><span class="cl">	<span class="cm">/* 计算两点连线中心点 */</span>
-</span></span><span class="line"><span class="cl">	<span class="kd">public</span> <span class="kd">static</span> <span class="kd">native</span> <span class="n">TSCoord</span> <span class="nf">calcCenter</span><span class="o">(</span><span class="n">TSCoord</span> <span class="n">a</span><span class="o">,</span> <span class="n">TSCoord</span> <span class="n">b</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl"><span class="o">}</span>
-</span></span></code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kn">package</span><span class="w"> </span><span class="nn">com.zhdgps.ts</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">TSMath</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="kd">static</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="n">System</span><span class="p">.</span><span class="na">loadLibrary</span><span class="p">(</span><span class="s">&#34;tsmath&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="cm">/* 获取版本信息 */</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">native</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">getVersion</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="cm">/* 计算两点连线中心点 */</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">native</span><span class="w"> </span><span class="n">TSCoord</span><span class="w"> </span><span class="nf">calcCenter</span><span class="p">(</span><span class="n">TSCoord</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">TSCoord</span><span class="w"> </span><span class="n">b</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
 </div>
 </div><p><code>System.loadLibrary</code> 用来加载so库，<code>static</code> 表示这段代码要最先运行。</p>
 <p>接口函数用 <code>native</code> 关键字修饰表明这是源生方法实现而不是 java 代码实现（JNI），在这里就是指在so库中实现的方法。</p>
@@ -210,14 +211,14 @@
 </span><span class="lnt">7
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kn">package</span> <span class="nn">com.zhdgps.ts</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">TSCoord</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">	<span class="kd">public</span> <span class="kt">double</span> <span class="n">N</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl">	<span class="kd">public</span> <span class="kt">double</span> <span class="n">E</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl">	<span class="kd">public</span> <span class="kt">double</span> <span class="n">Z</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl"><span class="o">}</span>
-</span></span></code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kn">package</span><span class="w"> </span><span class="nn">com.zhdgps.ts</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">TSCoord</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="kd">public</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">N</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="kd">public</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">E</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="kd">public</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">Z</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>两个文件都放属于包 <code>com.zhdgps.ts</code> 。</p>
 <h2 id="2-so库c代码实现和编译">2. so库C代码实现和编译</h2>
@@ -726,26 +727,26 @@
 </span><span class="lnt">19
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">TSCoord</span> <span class="n">a</span> <span class="o">=</span> <span class="k">new</span> <span class="n">TSCoord</span><span class="o">();</span>
-</span></span><span class="line"><span class="cl"><span class="n">a</span><span class="o">.</span><span class="na">N</span> <span class="o">=</span> <span class="n">1</span><span class="o">.</span><span class="na">0</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl"><span class="n">a</span><span class="o">.</span><span class="na">E</span> <span class="o">=</span> <span class="n">2</span><span class="o">.</span><span class="na">0</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl"><span class="n">a</span><span class="o">.</span><span class="na">Z</span> <span class="o">=</span> <span class="n">3</span><span class="o">.</span><span class="na">0</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="n">TSCoord</span> <span class="n">b</span> <span class="o">=</span> <span class="k">new</span> <span class="n">TSCoord</span><span class="o">();</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="n">b</span><span class="o">.</span><span class="na">N</span> <span class="o">=</span> <span class="n">3</span><span class="o">.</span><span class="na">0</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl"><span class="n">b</span><span class="o">.</span><span class="na">E</span> <span class="o">=</span> <span class="n">6</span><span class="o">.</span><span class="na">0</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl"><span class="n">b</span><span class="o">.</span><span class="na">Z</span> <span class="o">=</span> <span class="n">9</span><span class="o">.</span><span class="na">0</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="n">TSCoord</span> <span class="n">c</span> <span class="o">=</span> <span class="n">TSMath</span><span class="o">.</span><span class="na">calcCenter</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">b</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl"><span class="n">String</span> <span class="n">output</span> <span class="o">=</span> <span class="n">String</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&#34;A(%f, %f, %f), B(%f, %f, %f) center: (%f, %f, %f)&#34;</span><span class="o">,</span>
-</span></span><span class="line"><span class="cl">				<span class="n">a</span><span class="o">.</span><span class="na">N</span><span class="o">,</span> <span class="n">a</span><span class="o">.</span><span class="na">E</span><span class="o">,</span> <span class="n">a</span><span class="o">.</span><span class="na">Z</span><span class="o">,</span>
-</span></span><span class="line"><span class="cl">				<span class="n">b</span><span class="o">.</span><span class="na">N</span><span class="o">,</span> <span class="n">b</span><span class="o">.</span><span class="na">E</span><span class="o">,</span> <span class="n">b</span><span class="o">.</span><span class="na">Z</span><span class="o">,</span>
-</span></span><span class="line"><span class="cl">				<span class="n">c</span><span class="o">.</span><span class="na">N</span><span class="o">,</span> <span class="n">c</span><span class="o">.</span><span class="na">E</span><span class="o">,</span> <span class="n">c</span><span class="o">.</span><span class="na">Z</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="n">TextView</span> <span class="n">view</span> <span class="o">=</span> <span class="o">(</span><span class="n">TextView</span><span class="o">)</span><span class="n">findViewById</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">message</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl"><span class="n">view</span><span class="o">.</span><span class="na">setText</span><span class="o">(</span><span class="n">output</span><span class="o">);</span>
-</span></span></code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">TSCoord</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">TSCoord</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">a</span><span class="p">.</span><span class="na">N</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">1</span><span class="p">.</span><span class="na">0</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">a</span><span class="p">.</span><span class="na">E</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">2</span><span class="p">.</span><span class="na">0</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">a</span><span class="p">.</span><span class="na">Z</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">3</span><span class="p">.</span><span class="na">0</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">TSCoord</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">TSCoord</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">b</span><span class="p">.</span><span class="na">N</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">3</span><span class="p">.</span><span class="na">0</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">b</span><span class="p">.</span><span class="na">E</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">6</span><span class="p">.</span><span class="na">0</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">b</span><span class="p">.</span><span class="na">Z</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">9</span><span class="p">.</span><span class="na">0</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">TSCoord</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">TSMath</span><span class="p">.</span><span class="na">calcCenter</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">String</span><span class="w"> </span><span class="n">output</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">String</span><span class="p">.</span><span class="na">format</span><span class="p">(</span><span class="s">&#34;A(%f, %f, %f), B(%f, %f, %f) center: (%f, %f, %f)&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">				</span><span class="n">a</span><span class="p">.</span><span class="na">N</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="na">E</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="na">Z</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">				</span><span class="n">b</span><span class="p">.</span><span class="na">N</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="na">E</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="na">Z</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">				</span><span class="n">c</span><span class="p">.</span><span class="na">N</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">.</span><span class="na">E</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">.</span><span class="na">Z</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">TextView</span><span class="w"> </span><span class="n">view</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">TextView</span><span class="p">)</span><span class="n">findViewById</span><span class="p">(</span><span class="n">R</span><span class="p">.</span><span class="na">id</span><span class="p">.</span><span class="na">message</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">view</span><span class="p">.</span><span class="na">setText</span><span class="p">(</span><span class="n">output</span><span class="p">);</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>这里测试了函数 <code>TSMath.calcCenter</code>。编译项目并运行，就可以看到结果了。</p>
 <p>源码可以点击这里<a href="/download/ndk_sample.zip">下载</a></p>

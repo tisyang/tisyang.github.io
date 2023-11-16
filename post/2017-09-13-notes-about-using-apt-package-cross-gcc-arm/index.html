@@ -26,7 +26,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.118.2 with theme even" />
+<meta name="generator" content="Hugo 0.120.3 with theme even" />
 
 
 <link rel="canonical" href="https://tisyang.github.io/post/2017-09-13-notes-about-using-apt-package-cross-gcc-arm/" />
@@ -50,6 +50,7 @@
 <meta property="og:url" content="https://tisyang.github.io/post/2017-09-13-notes-about-using-apt-package-cross-gcc-arm/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2017-09-13T00:00:00+00:00" />
 <meta property="article:modified_time" content="2017-09-13T00:00:00+00:00" />
+
 <meta itemprop="name" content="apt源arm gcc交叉编译器注意事项">
 <meta itemprop="description" content="做嵌入式 Linux 开发时候都需要使用交叉编译工具，这些一般是方案厂商提供，但我们通常也可以使用那些打包好的通用交叉编译工具，比如 Debian 上 apt 也有打包好的 arm 交叉编译工具： gcc-arm-linux-gnueabi 和 gcc-arm-linux-gnueabihf，对应 c&#43;&#43; 版本以 g&#43;&#43; 开头，这两类主要区别在于 CPU 对于浮点的处理上，涉及到 armel 和 armhf 架构的区别，详情参照这里，你只需要选择对应开发板的架构工具即可。
 由于是 Debian 自己维护更新的包，上述的两个交叉编译工具通常都会更新比较频繁，会支持最新的标准和特性，但是我们的开发板上系统通常都不是最新的，所以在使用时需要注意，否则会出现编译后的程序无法在开发板上运行。
