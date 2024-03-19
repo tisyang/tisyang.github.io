@@ -6,7 +6,45 @@
     <description>Recent content on 碎片</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Thu, 16 Nov 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://tisyang.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 19 Mar 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://tisyang.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>解决 LXC 客户机中登陆缓慢的问题</title>
+      <link>https://tisyang.github.io/post/2024-03-19-fix-slow-login-in-lxc/</link>
+      <pubDate>Tue, 19 Mar 2024 00:00:00 +0000</pubDate>
+      
+      <guid>https://tisyang.github.io/post/2024-03-19-fix-slow-login-in-lxc/</guid>
+      <description>&lt;p&gt;如果在 LXC 容器中运行 Ubuntu/Debian，有时候会碰到登陆缓慢卡住的情况，尤其是跨架构的容器，需要很久才登陆成功：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;使用 &lt;code&gt;lxc-attach xxxx&lt;/code&gt; 后，使用 &lt;code&gt;su user&lt;/code&gt; 切换用户时，卡住；&lt;/li&gt;
+&lt;li&gt;直接使用 &lt;code&gt;ssh user@10.0.3.xxx&lt;/code&gt;，输入完用户名密码后，卡住；&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;卡住之后，系统负载上升，检查会发现容器的 &lt;code&gt;systemd&lt;/code&gt; 进程 CPU 占用很高，需要很久才正常，然后登陆成功。同样，关闭 LXC 容器时，命令也会等待很久。&lt;/p&gt;
+&lt;p&gt;解决办法可以参考 &lt;a href=&#34;https://gist.github.com/charlyie/76ff7d288165c7d42e5ef7d304245916&#34;&gt;Fix Debian 11 bullseye slow SSH login and sudo on LXC Proxmox&lt;/a&gt;：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;在容器中运行 &lt;code&gt;systemctl mask systemd-logind&lt;/code&gt;；&lt;/li&gt;
+&lt;li&gt;在容器中运行 &lt;code&gt;pam-auth-update&lt;/code&gt; 然后取消选择 &lt;code&gt;Register user sessions in the systemd control group hierarchy&lt;/code&gt;，即可。或者直接运行 &lt;code&gt;pam-auth-update --remove systemd&lt;/code&gt;.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;具体原因倒不是特别清晰，这种现象特别影响效率。&lt;/p&gt;
+&lt;h2 id=&#34;lxc-容器无法-dhcp-获取到-ip&#34;&gt;LXC 容器无法 DHCP 获取到 IP&lt;/h2&gt;
+&lt;p&gt;如果 LXC 容器已经使用 DHCP 获取 IP, 但是启动后无法正常获取 IP，则可以通过这种方法解决：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;临时方案：在宿主系统运行 &lt;code&gt;ethtool -K vethXXXX tx off&lt;/code&gt; 和 &lt;code&gt;ethtool -K lxcbrXXX tx off&lt;/code&gt;，命令需要 root 权限，该命令会关闭 LXC 虚拟网卡的校验功能。&lt;/li&gt;
+&lt;li&gt;永久方案：使用 udev 规则来自动处理校验关闭，创建文件 &lt;code&gt;/etc/udev/rules.d/90-lxc-net.rules&lt;/code&gt;:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-gdscript3&#34; data-lang=&#34;gdscript3&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;ACTION&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;==&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;add&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;SUBSYSTEM&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;==&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;net&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;KERNEL&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;==&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;veth*&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;RUN&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;/usr/sbin/ethtool -K $env{INTERFACE} tx off&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;ACTION&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;==&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;add&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;SUBSYSTEM&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;==&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;net&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;KERNEL&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;==&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;lxcbr*&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;RUN&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;/usr/sbin/ethtool -K $env{INTERFACE} tx off&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;这种现象原因是，虚拟网卡一般不需要在 IP 包中附加校验，但是 DHCP 工具目前会主动校验数据包，造成检验失败，DHCP 握手失败。&lt;/p&gt;
+</description>
+    </item>
+    
     <item>
       <title>给开发板适配 Alpine Linux</title>
       <link>https://tisyang.github.io/post/2023-11-16-port-alpine-linux-to-rv1106-board/</link>
