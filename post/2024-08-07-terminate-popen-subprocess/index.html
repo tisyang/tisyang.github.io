@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>关闭 popen 打开的子进程 - 碎片</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="TyK" /><meta name="description" content="常见功能开发中，需要获取其他命令的输出数据时，通常可以采用 popen 打开子进程进行读操作，但是 popen 并没有提供终止子进程的接口，pclose 会阻塞等待子" /><meta name="keywords" content="程序员, 博客, blog, programming" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.128.2 with theme even" />
+
+
+<link rel="canonical" href="https://tisyang.github.io/post/2024-08-07-terminate-popen-subprocess/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link href="/lib/fancybox/jquery.fancybox-3.1.20.min.css" rel="stylesheet">
+
+
+<meta property="og:url" content="https://tisyang.github.io/post/2024-08-07-terminate-popen-subprocess/">
+  <meta property="og:site_name" content="碎片">
+  <meta property="og:title" content="关闭 popen 打开的子进程">
+  <meta property="og:description" content="常见功能开发中，需要获取其他命令的输出数据时，通常可以采用 popen 打开子进程进行读操作，但是 popen 并没有提供终止子进程的接口，pclose 会阻塞等待子">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="post">
+    <meta property="article:published_time" content="2024-08-07T00:00:00+00:00">
+    <meta property="article:modified_time" content="2024-08-07T00:00:00+00:00">
+
+  <meta itemprop="name" content="关闭 popen 打开的子进程">
+  <meta itemprop="description" content="常见功能开发中，需要获取其他命令的输出数据时，通常可以采用 popen 打开子进程进行读操作，但是 popen 并没有提供终止子进程的接口，pclose 会阻塞等待子">
+  <meta itemprop="datePublished" content="2024-08-07T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2024-08-07T00:00:00+00:00">
+  <meta itemprop="wordCount" content="663">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="关闭 popen 打开的子进程">
+  <meta name="twitter:description" content="常见功能开发中，需要获取其他命令的输出数据时，通常可以采用 popen 打开子进程进行读操作，但是 popen 并没有提供终止子进程的接口，pclose 会阻塞等待子">
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">碎片</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/index.xml">
+        <li class="mobile-menu-item">RSS</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">碎片</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/index.xml">RSS</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">关闭 popen 打开的子进程</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2024-08-07 </span>
+        
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents"></nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>常见功能开发中，需要获取其他命令的输出数据时，通常可以采用 <code>popen</code> 打开子进程进行读操作，但是 <code>popen</code> 并没有提供终止子进程的接口，<code>pclose</code> 会阻塞等待子进程自己结束然后才返回。导致在一些会持续输出的命令调用中，无法方便的结束子进程。</p>
+<p>一种解决方法是使用 <code>fork</code> 来自行实现类似 <code>popen</code> 的接口，比如 <a href="https://stackoverflow.com/questions/548063/kill-a-process-started-with-popen">Kill a process started with popen</a>，但是在一些简单场景，可以尝试更为简单的方法。</p>
+<p><code>popen</code> 在 Linux 上通常是调用 shell 去创建会话执行命令，可以利用 shell 的方法来获取会话进程的 pid，然后在输出中输出 pid ，这样在调用 <code>pclose</code> 之前可以使用 <code>pkill</code> 调用去终止会话及子进程以避免 <code>pclose</code> 阻塞。</p>
+<p>shell（常见 bash）中，<code>$$</code> 变量表示当前 shell 的进程 pid, 我们可以利用该变量来控制子进程。以 ping 指令为例，使用如下命令创建子进程：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># 需要注意 \$\$ 而非 $$，否则当前 shell 会直接解译该变量导致输出为当前 shell pid，</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 而非会话子进程</span>
+</span></span><span class="line"><span class="cl">sh -c <span class="s2">&#34;echo pid=\$\$; ping 223.5.5.5&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>其输出:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nv">pid</span><span class="o">=</span><span class="m">62853</span>
+</span></span><span class="line"><span class="cl">PING 223.5.5.5 <span class="o">(</span>223.5.5.5<span class="o">)</span> 56<span class="o">(</span>84<span class="o">)</span> bytes of data.
+</span></span><span class="line"><span class="cl"><span class="m">64</span> bytes from 223.5.5.5: <span class="nv">icmp_seq</span><span class="o">=</span><span class="m">1</span> <span class="nv">ttl</span><span class="o">=</span><span class="m">116</span> <span class="nv">time</span><span class="o">=</span>24.1 ms
+</span></span><span class="line"><span class="cl"><span class="m">64</span> bytes from 223.5.5.5: <span class="nv">icmp_seq</span><span class="o">=</span><span class="m">2</span> <span class="nv">ttl</span><span class="o">=</span><span class="m">116</span> <span class="nv">time</span><span class="o">=</span>23.3 ms
+</span></span><span class="line"><span class="cl"><span class="m">64</span> bytes from 223.5.5.5: <span class="nv">icmp_seq</span><span class="o">=</span><span class="m">3</span> <span class="nv">ttl</span><span class="o">=</span><span class="m">116</span> <span class="nv">time</span><span class="o">=</span>24.4 ms
+</span></span><span class="line"><span class="cl"><span class="m">64</span> bytes from 223.5.5.5: <span class="nv">icmp_seq</span><span class="o">=</span><span class="m">4</span> <span class="nv">ttl</span><span class="o">=</span><span class="m">116</span> <span class="nv">time</span><span class="o">=</span>23.4 ms
+</span></span><span class="line"><span class="cl">...
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这时，在另外 shell 中执行 <code>pkill -P 62883</code> 来终止会话子进程(该命令无需 root 权限, <code>pkill -P</code> 只终止父进程 pid 匹配的进程, shell 进程在子进程命令结束后自然退出)，子会话及其子进程会终止退出：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nv">pid</span><span class="o">=</span><span class="m">62853</span>
+</span></span><span class="line"><span class="cl">PING 223.5.5.5 <span class="o">(</span>223.5.5.5<span class="o">)</span> 56<span class="o">(</span>84<span class="o">)</span> bytes of data.
+</span></span><span class="line"><span class="cl"><span class="m">64</span> bytes from 223.5.5.5: <span class="nv">icmp_seq</span><span class="o">=</span><span class="m">1</span> <span class="nv">ttl</span><span class="o">=</span><span class="m">116</span> <span class="nv">time</span><span class="o">=</span>24.6 ms
+</span></span><span class="line"><span class="cl"><span class="m">64</span> bytes from 223.5.5.5: <span class="nv">icmp_seq</span><span class="o">=</span><span class="m">2</span> <span class="nv">ttl</span><span class="o">=</span><span class="m">116</span> <span class="nv">time</span><span class="o">=</span>24.7 ms
+</span></span><span class="line"><span class="cl"><span class="m">64</span> bytes from 223.5.5.5: <span class="nv">icmp_seq</span><span class="o">=</span><span class="m">3</span> <span class="nv">ttl</span><span class="o">=</span><span class="m">116</span> <span class="nv">time</span><span class="o">=</span>24.5 ms
+</span></span><span class="line"><span class="cl"><span class="m">64</span> bytes from 223.5.5.5: <span class="nv">icmp_seq</span><span class="o">=</span><span class="m">4</span> <span class="nv">ttl</span><span class="o">=</span><span class="m">116</span> <span class="nv">time</span><span class="o">=</span>24.2 ms
+</span></span><span class="line"><span class="cl"><span class="m">64</span> bytes from 223.5.5.5: <span class="nv">icmp_seq</span><span class="o">=</span><span class="m">5</span> <span class="nv">ttl</span><span class="o">=</span><span class="m">116</span> <span class="nv">time</span><span class="o">=</span>22.6 ms
+</span></span><span class="line"><span class="cl"><span class="m">64</span> bytes from 223.5.5.5: <span class="nv">icmp_seq</span><span class="o">=</span><span class="m">6</span> <span class="nv">ttl</span><span class="o">=</span><span class="m">116</span> <span class="nv">time</span><span class="o">=</span>21.2 ms
+</span></span><span class="line"><span class="cl"><span class="m">64</span> bytes from 223.5.5.5: <span class="nv">icmp_seq</span><span class="o">=</span><span class="m">7</span> <span class="nv">ttl</span><span class="o">=</span><span class="m">116</span> <span class="nv">time</span><span class="o">=</span>26.3 ms
+</span></span><span class="line"><span class="cl"><span class="m">64</span> bytes from 223.5.5.5: <span class="nv">icmp_seq</span><span class="o">=</span><span class="m">8</span> <span class="nv">ttl</span><span class="o">=</span><span class="m">116</span> <span class="nv">time</span><span class="o">=</span>24.7 ms
+</span></span><span class="line"><span class="cl">Terminated
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>利用该特性，在实践中可以在 <code>popen</code> 后，利用 <code>fgets</code> 从输出中获取会话 pid，然后在 <code>pclose</code> 前，调用 <code>system(&quot;pkill -P xxxx&quot;)</code> 来终止会话子进程，然后再调用 <code>pclose</code> 去释放资源，此时 <code>pclose</code> 调用不会阻塞， 该方法虽不优雅，但足够 quick-and-dirty.</p>
+
+    </div>
+
+    
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        
+        <a class="next" href="/post/2024-03-19-fix-slow-login-in-lxc/">
+            <span class="next-text nav-default">解决 LXC 客户机中登陆缓慢的问题</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="https://github.com/tisyang" class="iconfont icon-github" title="github"></a>
+  <a href="/post/2024-08-07-terminate-popen-subprocess/" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2016 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>TyK</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  <script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  <script type="text/javascript" src="/lib/fancybox/jquery.fancybox-3.1.20.min.js"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

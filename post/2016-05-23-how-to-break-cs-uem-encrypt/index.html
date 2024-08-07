@@ -26,7 +26,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.123.8 with theme even" />
+<meta name="generator" content="Hugo 0.128.2 with theme even" />
 
 
 <link rel="canonical" href="https://tisyang.github.io/post/2016-05-23-how-to-break-cs-uem-encrypt/" />
@@ -38,29 +38,34 @@
 
 
 
-<link href="/sass/main.min.d4d0dce78b3ec6333437bc36540c4749ae9a27ff4ca2d7562da2dbfbf991dde3.css" rel="stylesheet">
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
 <link href="/lib/fancybox/jquery.fancybox-3.1.20.min.css" rel="stylesheet">
 
 
-<meta property="og:title" content="中软统一终端加密文件解密" />
-<meta property="og:description" content="背景不提，通过搜索能看到这篇文章的，请彼此保持同情。
+<meta property="og:url" content="https://tisyang.github.io/post/2016-05-23-how-to-break-cs-uem-encrypt/">
+  <meta property="og:site_name" content="碎片">
+  <meta property="og:title" content="中软统一终端加密文件解密">
+  <meta property="og:description" content="背景不提，通过搜索能看到这篇文章的，请彼此保持同情。
 中软统一终端这个软件通过网内文件加密存储，使用时自解密，保证一个局部网络的资料安全性，防止泄漏，主要用于密级文档、源代码和工程图纸的管控。
-听起来很高大上，但是在文件加密解密这条策略链上，漏洞是很多的，在具体部署上，漏洞就更多了。下面介绍一下如何利用策略漏洞解密被加密的文件，这里主要针对源代码，其他文档类似。" />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://tisyang.github.io/post/2016-05-23-how-to-break-cs-uem-encrypt/" /><meta property="article:section" content="post" />
-<meta property="article:published_time" content="2016-05-23T00:00:00+00:00" />
-<meta property="article:modified_time" content="2016-05-23T00:00:00+00:00" />
+听起来很高大上，但是在文件加密解密这条策略链上，漏洞是很多的，在具体部署上，漏洞就更多了。下面介绍一下如何利用策略漏洞解密被加密的文件，这里主要针对源代码，其他文档类似。">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="post">
+    <meta property="article:published_time" content="2016-05-23T00:00:00+00:00">
+    <meta property="article:modified_time" content="2016-05-23T00:00:00+00:00">
 
-<meta itemprop="name" content="中软统一终端加密文件解密">
-<meta itemprop="description" content="背景不提，通过搜索能看到这篇文章的，请彼此保持同情。
+  <meta itemprop="name" content="中软统一终端加密文件解密">
+  <meta itemprop="description" content="背景不提，通过搜索能看到这篇文章的，请彼此保持同情。
 中软统一终端这个软件通过网内文件加密存储，使用时自解密，保证一个局部网络的资料安全性，防止泄漏，主要用于密级文档、源代码和工程图纸的管控。
-听起来很高大上，但是在文件加密解密这条策略链上，漏洞是很多的，在具体部署上，漏洞就更多了。下面介绍一下如何利用策略漏洞解密被加密的文件，这里主要针对源代码，其他文档类似。"><meta itemprop="datePublished" content="2016-05-23T00:00:00+00:00" />
-<meta itemprop="dateModified" content="2016-05-23T00:00:00+00:00" />
-<meta itemprop="wordCount" content="2132">
-<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="中软统一终端加密文件解密"/>
-<meta name="twitter:description" content="背景不提，通过搜索能看到这篇文章的，请彼此保持同情。
+听起来很高大上，但是在文件加密解密这条策略链上，漏洞是很多的，在具体部署上，漏洞就更多了。下面介绍一下如何利用策略漏洞解密被加密的文件，这里主要针对源代码，其他文档类似。">
+  <meta itemprop="datePublished" content="2016-05-23T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2016-05-23T00:00:00+00:00">
+  <meta itemprop="wordCount" content="2132">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="中软统一终端加密文件解密">
+  <meta name="twitter:description" content="背景不提，通过搜索能看到这篇文章的，请彼此保持同情。
 中软统一终端这个软件通过网内文件加密存储，使用时自解密，保证一个局部网络的资料安全性，防止泄漏，主要用于密级文档、源代码和工程图纸的管控。
-听起来很高大上，但是在文件加密解密这条策略链上，漏洞是很多的，在具体部署上，漏洞就更多了。下面介绍一下如何利用策略漏洞解密被加密的文件，这里主要针对源代码，其他文档类似。"/>
+听起来很高大上，但是在文件加密解密这条策略链上，漏洞是很多的，在具体部署上，漏洞就更多了。下面介绍一下如何利用策略漏洞解密被加密的文件，这里主要针对源代码，其他文档类似。">
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -70,17 +75,6 @@
   <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
 <![endif]-->
-
-<script>
-    (function(){
-     if(''){
-     if (prompt('请输入文章密码') !== ''){
-     alert('密码错误！');
-     history.back();
-     }
-     }
-     })();
-</script>
 
 </head>
 <body>
@@ -114,8 +108,12 @@
     <header id="header" class="header">
         <div class="logo-wrapper">
   <a href="/" class="logo">碎片</a>
-  
 </div>
+
+
+
+
+
 <nav class="site-navbar">
   <ul id="menu" class="menu">
     <li class="menu-item">
@@ -127,10 +125,6 @@
       </li>
   </ul>
 </nav>
-
-
-
-
 
     </header>
 
@@ -146,7 +140,6 @@
         <span class="post-time"> 2016-05-23 </span>
         
         
-        <span class="more-meta"> by </span>
       </div>
     </header>
 
@@ -337,7 +330,7 @@
     <footer id="footer" class="footer">
       <div class="social-links">
       <a href="https://github.com/tisyang" class="iconfont icon-github" title="github"></a>
-  
+  <a href="/post/2016-05-23-how-to-break-cs-uem-encrypt/" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
 </div>
 
 <div class="copyright">
@@ -358,14 +351,6 @@
     2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>TyK</span>
   </span>
 </div>
-
-
-<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
-<script>
-    mermaid.initialize({ startOnLoad: true });
-</script>
-
-<script src="/js/copy-to-clipboard.js"></script>
 
     </footer>
 

@@ -23,7 +23,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.123.8 with theme even" />
+<meta name="generator" content="Hugo 0.128.2 with theme even" />
 
 
 <link rel="canonical" href="https://tisyang.github.io/post/2023-09-26-setup-lxc-vm-on-debian/" />
@@ -35,23 +35,28 @@
 
 
 
-<link href="/sass/main.min.d4d0dce78b3ec6333437bc36540c4749ae9a27ff4ca2d7562da2dbfbf991dde3.css" rel="stylesheet">
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
 <link href="/lib/fancybox/jquery.fancybox-3.1.20.min.css" rel="stylesheet">
 
 
-<meta property="og:title" content="使用 LXC 创建用于构建 BSP 的容器机" />
-<meta property="og:description" content="工作电脑用的系统是 Debian Sid(当前代号 trixie, Debian 13)，工作内容中经常需要构建 BSP，厂商提供的构建要求通常为指定版本的 Ubuntu，如果不想换掉系" />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://tisyang.github.io/post/2023-09-26-setup-lxc-vm-on-debian/" /><meta property="article:section" content="post" />
-<meta property="article:published_time" content="2023-09-26T00:00:00+00:00" />
-<meta property="article:modified_time" content="2023-09-26T00:00:00+00:00" />
+<meta property="og:url" content="https://tisyang.github.io/post/2023-09-26-setup-lxc-vm-on-debian/">
+  <meta property="og:site_name" content="碎片">
+  <meta property="og:title" content="使用 LXC 创建用于构建 BSP 的容器机">
+  <meta property="og:description" content="工作电脑用的系统是 Debian Sid(当前代号 trixie, Debian 13)，工作内容中经常需要构建 BSP，厂商提供的构建要求通常为指定版本的 Ubuntu，如果不想换掉系">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="post">
+    <meta property="article:published_time" content="2023-09-26T00:00:00+00:00">
+    <meta property="article:modified_time" content="2023-09-26T00:00:00+00:00">
 
-<meta itemprop="name" content="使用 LXC 创建用于构建 BSP 的容器机">
-<meta itemprop="description" content="工作电脑用的系统是 Debian Sid(当前代号 trixie, Debian 13)，工作内容中经常需要构建 BSP，厂商提供的构建要求通常为指定版本的 Ubuntu，如果不想换掉系"><meta itemprop="datePublished" content="2023-09-26T00:00:00+00:00" />
-<meta itemprop="dateModified" content="2023-09-26T00:00:00+00:00" />
-<meta itemprop="wordCount" content="872">
-<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="使用 LXC 创建用于构建 BSP 的容器机"/>
-<meta name="twitter:description" content="工作电脑用的系统是 Debian Sid(当前代号 trixie, Debian 13)，工作内容中经常需要构建 BSP，厂商提供的构建要求通常为指定版本的 Ubuntu，如果不想换掉系"/>
+  <meta itemprop="name" content="使用 LXC 创建用于构建 BSP 的容器机">
+  <meta itemprop="description" content="工作电脑用的系统是 Debian Sid(当前代号 trixie, Debian 13)，工作内容中经常需要构建 BSP，厂商提供的构建要求通常为指定版本的 Ubuntu，如果不想换掉系">
+  <meta itemprop="datePublished" content="2023-09-26T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2023-09-26T00:00:00+00:00">
+  <meta itemprop="wordCount" content="872">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="使用 LXC 创建用于构建 BSP 的容器机">
+  <meta name="twitter:description" content="工作电脑用的系统是 Debian Sid(当前代号 trixie, Debian 13)，工作内容中经常需要构建 BSP，厂商提供的构建要求通常为指定版本的 Ubuntu，如果不想换掉系">
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -61,17 +66,6 @@
   <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
 <![endif]-->
-
-<script>
-    (function(){
-     if(''){
-     if (prompt('请输入文章密码') !== ''){
-     alert('密码错误！');
-     history.back();
-     }
-     }
-     })();
-</script>
 
 </head>
 <body>
@@ -105,8 +99,12 @@
     <header id="header" class="header">
         <div class="logo-wrapper">
   <a href="/" class="logo">碎片</a>
-  
 </div>
+
+
+
+
+
 <nav class="site-navbar">
   <ul id="menu" class="menu">
     <li class="menu-item">
@@ -118,10 +116,6 @@
       </li>
   </ul>
 </nav>
-
-
-
-
 
     </header>
 
@@ -137,7 +131,6 @@
         <span class="post-time"> 2023-09-26 </span>
         
         
-        <span class="more-meta"> by </span>
       </div>
     </header>
 
@@ -333,7 +326,7 @@
     <footer id="footer" class="footer">
       <div class="social-links">
       <a href="https://github.com/tisyang" class="iconfont icon-github" title="github"></a>
-  
+  <a href="/post/2023-09-26-setup-lxc-vm-on-debian/" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
 </div>
 
 <div class="copyright">
@@ -354,14 +347,6 @@
     2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>TyK</span>
   </span>
 </div>
-
-
-<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
-<script>
-    mermaid.initialize({ startOnLoad: true });
-</script>
-
-<script src="/js/copy-to-clipboard.js"></script>
 
     </footer>
 
