@@ -3,20 +3,27 @@
   
   <url>
     <loc>https://tisyang.github.io/post/</loc>
-    <lastmod>2024-08-07T00:00:00+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://tisyang.github.io/post/2024-08-07-terminate-popen-subprocess/</loc>
-    <lastmod>2024-08-07T00:00:00+00:00</lastmod>
+    <lastmod>2024-09-12T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
     <loc>https://tisyang.github.io/</loc>
+    <lastmod>2024-09-12T00:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://tisyang.github.io/post/2024-09-12-a-simple-config-of-sing-box/</loc>
+    <lastmod>2024-09-12T00:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://tisyang.github.io/post/2024-08-07-terminate-popen-subprocess/</loc>
     <lastmod>2024-08-07T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
