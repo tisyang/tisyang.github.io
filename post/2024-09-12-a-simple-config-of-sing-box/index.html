@@ -53,7 +53,7 @@
   <meta itemprop="description" content="sing-box 作为代理工具的集大成者，支持多协议多功能，且覆盖多平台，但是配置起来比较复杂，这里给出一个适合 Linux 桌面使用的配置样本，供参考。 本配置适合 Linux 桌">
   <meta itemprop="datePublished" content="2024-09-12T00:00:00+00:00">
   <meta itemprop="dateModified" content="2024-09-12T00:00:00+00:00">
-  <meta itemprop="wordCount" content="1796">
+  <meta itemprop="wordCount" content="1874">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="适合 Linux 桌面的 sing-box 客户端配置">
   <meta name="twitter:description" content="sing-box 作为代理工具的集大成者，支持多协议多功能，且覆盖多平台，但是配置起来比较复杂，这里给出一个适合 Linux 桌面使用的配置样本，供参考。 本配置适合 Linux 桌">
@@ -137,13 +137,23 @@
     <div class="post-toc" id="post-toc">
   <h2 class="post-toc-title">Contents</h2>
   <div class="post-toc-content always-active">
-    <nav id="TableOfContents"></nav>
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#配置策略">配置策略</a></li>
+    <li><a href="#配置内容">配置内容</a></li>
+    <li><a href="#备注">备注</a></li>
+    <li><a href="#自启动管理">自启动管理</a></li>
+    <li><a href="#dns-转发">DNS 转发</a></li>
+    <li><a href="#dns-泄漏检测">DNS 泄漏检测</a></li>
+  </ul>
+</nav>
   </div>
 </div>
     <div class="post-content">
       <p><a href="https://sing-box.sagernet.org/zh/">sing-box</a> 作为代理工具的集大成者，支持多协议多功能，且覆盖多平台，但是配置起来比较复杂，这里给出一个适合 Linux 桌面使用的配置样本，供参考。</p>
 <p>本配置适合 Linux 桌面，不适配 Windows 和 Android，Mac OS 也许可以参考部分。</p>
 <!-- raw HTML omitted -->
+<h2 id="配置策略">配置策略</h2>
 <p>本配置主要实现的目的：</p>
 <ol>
 <li>提供本地 HTTP/HTTPS/SOCKS5 代理，供给浏览器（Firefox）和命令行工具等使用，自动分流国内和国外流量（基于 GeoIP 和 GeoSite）；</li>
@@ -152,6 +162,7 @@
 <li>避免 DNS 泄漏（DNS 泄漏可以认为是：访问的境外域名泄漏给国内 DNS 服务商，使之可以获悉你访问的境外网站）；</li>
 <li>过滤广告;</li>
 </ol>
+<h2 id="配置内容">配置内容</h2>
 <p>本配置主要内容如下，适合 sing-box 1.10 beta 以上版本，如果使用版本为 1.9.x，则可以考虑删除广告过滤的配置即可：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -334,20 +345,6 @@
 </span><span class="lnt">177
 </span><span class="lnt">178
 </span><span class="lnt">179
-</span><span class="lnt">180
-</span><span class="lnt">181
-</span><span class="lnt">182
-</span><span class="lnt">183
-</span><span class="lnt">184
-</span><span class="lnt">185
-</span><span class="lnt">186
-</span><span class="lnt">187
-</span><span class="lnt">188
-</span><span class="lnt">189
-</span><span class="lnt">190
-</span><span class="lnt">191
-</span><span class="lnt">192
-</span><span class="lnt">193
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
@@ -371,11 +368,6 @@
 </span></span><span class="line"><span class="cl">      <span class="p">},</span>
 </span></span><span class="line"><span class="cl">      <span class="p">{</span>
 </span></span><span class="line"><span class="cl">        <span class="nt">&#34;tag&#34;</span><span class="p">:</span> <span class="s2">&#34;dns-default&#34;</span><span class="p">,</span>
-</span></span><span class="line"><span class="cl">        <span class="nt">&#34;address&#34;</span><span class="p">:</span> <span class="s2">&#34;223.5.5.5&#34;</span><span class="p">,</span>
-</span></span><span class="line"><span class="cl">        <span class="nt">&#34;detour&#34;</span><span class="p">:</span> <span class="s2">&#34;direct&#34;</span>
-</span></span><span class="line"><span class="cl">      <span class="p">},</span>
-</span></span><span class="line"><span class="cl">      <span class="p">{</span>
-</span></span><span class="line"><span class="cl">        <span class="nt">&#34;tag&#34;</span><span class="p">:</span> <span class="s2">&#34;dns-default-doh&#34;</span><span class="p">,</span>
 </span></span><span class="line"><span class="cl">        <span class="nt">&#34;address&#34;</span><span class="p">:</span> <span class="s2">&#34;https://223.5.5.5/dns-query&#34;</span><span class="p">,</span>
 </span></span><span class="line"><span class="cl">        <span class="nt">&#34;detour&#34;</span><span class="p">:</span> <span class="s2">&#34;direct&#34;</span>
 </span></span><span class="line"><span class="cl">      <span class="p">},</span>
@@ -399,9 +391,6 @@
 </span></span><span class="line"><span class="cl">        <span class="nt">&#34;server&#34;</span><span class="p">:</span> <span class="s2">&#34;dns-remote&#34;</span>
 </span></span><span class="line"><span class="cl">      <span class="p">},</span>
 </span></span><span class="line"><span class="cl">      <span class="p">{</span>
-</span></span><span class="line"><span class="cl">        <span class="nt">&#34;domain_suffix&#34;</span><span class="p">:</span> <span class="p">[</span>
-</span></span><span class="line"><span class="cl">          <span class="s2">&#34;.cn&#34;</span>
-</span></span><span class="line"><span class="cl">        <span class="p">],</span>
 </span></span><span class="line"><span class="cl">        <span class="nt">&#34;rule_set&#34;</span><span class="p">:</span> <span class="p">[</span>
 </span></span><span class="line"><span class="cl">          <span class="s2">&#34;geosite-cn&#34;</span><span class="p">,</span>
 </span></span><span class="line"><span class="cl">          <span class="s2">&#34;geoip-cn&#34;</span>
@@ -424,7 +413,6 @@
 </span></span><span class="line"><span class="cl">      <span class="nt">&#34;listen_port&#34;</span><span class="p">:</span> <span class="mi">5335</span><span class="p">,</span>
 </span></span><span class="line"><span class="cl">      <span class="nt">&#34;network&#34;</span><span class="p">:</span> <span class="s2">&#34;udp&#34;</span><span class="p">,</span>
 </span></span><span class="line"><span class="cl">      <span class="nt">&#34;sniff&#34;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
-</span></span><span class="line"><span class="cl">      <span class="nt">&#34;sniff_timeout&#34;</span><span class="p">:</span> <span class="s2">&#34;300ms&#34;</span>
 </span></span><span class="line"><span class="cl">    <span class="p">},</span>
 </span></span><span class="line"><span class="cl">    <span class="p">{</span>
 </span></span><span class="line"><span class="cl">      <span class="nt">&#34;tag&#34;</span><span class="p">:</span> <span class="s2">&#34;global&#34;</span><span class="p">,</span>
@@ -432,7 +420,6 @@
 </span></span><span class="line"><span class="cl">      <span class="nt">&#34;listen&#34;</span><span class="p">:</span> <span class="s2">&#34;127.0.0.1&#34;</span><span class="p">,</span>
 </span></span><span class="line"><span class="cl">      <span class="nt">&#34;listen_port&#34;</span><span class="p">:</span> <span class="mi">1091</span><span class="p">,</span>
 </span></span><span class="line"><span class="cl">      <span class="nt">&#34;sniff&#34;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
-</span></span><span class="line"><span class="cl">  	  <span class="nt">&#34;sniff_timeout&#34;</span><span class="p">:</span> <span class="s2">&#34;300ms&#34;</span><span class="p">,</span>
 </span></span><span class="line"><span class="cl">      <span class="nt">&#34;set_system_proxy&#34;</span><span class="p">:</span> <span class="kc">false</span>
 </span></span><span class="line"><span class="cl">    <span class="p">},</span>
 </span></span><span class="line"><span class="cl">    <span class="p">{</span>
@@ -441,7 +428,6 @@
 </span></span><span class="line"><span class="cl">      <span class="nt">&#34;listen&#34;</span><span class="p">:</span> <span class="s2">&#34;127.0.0.1&#34;</span><span class="p">,</span>
 </span></span><span class="line"><span class="cl">      <span class="nt">&#34;listen_port&#34;</span><span class="p">:</span> <span class="mi">1090</span><span class="p">,</span>
 </span></span><span class="line"><span class="cl">      <span class="nt">&#34;sniff&#34;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
-</span></span><span class="line"><span class="cl">  	  <span class="nt">&#34;sniff_timeout&#34;</span><span class="p">:</span> <span class="s2">&#34;300ms&#34;</span><span class="p">,</span>
 </span></span><span class="line"><span class="cl">      <span class="nt">&#34;set_system_proxy&#34;</span><span class="p">:</span> <span class="kc">false</span>
 </span></span><span class="line"><span class="cl">    <span class="p">}</span>
 </span></span><span class="line"><span class="cl">  <span class="p">],</span>
@@ -497,9 +483,6 @@
 </span></span><span class="line"><span class="cl">        <span class="nt">&#34;outbound&#34;</span><span class="p">:</span> <span class="s2">&#34;proxy&#34;</span>
 </span></span><span class="line"><span class="cl">      <span class="p">},</span>
 </span></span><span class="line"><span class="cl">      <span class="p">{</span>
-</span></span><span class="line"><span class="cl">        <span class="nt">&#34;domain_suffix&#34;</span><span class="p">:</span> <span class="p">[</span>
-</span></span><span class="line"><span class="cl">          <span class="s2">&#34;.cn&#34;</span>
-</span></span><span class="line"><span class="cl">        <span class="p">],</span>
 </span></span><span class="line"><span class="cl">        <span class="nt">&#34;rule_set&#34;</span><span class="p">:</span> <span class="p">[</span>
 </span></span><span class="line"><span class="cl">          <span class="s2">&#34;geoip-cn&#34;</span><span class="p">,</span>
 </span></span><span class="line"><span class="cl">          <span class="s2">&#34;geosite-cn&#34;</span>
@@ -545,13 +528,14 @@
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>主要配置思路：</p>
+</div><h2 id="备注">备注</h2>
+<p>主要配置思路：</p>
 <ol>
 <li>
 <p>dns 服务器部分，国内使用 alidns 作为境内 dns 服务器，有普通和 DOH 两个，国外使用 Cloudflare 的 DOH dns 服务器，同时创建了一个用于屏蔽的 dns-block 服务器；</p>
 </li>
 <li>
-<p>dns 规则部分较为简单，基于 anti-ad 规则进行 dns 屏蔽；对于全局代理入口 global 则都转发到 dns-remote 解析；对于域名 .cn 结果或匹配了 GeoIP-CN 和 GeoSite-CN 规则集，则使用境内 dns 服务器； final 使用 dns-remote。这里实现了 dns 分流和广告屏蔽。outbound=any 规则保证了代理服务器域名的解析，否则代理无法正常启动。</p>
+<p>dns 规则部分较为简单，基于 anti-ad 规则进行 dns 屏蔽；对于全局代理入口 global 则都转发到 dns-remote 解析；对于域名匹配了 GeoIP-CN 和 GeoSite-CN 规则集，则使用境内 dns 服务器； final 使用 dns-remote。这里实现了 dns 分流和广告屏蔽。outbound=any 规则保证了代理服务器域名的解析，否则代理无法正常启动。</p>
 </li>
 <li>
 <p>inbounds 提供了 3 个服务入口：</p>
@@ -570,15 +554,16 @@
 <li>dns-in 转发给 dns-out，用于本地 dns 服务器；</li>
 <li>基于 anti-ad 的广告屏蔽；</li>
 <li>global 的全局代理路由；</li>
-<li>基于 .cn 域名后缀匹配或境内网站、IP 匹配或私有网络 IP 匹配，则流量通过本地；</li>
+<li>基于境内网站、IP 匹配或私有网络 IP 匹配，则流量通过本地；</li>
 <li>final 设置为 proxy 走境外来保证境外流量规则；</li>
 <li>protocol=dns 部分走 dns-out 是为了 dns 分流；</li>
 </ul>
 </li>
 <li>
-<p>规则集部分，除了 anti-ad 需要 1.10 beta 以上版本支持，其他都兼容 1.9.x。这里都是用远程规则集，并使用了 experimental 的 cache_file 来保证本地缓存。</p>
+<p>规则集部分，除了 anti-ad 需要 1.10 beta 以上版本支持，其他都兼容 1.9.x。这里都是用远程规则集，并使用了 <code>experimental.cache_file</code> 来保证本地缓存。</p>
 </li>
 </ol>
+<h2 id="自启动管理">自启动管理</h2>
 <p>为了实现 sing-box 自启动和权限，则可以使用如下 systemd service 文件，需要注意可执行文件路径及配置文件路径：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -602,58 +587,97 @@
 </span><span class="lnt">18
 </span><span class="lnt">19
 </span><span class="lnt">20
-</span><span class="lnt">21
-</span><span class="lnt">22
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="c1"># path: /usr/local/lib/systemd/system/sing-box.service</span>
-</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="n">Unit</span><span class="p">]</span>
-</span></span><span class="line"><span class="cl"><span class="n">Description</span><span class="o">=</span><span class="n">Sing</span><span class="o">-</span><span class="n">Box</span>
-</span></span><span class="line"><span class="cl"><span class="n">After</span><span class="o">=</span><span class="n">network</span><span class="o">.</span><span class="n">target</span> 
-</span></span><span class="line"><span class="cl"><span class="n">Wants</span><span class="o">=</span><span class="n">network</span><span class="o">-</span><span class="n">online</span><span class="o">.</span><span class="n">target</span>
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"># path: /usr/local/lib/systemd/system/sing-box.service
+</span></span><span class="line"><span class="cl">[Unit]
+</span></span><span class="line"><span class="cl">Description=Sing-Box
+</span></span><span class="line"><span class="cl">After=network.target 
+</span></span><span class="line"><span class="cl">Wants=network-online.target
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="n">Service</span><span class="p">]</span>
-</span></span><span class="line"><span class="cl"><span class="n">Type</span><span class="o">=</span><span class="n">simple</span>
-</span></span><span class="line"><span class="cl"><span class="c1"># 限制用户权限</span>
-</span></span><span class="line"><span class="cl"><span class="n">DynamicUser</span><span class="o">=</span><span class="n">yes</span>
-</span></span><span class="line"><span class="cl"><span class="n">ExecStart</span><span class="o">=/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">sing</span><span class="o">-</span><span class="n">box</span> <span class="n">run</span> <span class="o">-</span><span class="n">c</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">sing</span><span class="o">-</span><span class="n">box</span><span class="o">/</span><span class="n">config</span><span class="o">.</span><span class="n">json</span>
-</span></span><span class="line"><span class="cl"><span class="c1"># 提供特权端口监听权限</span>
-</span></span><span class="line"><span class="cl"><span class="n">AmbientCapabilities</span><span class="o">=</span><span class="n">CAP_NET_BIND_SERVICE</span>
-</span></span><span class="line"><span class="cl"><span class="n">NoNewPrivileges</span><span class="o">=</span><span class="bp">true</span>
-</span></span><span class="line"><span class="cl"><span class="c1"># 设置缓存目录和工作目录，来保证 cache.db 文件的存储</span>
-</span></span><span class="line"><span class="cl"><span class="n">CacheDirectory</span><span class="o">=</span><span class="n">sing</span><span class="o">-</span><span class="n">box</span>
-</span></span><span class="line"><span class="cl"><span class="n">WorkingDirectory</span><span class="o">=/</span><span class="k">var</span><span class="o">/</span><span class="n">cache</span><span class="o">/</span><span class="n">sing</span><span class="o">-</span><span class="n">box</span>
-</span></span><span class="line"><span class="cl"><span class="n">Restart</span><span class="o">=</span><span class="n">on</span><span class="o">-</span><span class="n">failure</span>
-</span></span><span class="line"><span class="cl"><span class="n">RestartSec</span><span class="o">=</span><span class="mi">5</span>
+</span></span><span class="line"><span class="cl">[Service]
+</span></span><span class="line"><span class="cl">Type=simple
+</span></span><span class="line"><span class="cl"># 限制用户权限
+</span></span><span class="line"><span class="cl">DynamicUser=yes
+</span></span><span class="line"><span class="cl">ExecStart=/usr/local/bin/sing-box run -D ${CACHE_DIRECTORY} -c /usr/local/etc/sing-box/config.json
+</span></span><span class="line"><span class="cl"># 提供特权端口监听权限
+</span></span><span class="line"><span class="cl">AmbientCapabilities=CAP_NET_BIND_SERVICE
+</span></span><span class="line"><span class="cl">NoNewPrivileges=true
+</span></span><span class="line"><span class="cl">CacheDirectory=sing-box
+</span></span><span class="line"><span class="cl">Restart=on-failure
+</span></span><span class="line"><span class="cl">RestartSec=5
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="n">Install</span><span class="p">]</span>
-</span></span><span class="line"><span class="cl"><span class="n">WantedBy</span><span class="o">=</span><span class="n">multi</span><span class="o">-</span><span class="n">user</span><span class="o">.</span><span class="n">target</span>
+</span></span><span class="line"><span class="cl">[Install]
+</span></span><span class="line"><span class="cl">WantedBy=multi-user.target
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>通过 systemctl enable sing-box &ndash;now 后，通过 systemctl status sing-box 查看状态，通过 journalctl -u sing-box 查看日志。</p>
-<p>另外，如果想将系统 DNS 全部转发给 sing-box，我们则可以通过 systemd-resolved 来转发请求。</p>
-<p>安装完 systemd-resolved 后，新增配置文件:</p>
+<h2 id="dns-转发">DNS 转发</h2>
+<p>另外，如果想将系统 DNS 全部转发给 sing-box，我们则可以通过 <del>systemd-resolved</del> dnsmasq 来转发请求(dnsmasq 可以利用 <code>strict-order</code> 来实现 fallback 机制)。</p>
+<p>安装完 dnsmasq 后，新增配置文件:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># path: /etc/dnsmasq.d/dns-servers.conf</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># only bind to lo</span>
+</span></span><span class="line"><span class="cl"><span class="nv">interface</span><span class="o">=</span>lo
+</span></span><span class="line"><span class="cl">bind-interfaces
+</span></span><span class="line"><span class="cl"><span class="c1"># not use or poll /etc/resolv.conf</span>
+</span></span><span class="line"><span class="cl">no-resolv
+</span></span><span class="line"><span class="cl">no-poll
+</span></span><span class="line"><span class="cl"><span class="c1"># cache</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># max live in cache</span>
+</span></span><span class="line"><span class="cl">max-cache-ttl<span class="o">=</span><span class="m">3600</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># min live in cache</span>
+</span></span><span class="line"><span class="cl">min-cache-ttl<span class="o">=</span><span class="m">300</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># cache size</span>
+</span></span><span class="line"><span class="cl">cache-size<span class="o">=</span><span class="m">1000</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># keep strict order on servers</span>
+</span></span><span class="line"><span class="cl">strict-order
+</span></span><span class="line"><span class="cl"><span class="c1"># sing-box server</span>
+</span></span><span class="line"><span class="cl"><span class="nv">server</span><span class="o">=</span>127.0.0.1#5335
+</span></span><span class="line"><span class="cl"><span class="c1"># fallback server if sing-box failed</span>
+</span></span><span class="line"><span class="cl"><span class="nv">server</span><span class="o">=</span>223.5.5.5
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>然后 systemctl restart dnsmasq 来重启服务。</p>
+<p>同时，需要手动修改 <code>/etc/resolv.conf</code> 文件来指定使用 dnsmasq 服务器:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
-</span><span class="lnt">5
-</span><span class="lnt">6
-</span><span class="lnt">7
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># path: /etc/systemd/resolved.conf.d/dns.conf</span>
-</span></span><span class="line"><span class="cl"><span class="o">[</span>Resolve<span class="o">]</span>
-</span></span><span class="line"><span class="cl"><span class="nv">DNS</span><span class="o">=</span>127.0.0.1:5335
-</span></span><span class="line"><span class="cl"><span class="c1"># 使用缓存</span>
-</span></span><span class="line"><span class="cl"><span class="nv">Cache</span><span class="o">=</span>yes
-</span></span><span class="line"><span class="cl"><span class="c1"># 这里将上述 DNS 作为全局 DNS</span>
-</span></span><span class="line"><span class="cl"><span class="nv">Domains</span><span class="o">=</span>~.
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># path: /etc/resolv.conf</span>
+</span></span><span class="line"><span class="cl">nameserver ::1
+</span></span><span class="line"><span class="cl">nameserver 127.0.0.1
+</span></span><span class="line"><span class="cl">options edns0 trust-ad
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>然后 systemctl restart systemd-resolved 来重启服务。</p>
+</div><p>为了避免 <code>/etc/resolv.conf</code> 被以外修改，可以使用 <code>sudo chattr +i /etc/resolv.conf</code> 来标记不可变属性。</p>
 <p>对于 Firefox，需要将配置中的代理配置为 127.0.0.1:1090，所有协议共用这个端口。对于普通命令行工具，则可以在 ~/.bashrc 文件中追加两行：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -665,7 +689,8 @@
 </span></span><span class="line"><span class="cl"><span class="k">export</span> <span class="n">https_proxy</span><span class="o">=$</span><span class="n">http_proxy</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>所有正常后，想检查是否存在 DNS 泄漏，则可以用 Firefox 访问以下两个网站任意一个即可：</p>
+</div><h2 id="dns-泄漏检测">DNS 泄漏检测</h2>
+<p>所有正常后，想检查是否存在 DNS 泄漏，则可以用 Firefox 访问以下两个网站任意一个即可：</p>
 <ol>
 <li><a href="https://ipleak.net/">https://ipleak.net/</a></li>
 <li><a href="https://browserleaks.com/dns">https://browserleaks.com/dns</a></li>
@@ -678,7 +703,11 @@
 <footer class="post-footer">
       
       <nav class="post-nav">
-        
+        <a class="prev" href="/post/2024-09-18-a-simple-config-of-sing-box-for-android/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">适合安卓的 sing-box 客户端配置</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
         <a class="next" href="/post/2024-08-07-terminate-popen-subprocess/">
             <span class="next-text nav-default">关闭 popen 打开的子进程</span>
             <span class="next-text nav-mobile">Next</span>
