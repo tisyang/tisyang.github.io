@@ -53,7 +53,7 @@
   <meta itemprop="description" content="sing-box 作为代理工具的集大成者，支持多协议多功能，且覆盖多平台，但是配置起来比较复杂，这里给出一个适合 Linux 桌面使用的配置样本，供参考。 本配置适合 Linux 桌">
   <meta itemprop="datePublished" content="2024-09-12T00:00:00+00:00">
   <meta itemprop="dateModified" content="2024-09-12T00:00:00+00:00">
-  <meta itemprop="wordCount" content="1874">
+  <meta itemprop="wordCount" content="1938">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="适合 Linux 桌面的 sing-box 客户端配置">
   <meta name="twitter:description" content="sing-box 作为代理工具的集大成者，支持多协议多功能，且覆盖多平台，但是配置起来比较复杂，这里给出一个适合 Linux 桌面使用的配置样本，供参考。 本配置适合 Linux 桌">
@@ -344,7 +344,6 @@
 </span><span class="lnt">176
 </span><span class="lnt">177
 </span><span class="lnt">178
-</span><span class="lnt">179
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
@@ -392,8 +391,7 @@
 </span></span><span class="line"><span class="cl">      <span class="p">},</span>
 </span></span><span class="line"><span class="cl">      <span class="p">{</span>
 </span></span><span class="line"><span class="cl">        <span class="nt">&#34;rule_set&#34;</span><span class="p">:</span> <span class="p">[</span>
-</span></span><span class="line"><span class="cl">          <span class="s2">&#34;geosite-cn&#34;</span><span class="p">,</span>
-</span></span><span class="line"><span class="cl">          <span class="s2">&#34;geoip-cn&#34;</span>
+</span></span><span class="line"><span class="cl">          <span class="s2">&#34;geosite-cn&#34;</span>
 </span></span><span class="line"><span class="cl">        <span class="p">],</span>
 </span></span><span class="line"><span class="cl">        <span class="nt">&#34;server&#34;</span><span class="p">:</span> <span class="s2">&#34;dns-default&#34;</span>
 </span></span><span class="line"><span class="cl">      <span class="p">},</span>
@@ -561,6 +559,9 @@
 </li>
 <li>
 <p>规则集部分，除了 anti-ad 需要 1.10 beta 以上版本支持，其他都兼容 1.9.x。这里都是用远程规则集，并使用了 <code>experimental.cache_file</code> 来保证本地缓存。</p>
+</li>
+<li>
+<p>需要额外注意的是，<strong>不要在 DNS 规则中使用 IP 规则集</strong>（比如 GeoIP 等），这会导致在 DNS 路由处理前将域名解析为 IP 进行匹配，以至于在这个阶段发生 DNS 泄漏。</p>
 </li>
 </ol>
 <h2 id="自启动管理">自启动管理</h2>
