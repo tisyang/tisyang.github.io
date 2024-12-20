@@ -6,8 +6,15 @@
     <description>Recent content in Posts on 碎片</description>
     <generator>Hugo</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Wed, 18 Sep 2024 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 20 Dec 2024 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://tisyang.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>rv1106 适配 Wiznet-W5500 SPI以太网模块</title>
+      <link>https://tisyang.github.io/post/2024-12-20-wiznet-w5500-rv1106-board/</link>
+      <pubDate>Fri, 20 Dec 2024 00:00:00 +0000</pubDate>
+      <guid>https://tisyang.github.io/post/2024-12-20-wiznet-w5500-rv1106-board/</guid>
+      <description>本文主要记录如何在 LuckFox Pico Max RV1106 开发板上驱动 Wiznet-W5500 SPI以太网模块。 前文 给开发板适配 Alpine Linux 介绍了一个 RV1106 的开发板，尺寸小巧，功能十足，只有一个 100M 以太网口对</description>
+    </item>
     <item>
       <title>适合安卓的 sing-box 客户端配置</title>
       <link>https://tisyang.github.io/post/2024-09-18-a-simple-config-of-sing-box-for-android/</link>

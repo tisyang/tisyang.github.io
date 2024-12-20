@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>rv1106 适配 Wiznet-W5500 SPI以太网模块 - 碎片</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="TyK" /><meta name="description" content="本文主要记录如何在 LuckFox Pico Max RV1106 开发板上驱动 Wiznet-W5500 SPI以太网模块。 前文 给开发板适配 Alpine Linux 介绍了一个 RV1106 的开发板，尺寸小巧，功能十足，只有一个 100M 以太网口对" /><meta name="keywords" content="程序员, 博客, blog, programming" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.131.0 with theme even" />
+
+
+<link rel="canonical" href="https://tisyang.github.io/post/2024-12-20-wiznet-w5500-rv1106-board/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link href="/lib/fancybox/jquery.fancybox-3.1.20.min.css" rel="stylesheet">
+
+
+<meta property="og:url" content="https://tisyang.github.io/post/2024-12-20-wiznet-w5500-rv1106-board/">
+  <meta property="og:site_name" content="碎片">
+  <meta property="og:title" content="rv1106 适配 Wiznet-W5500 SPI以太网模块">
+  <meta property="og:description" content="本文主要记录如何在 LuckFox Pico Max RV1106 开发板上驱动 Wiznet-W5500 SPI以太网模块。 前文 给开发板适配 Alpine Linux 介绍了一个 RV1106 的开发板，尺寸小巧，功能十足，只有一个 100M 以太网口对">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="post">
+    <meta property="article:published_time" content="2024-12-20T00:00:00+00:00">
+    <meta property="article:modified_time" content="2024-12-20T00:00:00+00:00">
+
+  <meta itemprop="name" content="rv1106 适配 Wiznet-W5500 SPI以太网模块">
+  <meta itemprop="description" content="本文主要记录如何在 LuckFox Pico Max RV1106 开发板上驱动 Wiznet-W5500 SPI以太网模块。 前文 给开发板适配 Alpine Linux 介绍了一个 RV1106 的开发板，尺寸小巧，功能十足，只有一个 100M 以太网口对">
+  <meta itemprop="datePublished" content="2024-12-20T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2024-12-20T00:00:00+00:00">
+  <meta itemprop="wordCount" content="647">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="rv1106 适配 Wiznet-W5500 SPI以太网模块">
+  <meta name="twitter:description" content="本文主要记录如何在 LuckFox Pico Max RV1106 开发板上驱动 Wiznet-W5500 SPI以太网模块。 前文 给开发板适配 Alpine Linux 介绍了一个 RV1106 的开发板，尺寸小巧，功能十足，只有一个 100M 以太网口对">
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">碎片</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/index.xml">
+        <li class="mobile-menu-item">RSS</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">碎片</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/index.xml">RSS</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">rv1106 适配 Wiznet-W5500 SPI以太网模块</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2024-12-20 </span>
+        
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents"></nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>本文主要记录如何在 LuckFox Pico Max RV1106 开发板上驱动 Wiznet-W5500 SPI以太网模块。</p>
+<!-- raw HTML omitted -->
+<p>前文 <a href="/post/2023-11-16-port-alpine-linux-to-rv1106-board/">给开发板适配 Alpine Linux</a> 介绍了一个 RV1106 的开发板，尺寸小巧，功能十足，只有一个 100M 以太网口对于有些应用不大够用，USB 也是跟 Type-C 共享不容易引出扩展，GPIO 针脚上引出有 SPI 总线，可以利用 Wiznet-W5500 模组扩展一个低速网口使用。</p>
+<p>板载 GPIO 扩展引脚如下图所示：</p>
+<p><img src="/image/luckfox-pico-max-gpio-pins.png" alt="Luckfox pico max gpio pins"></p>
+<p>W5500 模块除了连接 SOC SPI 总线外，还需要额外两个 GPIO 引脚用于连接 <code>INT</code> (中断处理) 和 <code>RST</code> (重置)，如上图所示，SPI 片选使用 RV1106 的 <code>CS0</code> ，中断（<code>INT</code>）使用 <code>GPIO2_A6</code>(29 引脚)，重置(<code>RST</code>) 使用 <code>GPIO2_A0</code> (24 引脚)，需要注意硬件上电平转换。</p>
+<p>硬件连接完成后，还需要配置 RV1106 BSP 以驱动该模块。Wiznet-W5500 在内核中使用 <code>wiznet/w5100-spi</code> 驱动模块，我们只需要配置内核 <code>CONFIG</code> 以及 <code>DTS</code> 即可。</p>
+<p>Kernel Config 修改如下，激活 Wiznet/w5100-spi：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-diff" data-lang="diff"><span class="line"><span class="cl">#FILE: source/kernel/arch/arm/configs/luckfox_rv1106_linux_defconfig
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="gd">-# CONFIG_NET_VENDOR_WIZNET is not set
+</span></span></span><span class="line"><span class="cl"><span class="gd"></span><span class="gi">+CONFIG_NET_VENDOR_WIZNET=y
+</span></span></span><span class="line"><span class="cl"><span class="gi">+CONFIG_WIZNET_W5100=m
+</span></span></span><span class="line"><span class="cl"><span class="gi">+CONFIG_WIZNET_W5100_SPI=m
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>DTS 修改如下，配置 SPI，以及 w5500 <code>INT</code> 和 <code>RST</code> 引脚：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-diff" data-lang="diff"><span class="line"><span class="cl">#FILE: source/kernel/arch/arm/boot/dts/rv1106g-luckfox-pico-pro-max.dts
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"> // /**********SPI**********/
+</span></span><span class="line"><span class="cl"> &amp;spi0 {
+</span></span><span class="line"><span class="cl"> 	status = &#34;okay&#34;;
+</span></span><span class="line"><span class="cl"> 	pinctrl-names = &#34;default&#34;;
+</span></span><span class="line"><span class="cl"> 	pinctrl-0 = &lt;&amp;spi0m0_pins&gt;;
+</span></span><span class="line"><span class="cl"><span class="gd">-	cs-gpios = &lt;&amp;gpio1 RK_PC0 1&gt;;
+</span></span></span><span class="line"><span class="cl"><span class="gd">-	// cs-gpios = &lt;&amp;gpio1 26 1&gt;;
+</span></span></span><span class="line"><span class="cl"><span class="gd"></span><span class="gi">+	//cs-gpios = &lt;&amp;gpio1 RK_PC0 1&gt;;
+</span></span></span><span class="line"><span class="cl"><span class="gi">+	cs-gpios = &lt;&amp;gpio1 16 1&gt;;
+</span></span></span><span class="line"><span class="cl"><span class="gi"></span> 	#address-cells = &lt;1&gt;;
+</span></span><span class="line"><span class="cl"> 	#size-cells = &lt;0&gt;;
+</span></span><span class="line"><span class="cl"> 	spidev@0 {
+</span></span><span class="line"><span class="cl"><span class="gi">+		status = &#34;disabled&#34;;
+</span></span></span><span class="line"><span class="cl"><span class="gi"></span> 		compatible = &#34;rockchip,spidev&#34;;
+</span></span><span class="line"><span class="cl"> 		spi-max-frequency = &lt;50000000&gt;;
+</span></span><span class="line"><span class="cl"> 		reg = &lt;0&gt;;
+</span></span><span class="line"><span class="cl"> 	};
+</span></span><span class="line"><span class="cl"><span class="gi">+	w5500@0 {
+</span></span></span><span class="line"><span class="cl"><span class="gi">+		status = &#34;okay&#34;;
+</span></span></span><span class="line"><span class="cl"><span class="gi">+		compatible = &#34;wiznet,w5500&#34;;
+</span></span></span><span class="line"><span class="cl"><span class="gi">+		spi-max-frequency = &lt;50000000&gt;;
+</span></span></span><span class="line"><span class="cl"><span class="gi">+		reg = &lt;0&gt;;
+</span></span></span><span class="line"><span class="cl"><span class="gi">+		pinctrl-names = &#34;default&#34;;
+</span></span></span><span class="line"><span class="cl"><span class="gi">+		pinctrl-0 = &lt;&amp;uart1m1_ctsn&gt;;
+</span></span></span><span class="line"><span class="cl"><span class="gi">+		interrupt-parent = &lt;&amp;gpio2&gt;;
+</span></span></span><span class="line"><span class="cl"><span class="gi">+		interrupts = &lt;6 IRQ_TYPE_EDGE_FALLING&gt;;
+</span></span></span><span class="line"><span class="cl"><span class="gi">+	};
+</span></span></span><span class="line"><span class="cl"><span class="gi"></span> };
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>以上修改完成后，编译 BSP 生成镜像刷机即可，启动后会额外生成 <code>eth1</code> 设备，可以安装 <code>iperf3</code> 工具用来测试网口性能：</p>
+<p><img src="/image/luckfox-pico-max-w5500-speed-iperf3.png" alt="iper3f with w5500 on rv1106"></p>
+<p>基本可以达到 W5500 的 15 Mbps 的速率上限，此时 CPU 占用约在 50% 左右(多数在内核 sys 数据处理上，si 并不高)，主要原因还是 rv1106 只有单核，性能有限。</p>
+<p>这样扩展的网口，速率只有 10 Mbps 水平，对于一些收发数据率不高的应用场景，也足够了。</p>
+
+    </div>
+
+    
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        
+        <a class="next" href="/post/2024-09-18-a-simple-config-of-sing-box-for-android/">
+            <span class="next-text nav-default">适合安卓的 sing-box 客户端配置</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="https://github.com/tisyang" class="iconfont icon-github" title="github"></a>
+  <a href="/post/2024-12-20-wiznet-w5500-rv1106-board/" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2016 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>TyK</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  <script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  <script type="text/javascript" src="/lib/fancybox/jquery.fancybox-3.1.20.min.js"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

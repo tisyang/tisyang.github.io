@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>Archive - 碎片</title>
+  <title>Linux 系统传感器数据同步之 GNSS - 碎片</title>
   <meta name="renderer" content="webkit" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
@@ -16,7 +16,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="TyK" /><meta name="keywords" content="程序员, 博客, blog, programming" />
+<meta name="author" content="TyK" /><meta name="description" content="本文主要讲述在 Linux 系统上针对常见传感器数据的时间同步的方法，本篇章主要描述 GNSS 部分。" /><meta name="keywords" content="程序员, 博客, blog, programming" />
 
 
 
@@ -26,9 +26,7 @@
 <meta name="generator" content="Hugo 0.131.0 with theme even" />
 
 
-<link rel="canonical" href="https://tisyang.github.io/post/" />
-  <link href="https://tisyang.github.io/post/index.xml" rel="alternate" type="application/rss+xml" title="碎片" />
-  <link href="https://tisyang.github.io/post/index.xml" rel="feed" type="application/rss+xml" title="碎片" />
+<link rel="canonical" href="https://tisyang.github.io/2024-11-28-time-sync-in-linux-part-gnss/" />
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
@@ -41,17 +39,23 @@
 <link href="/lib/fancybox/jquery.fancybox-3.1.20.min.css" rel="stylesheet">
 
 
-<meta property="og:url" content="https://tisyang.github.io/post/">
+<meta property="og:url" content="https://tisyang.github.io/2024-11-28-time-sync-in-linux-part-gnss/">
   <meta property="og:site_name" content="碎片">
-  <meta property="og:title" content="Posts">
+  <meta property="og:title" content="Linux 系统传感器数据同步之 GNSS">
+  <meta property="og:description" content="本文主要讲述在 Linux 系统上针对常见传感器数据的时间同步的方法，本篇章主要描述 GNSS 部分。">
   <meta property="og:locale" content="zh_CN">
-  <meta property="og:type" content="website">
+  <meta property="og:type" content="article">
+    <meta property="article:published_time" content="2024-11-28T00:00:00+00:00">
+    <meta property="article:modified_time" content="2024-11-28T00:00:00+00:00">
 
-  <meta itemprop="name" content="Posts">
-  <meta itemprop="datePublished" content="2024-12-20T00:00:00+00:00">
-  <meta itemprop="dateModified" content="2024-12-20T00:00:00+00:00">
+  <meta itemprop="name" content="Linux 系统传感器数据同步之 GNSS">
+  <meta itemprop="description" content="本文主要讲述在 Linux 系统上针对常见传感器数据的时间同步的方法，本篇章主要描述 GNSS 部分。">
+  <meta itemprop="datePublished" content="2024-11-28T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2024-11-28T00:00:00+00:00">
+  <meta itemprop="wordCount" content="40">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Posts">
+  <meta name="twitter:title" content="Linux 系统传感器数据同步之 GNSS">
+  <meta name="twitter:description" content="本文主要讲述在 Linux 系统上针对常见传感器数据的时间同步的方法，本篇章主要描述 GNSS 部分。">
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -117,65 +121,19 @@
     <main id="main" class="main">
       <div class="content-wrapper">
         <div id="content" class="content">
-          
-<section id="archive" class="archive">
-      <div class="collection-title">
-        <h2 class="archive-year">2016</h2>
-      </div>
+          <article class="post">
+  <div class="post-content">
+    <p>本文主要讲述在 Linux 系统上针对常见传感器数据的时间同步的方法，本篇章主要描述 GNSS 部分。</p>
+<!-- raw HTML omitted -->
 
-    <div class="archive-post">
-      <span class="archive-post-time">
-        05-23
-      </span>
-      <span class="archive-post-title">
-        <a href="/post/2016-05-23-how-to-break-cs-uem-encrypt/" class="archive-post-link">
-          中软统一终端加密文件解密
-        </a>
-      </span>
-    </div>
-
-    <div class="archive-post">
-      <span class="archive-post-time">
-        04-28
-      </span>
-      <span class="archive-post-title">
-        <a href="/post/2016-04-28-add-exe-to-path/" class="archive-post-link">
-          添加可执行程序到 Path 中
-        </a>
-      </span>
-    </div>
-
-    <div class="archive-post">
-      <span class="archive-post-time">
-        04-12
-      </span>
-      <span class="archive-post-title">
-        <a href="/post/2016-04-12-ndk-sample/" class="archive-post-link">
-          NDK 实例
-        </a>
-      </span>
-    </div>
-
-    <div class="archive-post">
-      <span class="archive-post-time">
-        03-28
-      </span>
-      <span class="archive-post-title">
-        <a href="/post/2016-03-28-ndk-build-problem/" class="archive-post-link">
-          ndk-build提示“系统找不到指定的路径”问题
-        </a>
-      </span>
-    </div></section>
-
-<nav class="pagination">
-  <a class="prev" href="/post/page/3/">
-      <i class="iconfont icon-left"></i>
-      <span class="prev-text">Prev</span>
-    </a>
-  
-</nav>
+  </div>
+</article>
         </div>
         
+
+  
+
+  
 
       </div>
     </main>
@@ -183,7 +141,7 @@
     <footer id="footer" class="footer">
       <div class="social-links">
       <a href="https://github.com/tisyang" class="iconfont icon-github" title="github"></a>
-  <a href="/post/" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+  <a href="/2024-11-28-time-sync-in-linux-part-gnss/" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
 </div>
 
 <div class="copyright">

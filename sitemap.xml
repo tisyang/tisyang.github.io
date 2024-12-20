@@ -3,14 +3,28 @@
   
   <url>
     <loc>https://tisyang.github.io/post/</loc>
-    <lastmod>2024-09-18T00:00:00+00:00</lastmod>
+    <lastmod>2024-12-20T00:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://tisyang.github.io/post/2024-12-20-wiznet-w5500-rv1106-board/</loc>
+    <lastmod>2024-12-20T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
     <loc>https://tisyang.github.io/</loc>
-    <lastmod>2024-09-18T00:00:00+00:00</lastmod>
+    <lastmod>2024-12-20T00:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://tisyang.github.io/2024-11-28-time-sync-in-linux-part-gnss/</loc>
+    <lastmod>2024-11-28T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
