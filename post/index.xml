@@ -6,8 +6,15 @@
     <description>Recent content in Posts on 碎片</description>
     <generator>Hugo</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Fri, 20 Dec 2024 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 02 Jan 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://tisyang.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>参数解析库 argtable2 的使用</title>
+      <link>https://tisyang.github.io/post/2025-01-02-using-argtable2/</link>
+      <pubDate>Thu, 02 Jan 2025 00:00:00 +0000</pubDate>
+      <guid>https://tisyang.github.io/post/2025-01-02-using-argtable2/</guid>
+      <description>&lt;p&gt;C 程序解析命令行参数一般都会使用 &lt;code&gt;getopt&lt;/code&gt;/&lt;code&gt;getoptlong&lt;/code&gt; 这两个 GNU 接口，简单的参数设计还好，稍微复杂的就会维护起来很麻烦，比如手写 usage、命令参数的分散性（参数的异常处理）等等。&lt;/p&gt;</description>
+    </item>
     <item>
       <title>rv1106 适配 Wiznet-W5500 SPI以太网模块</title>
       <link>https://tisyang.github.io/post/2024-12-20-wiznet-w5500-rv1106-board/</link>
@@ -20,7 +27,7 @@
       <link>https://tisyang.github.io/post/2024-09-18-a-simple-config-of-sing-box-for-android/</link>
       <pubDate>Wed, 18 Sep 2024 00:00:00 +0000</pubDate>
       <guid>https://tisyang.github.io/post/2024-09-18-a-simple-config-of-sing-box-for-android/</guid>
-      <description>本配置适合安卓客户端，版本需要 1.10.0-beta 以上版本。 安卓版本使用 tun 来实现代理，与 Linux 桌面版本略有不同。 配置策略 本配置主要策略： DNS 提供国内和国外分流，且避</description>
+      <description>&lt;p&gt;本配置适合安卓客户端，版本需要 1.10.0-beta 以上版本。&lt;/p&gt;&#xA;&lt;p&gt;安卓版本使用 tun 来实现代理，与 Linux 桌面版本略有不同。&lt;/p&gt;</description>
     </item>
     <item>
       <title>适合 Linux 桌面的 sing-box 客户端配置</title>
@@ -69,7 +76,7 @@
       <link>https://tisyang.github.io/post/2023-05-25-linux-usb-storage-safe-shutdown/</link>
       <pubDate>Thu, 25 May 2023 00:00:00 +0000</pubDate>
       <guid>https://tisyang.github.io/post/2023-05-25-linux-usb-storage-safe-shutdown/</guid>
-      <description>最近固态价格越来越便宜了，就买了一个航雄M2移动硬盘盒，方案是 RTL9120B，支持 Nvme/Sata 双协议，然后弄了一块 1T 的大杯固态。然后把用了2年多的 U</description>
+      <description>&lt;p&gt;最近固态价格越来越便宜了，就买了一个航雄M2移动硬盘盒，方案是 RTL9120B，支持 Nvme/Sata 双协议，然后弄了一块 1T 的大杯固态。然后把用了2年多的 U盘 Debian系统迁移过去。具体迁移方法过后再写篇文章仔细描述，GPT/UEFI 系统迁移实在是太简单了。&lt;/p&gt;</description>
     </item>
     <item>
       <title>Linux 下 Logitech G29 编程</title>

@@ -16,7 +16,8 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="TyK" /><meta name="description" content="最近固态价格越来越便宜了，就买了一个航雄M2移动硬盘盒，方案是 RTL9120B，支持 Nvme/Sata 双协议，然后弄了一块 1T 的大杯固态。然后把用了2年多的 U" /><meta name="keywords" content="程序员, 博客, blog, programming" />
+<meta name="author" content="TyK" /><meta name="description" content="最近固态价格越来越便宜了，就买了一个航雄M2移动硬盘盒，方案是 RTL9120B，支持 Nvme/Sata 双协议，然后弄了一块 1T 的大杯固态。然后把用了2年多的 U盘 Debian系统迁移过去。具体迁移方法过后再写篇文章仔细描述，GPT/UEFI 系统迁移实在是太简单了。
+" /><meta name="keywords" content="程序员, 博客, blog, programming" />
 
 
 
@@ -42,7 +43,7 @@
 <meta property="og:url" content="https://tisyang.github.io/post/2023-05-25-linux-usb-storage-safe-shutdown/">
   <meta property="og:site_name" content="碎片">
   <meta property="og:title" content="Linux 移动硬盘安全关闭">
-  <meta property="og:description" content="最近固态价格越来越便宜了，就买了一个航雄M2移动硬盘盒，方案是 RTL9120B，支持 Nvme/Sata 双协议，然后弄了一块 1T 的大杯固态。然后把用了2年多的 U">
+  <meta property="og:description" content="最近固态价格越来越便宜了，就买了一个航雄M2移动硬盘盒，方案是 RTL9120B，支持 Nvme/Sata 双协议，然后弄了一块 1T 的大杯固态。然后把用了2年多的 U盘 Debian系统迁移过去。具体迁移方法过后再写篇文章仔细描述，GPT/UEFI 系统迁移实在是太简单了。">
   <meta property="og:locale" content="zh_CN">
   <meta property="og:type" content="article">
     <meta property="article:section" content="post">
@@ -50,13 +51,13 @@
     <meta property="article:modified_time" content="2023-05-25T00:00:00+00:00">
 
   <meta itemprop="name" content="Linux 移动硬盘安全关闭">
-  <meta itemprop="description" content="最近固态价格越来越便宜了，就买了一个航雄M2移动硬盘盒，方案是 RTL9120B，支持 Nvme/Sata 双协议，然后弄了一块 1T 的大杯固态。然后把用了2年多的 U">
+  <meta itemprop="description" content="最近固态价格越来越便宜了，就买了一个航雄M2移动硬盘盒，方案是 RTL9120B，支持 Nvme/Sata 双协议，然后弄了一块 1T 的大杯固态。然后把用了2年多的 U盘 Debian系统迁移过去。具体迁移方法过后再写篇文章仔细描述，GPT/UEFI 系统迁移实在是太简单了。">
   <meta itemprop="datePublished" content="2023-05-25T00:00:00+00:00">
   <meta itemprop="dateModified" content="2023-05-25T00:00:00+00:00">
   <meta itemprop="wordCount" content="876">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Linux 移动硬盘安全关闭">
-  <meta name="twitter:description" content="最近固态价格越来越便宜了，就买了一个航雄M2移动硬盘盒，方案是 RTL9120B，支持 Nvme/Sata 双协议，然后弄了一块 1T 的大杯固态。然后把用了2年多的 U">
+  <meta name="twitter:description" content="最近固态价格越来越便宜了，就买了一个航雄M2移动硬盘盒，方案是 RTL9120B，支持 Nvme/Sata 双协议，然后弄了一块 1T 的大杯固态。然后把用了2年多的 U盘 Debian系统迁移过去。具体迁移方法过后再写篇文章仔细描述，GPT/UEFI 系统迁移实在是太简单了。">
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -142,7 +143,6 @@
 </div>
     <div class="post-content">
       <p>最近固态价格越来越便宜了，就买了一个航雄M2移动硬盘盒，方案是 RTL9120B，支持 Nvme/Sata 双协议，然后弄了一块 1T 的大杯固态。然后把用了2年多的 U盘 Debian系统迁移过去。具体迁移方法过后再写篇文章仔细描述，GPT/UEFI 系统迁移实在是太简单了。</p>
-<!-- raw HTML omitted -->
 <p>之前用的 U盘，没有 SMART 信息，换移动硬盘后就发现，当笔记本关机后，移动硬盘还是工作状态，我这个硬盘盒指示灯是双色，绿色代表工作（总线桥接中），蓝色代表待机（Nvme电源关闭），关机后直到电脑 USB 自动断电，硬盘盒断电，再进入系统看 SMART 就可以看到“不安全关机（Unsafe Shutown Counts”会递增 1。虽然固态硬盘这个计数实际不会损害，但是过于膈应，而且我觉得系统本身不可能不支持自动给移动硬盘自动弹出。</p>
 <p>这个跟旧固件的 RTK9210B 硬盘盒 bug 不同，我的硬盘盒固件是比较新的 1.31，弹出硬盘不安全关机次数递增的 bug 已经修正了。我这种情况是 Linux 系统装在移动硬盘上，然后关机时系统没有通知 USB 设备进入待机（Standby）状态。查询了许多资料，都是让在 <code>/lib/systemd/system-shutdown</code> 中使用 <code>udisksctl</code> 或者 <code>hdparm</code> 去卸载/关闭 USB 存储，实际操作下来并没有什么用，直到看到论坛帖子 <a href="https://forum.manjaro.org/t/graceful-way-to-spin-down-unload-head-usb-attached-mobile-hard-drive-before-shutdown-poweroff-reboot-halt/136844">Graceful way to spin down (unload head) USB attached mobile hard drive BEFRORE shutdown(poweroff/reboot/halt)</a>，才找到正确的解决方案。</p>
 <p>具体就是，需要使能系统 <code>scsi_disk</code> 模块对于 USB 存储的 <code>manage_start_stop</code> 标志，这样系统就会管理这些设备的启动和停止任务。对于一般的外置移动硬盘而言，通常是用户自行加载移除设备，但是对于运行了系统的移动硬盘而言，用户无法自行处理移除，需要系统自己在关机时处理。比较奇怪的是为什么 Linux 没有默认使能这个标志。</p>
@@ -258,7 +258,7 @@
   <span class="copyright-year">
     &copy; 
     2016 - 
-    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>TyK</span>
+    2025<span class="heart"><i class="iconfont icon-heart"></i></span><span>TyK</span>
   </span>
 </div>
 
