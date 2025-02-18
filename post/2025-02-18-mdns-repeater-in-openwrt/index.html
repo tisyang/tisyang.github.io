@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>在 Lan 网络中自动识别 Wan 网络中的共享设备 - 碎片</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="TyK" /><meta name="description" content="局域网中通常有一些共享设备比如 NAS、打印机等，在同网络的主机可以自主发现这些设备，但是该网络的下属子网无法自动识别。
+" /><meta name="keywords" content="程序员, 博客, blog, programming" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.131.0 with theme even" />
+
+
+<link rel="canonical" href="https://tisyang.github.io/post/2025-02-18-mdns-repeater-in-openwrt/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link href="/lib/fancybox/jquery.fancybox-3.1.20.min.css" rel="stylesheet">
+
+
+<meta property="og:url" content="https://tisyang.github.io/post/2025-02-18-mdns-repeater-in-openwrt/">
+  <meta property="og:site_name" content="碎片">
+  <meta property="og:title" content="在 Lan 网络中自动识别 Wan 网络中的共享设备">
+  <meta property="og:description" content="局域网中通常有一些共享设备比如 NAS、打印机等，在同网络的主机可以自主发现这些设备，但是该网络的下属子网无法自动识别。">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="post">
+    <meta property="article:published_time" content="2025-02-18T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-02-18T00:00:00+00:00">
+
+  <meta itemprop="name" content="在 Lan 网络中自动识别 Wan 网络中的共享设备">
+  <meta itemprop="description" content="局域网中通常有一些共享设备比如 NAS、打印机等，在同网络的主机可以自主发现这些设备，但是该网络的下属子网无法自动识别。">
+  <meta itemprop="datePublished" content="2025-02-18T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2025-02-18T00:00:00+00:00">
+  <meta itemprop="wordCount" content="418">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="在 Lan 网络中自动识别 Wan 网络中的共享设备">
+  <meta name="twitter:description" content="局域网中通常有一些共享设备比如 NAS、打印机等，在同网络的主机可以自主发现这些设备，但是该网络的下属子网无法自动识别。">
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">碎片</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/index.xml">
+        <li class="mobile-menu-item">RSS</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">碎片</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/index.xml">RSS</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">在 Lan 网络中自动识别 Wan 网络中的共享设备</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2025-02-18 </span>
+        
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents"></nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>局域网中通常有一些共享设备比如 NAS、打印机等，在同网络的主机可以自主发现这些设备，但是该网络的下属子网无法自动识别。</p>
+<p>如果使用的是 OpenWrt 路由，那么可以尝试使用 <code>mdns-repeater</code> 这个工具来帮助子网获取上级网络的共享设备。</p>
+<p>NAS、打印机等共享设备的自主发现均基于 UDP 的 mDNS 协议，如果要实现 Wan 到 Lan 的设备自主发现，则需要将 Wan 网络的 mDNS 消息播发到 Lan 网络中。</p>
+<p><a href="https://github.com/geekman/mdns-repeater">mdns-repeater</a> 就是这样一个工具，在 OpenWrt 路由中，可以通过 系统-&gt; 软件包 搜索 <code>mdns</code> 来安装该包，然后通过终端修改其配置文件，主要是指定 Wan 和 Lan 网络的接口名称：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># /etc/config/mdns_repeater</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">config mdns_repeater <span class="s1">&#39;main&#39;</span>
+</span></span><span class="line"><span class="cl">        list interface <span class="s1">&#39;wan&#39;</span>
+</span></span><span class="line"><span class="cl">        list interface <span class="s1">&#39;br-lan&#39;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>然后在终端执行 <code>/etc/init.d/mdns-repeater enable</code> 和 <code>/etc/init.d/mdns-repeater start</code> 来使能开机启动和启动程序。</p>
+<p>同时还需要修改路由防火墙，允许 Wan 的 <code>mDNS</code> 消息可以通过。在 网络-&gt;防火墙 中添加一条通信规则：名称 <code>Allow-mDNS</code>，协议选择 <code>UDP</code>，源区域选择 <code>wan</code>，目标区域选择 <code>设备(输入)</code>，目标端口选择 <code>5353</code>，操作选择 <code>接受</code>，然后保存应用。</p>
+<p>然后过一段时间后，在 Lan 网络的主机就可以识别到 Wan 网络上的而共享设备了。</p>
+    </div>
+
+    
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        
+        <a class="next" href="/post/2025-01-02-using-argtable2/">
+            <span class="next-text nav-default">参数解析库 argtable2 的使用</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="https://github.com/tisyang" class="iconfont icon-github" title="github"></a>
+  <a href="/post/2025-02-18-mdns-repeater-in-openwrt/" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2016 - 
+    2025<span class="heart"><i class="iconfont icon-heart"></i></span><span>TyK</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  <script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  <script type="text/javascript" src="/lib/fancybox/jquery.fancybox-3.1.20.min.js"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

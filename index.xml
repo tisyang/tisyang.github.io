@@ -6,7 +6,38 @@
     <description>Recent content on 碎片</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Thu, 02 Jan 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://tisyang.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 18 Feb 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://tisyang.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>在 Lan 网络中自动识别 Wan 网络中的共享设备</title>
+      <link>https://tisyang.github.io/post/2025-02-18-mdns-repeater-in-openwrt/</link>
+      <pubDate>Tue, 18 Feb 2025 00:00:00 +0000</pubDate>
+      
+      <guid>https://tisyang.github.io/post/2025-02-18-mdns-repeater-in-openwrt/</guid>
+      <description>&lt;p&gt;局域网中通常有一些共享设备比如 NAS、打印机等，在同网络的主机可以自主发现这些设备，但是该网络的下属子网无法自动识别。&lt;/p&gt;
+&lt;p&gt;如果使用的是 OpenWrt 路由，那么可以尝试使用 &lt;code&gt;mdns-repeater&lt;/code&gt; 这个工具来帮助子网获取上级网络的共享设备。&lt;/p&gt;
+&lt;p&gt;NAS、打印机等共享设备的自主发现均基于 UDP 的 mDNS 协议，如果要实现 Wan 到 Lan 的设备自主发现，则需要将 Wan 网络的 mDNS 消息播发到 Lan 网络中。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/geekman/mdns-repeater&#34;&gt;mdns-repeater&lt;/a&gt; 就是这样一个工具，在 OpenWrt 路由中，可以通过 系统-&amp;gt; 软件包 搜索 &lt;code&gt;mdns&lt;/code&gt; 来安装该包，然后通过终端修改其配置文件，主要是指定 Wan 和 Lan 网络的接口名称：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# /etc/config/mdns_repeater&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;config mdns_repeater &lt;span class=&#34;s1&#34;&gt;&amp;#39;main&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        list interface &lt;span class=&#34;s1&#34;&gt;&amp;#39;wan&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        list interface &lt;span class=&#34;s1&#34;&gt;&amp;#39;br-lan&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;然后在终端执行 &lt;code&gt;/etc/init.d/mdns-repeater enable&lt;/code&gt; 和 &lt;code&gt;/etc/init.d/mdns-repeater start&lt;/code&gt; 来使能开机启动和启动程序。&lt;/p&gt;
+&lt;p&gt;同时还需要修改路由防火墙，允许 Wan 的 &lt;code&gt;mDNS&lt;/code&gt; 消息可以通过。在 网络-&amp;gt;防火墙 中添加一条通信规则：名称 &lt;code&gt;Allow-mDNS&lt;/code&gt;，协议选择 &lt;code&gt;UDP&lt;/code&gt;，源区域选择 &lt;code&gt;wan&lt;/code&gt;，目标区域选择 &lt;code&gt;设备(输入)&lt;/code&gt;，目标端口选择 &lt;code&gt;5353&lt;/code&gt;，操作选择 &lt;code&gt;接受&lt;/code&gt;，然后保存应用。&lt;/p&gt;
+&lt;p&gt;然后过一段时间后，在 Lan 网络的主机就可以识别到 Wan 网络上的而共享设备了。&lt;/p&gt;</description>
+    </item>
+    
     <item>
       <title>参数解析库 argtable2 的使用</title>
       <link>https://tisyang.github.io/post/2025-01-02-using-argtable2/</link>
