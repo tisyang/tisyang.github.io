@@ -6,8 +6,15 @@
     <description>Recent content in Posts on 碎片</description>
     <generator>Hugo</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Mon, 18 Aug 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 06 Nov 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://tisyang.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Linux 接入 ADIS16505 IMU</title>
+      <link>https://tisyang.github.io/post/2025-11-06-adis16505-rk3506/</link>
+      <pubDate>Thu, 06 Nov 2025 00:00:00 +0000</pubDate>
+      <guid>https://tisyang.github.io/post/2025-11-06-adis16505-rk3506/</guid>
+      <description>本文主要记录如何在 Rockchip RK3506 上接入并驱动 ADIS16505 IMU 模块。 Linux 有 IIO 子系统（工业输入输出)，用于接入一些工业传感器，其中就包括 IMU。Analog ADIS16505 是一款使用</description>
+    </item>
     <item>
       <title>C 语言中的 X-Macros</title>
       <link>https://tisyang.github.io/post/2025-08-18-x-macros-in-c/</link>
