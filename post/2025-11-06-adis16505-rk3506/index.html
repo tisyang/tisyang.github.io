@@ -53,7 +53,7 @@
   <meta itemprop="description" content="本文主要记录如何在 Rockchip RK3506 上接入并驱动 ADIS16505 IMU 模块。 Linux 有 IIO 子系统（工业输入输出)，用于接入一些工业传感器，其中就包括 IMU。Analog ADIS16505 是一款使用">
   <meta itemprop="datePublished" content="2025-11-06T00:00:00+00:00">
   <meta itemprop="dateModified" content="2025-11-06T00:00:00+00:00">
-  <meta itemprop="wordCount" content="1574">
+  <meta itemprop="wordCount" content="1575">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Linux 接入 ADIS16505 IMU">
   <meta name="twitter:description" content="本文主要记录如何在 Rockchip RK3506 上接入并驱动 ADIS16505 IMU 模块。 Linux 有 IIO 子系统（工业输入输出)，用于接入一些工业传感器，其中就包括 IMU。Analog ADIS16505 是一款使用">
@@ -475,12 +475,10 @@
 </span><span class="lnt">6
 </span><span class="lnt">7
 </span><span class="lnt">8
-</span><span class="lnt">9
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># 读取 0x60</span>
 </span></span><span class="line"><span class="cl"><span class="nb">echo</span> 0x60 &gt; direct_reg_access
-</span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">cat <span class="nv">0x60</span>
 </span></span><span class="line"><span class="cl"><span class="o">=</span>&gt; 0x2c1
 </span></span><span class="line"><span class="cl"><span class="c1"># 写入 0x60</span>
@@ -489,7 +487,7 @@
 </span></span><span class="line"><span class="cl"><span class="o">=</span>&gt; 0x2c1
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>另外如频率设置、滤波设置等，可以参考参考治疗，直接修改 <code>sysfs</code> 下文件即可。</p>
+</div><p>另外如频率设置、滤波设置等，可以参考资料说明，直接写入 <code>sysfs</code> 下对应文件即可。</p>
 
     </div>
 
@@ -497,7 +495,11 @@
 <footer class="post-footer">
       
       <nav class="post-nav">
-        
+        <a class="prev" href="/post/2026-01-13-rk3506-pwm-oneshot-bug/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">RK3506 PWM oneshot 模式驱动修正</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
         <a class="next" href="/post/2025-08-18-x-macros-in-c/">
             <span class="next-text nav-default">C 语言中的 X-Macros</span>
             <span class="next-text nav-mobile">Next</span>
@@ -537,7 +539,7 @@
   <span class="copyright-year">
     &copy; 
     2016 - 
-    2025<span class="heart"><i class="iconfont icon-heart"></i></span><span>TyK</span>
+    2026<span class="heart"><i class="iconfont icon-heart"></i></span><span>TyK</span>
   </span>
 </div>
 

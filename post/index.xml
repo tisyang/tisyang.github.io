@@ -6,8 +6,15 @@
     <description>Recent content in Posts on 碎片</description>
     <generator>Hugo</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Thu, 06 Nov 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 13 Jan 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://tisyang.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>RK3506 PWM oneshot 模式驱动修正</title>
+      <link>https://tisyang.github.io/post/2026-01-13-rk3506-pwm-oneshot-bug/</link>
+      <pubDate>Tue, 13 Jan 2026 00:00:00 +0000</pubDate>
+      <guid>https://tisyang.github.io/post/2026-01-13-rk3506-pwm-oneshot-bug/</guid>
+      <description>Rockchip RK3506 芯片 的 PWM 控制器支持 oneshot 模式，使用时，可以通过驱动模块、sysfs接口来配置周期、占空比和需要发送的数量（个数和重复次数），激活后硬件自动发</description>
+    </item>
     <item>
       <title>Linux 接入 ADIS16505 IMU</title>
       <link>https://tisyang.github.io/post/2025-11-06-adis16505-rk3506/</link>
