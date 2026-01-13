@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>基于 x-macros 的命令行参数解析库实现 - 碎片</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="TyK" /><meta name="description" content="在之前文档讲述了一下 C X-Macros 的特性和一些应用场景，也提到在编译期可以确定的范式基本都可以通过 X-Macros 来辅助实现，比如命令行参数解析，这里就具体讲述如何" /><meta name="keywords" content="程序员, 博客, blog, programming" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.131.0 with theme even" />
+
+
+<link rel="canonical" href="https://tisyang.github.io/post/2026-01-13-args-parse-using-x-macros/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link href="/lib/fancybox/jquery.fancybox-3.1.20.min.css" rel="stylesheet">
+
+
+<meta property="og:url" content="https://tisyang.github.io/post/2026-01-13-args-parse-using-x-macros/">
+  <meta property="og:site_name" content="碎片">
+  <meta property="og:title" content="基于 x-macros 的命令行参数解析库实现">
+  <meta property="og:description" content="在之前文档讲述了一下 C X-Macros 的特性和一些应用场景，也提到在编译期可以确定的范式基本都可以通过 X-Macros 来辅助实现，比如命令行参数解析，这里就具体讲述如何">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="post">
+    <meta property="article:published_time" content="2026-01-13T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-01-13T00:00:00+00:00">
+
+  <meta itemprop="name" content="基于 x-macros 的命令行参数解析库实现">
+  <meta itemprop="description" content="在之前文档讲述了一下 C X-Macros 的特性和一些应用场景，也提到在编译期可以确定的范式基本都可以通过 X-Macros 来辅助实现，比如命令行参数解析，这里就具体讲述如何">
+  <meta itemprop="datePublished" content="2026-01-13T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2026-01-13T00:00:00+00:00">
+  <meta itemprop="wordCount" content="1732">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="基于 x-macros 的命令行参数解析库实现">
+  <meta name="twitter:description" content="在之前文档讲述了一下 C X-Macros 的特性和一些应用场景，也提到在编译期可以确定的范式基本都可以通过 X-Macros 来辅助实现，比如命令行参数解析，这里就具体讲述如何">
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">碎片</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/index.xml">
+        <li class="mobile-menu-item">RSS</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">碎片</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/index.xml">RSS</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">基于 x-macros 的命令行参数解析库实现</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2026-01-13 </span>
+        
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#目标">目标</a></li>
+    <li><a href="#思路">思路</a></li>
+    <li><a href="#实现">实现</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>在之前文档讲述了一下 C X-Macros 的特性和一些应用场景，也提到在编译期可以确定的范式基本都可以通过 X-Macros 来辅助实现，比如命令行参数解析，这里就具体讲述如何实现。</p>
+<!-- raw HTML omitted -->
+<p>具体代码在 github：<a href="https://github.com/tisyang/macro_args">macros_args</a></p>
+<h2 id="目标">目标</h2>
+<p>因为使用过 <code>argtable</code> 这样的库，所以充分考虑了这种基于描述的命令行参数解析，但是也觉得还有一些繁琐，明明可以用一张表来表示所有参数，使用时却需要一个一个的初始化，而且库还有一些过于复杂的东西，比如特殊单位的处理支持。</p>
+<p>设想中，这样的参数解析应该这样：</p>
+<ol>
+<li>纯 header 文件实现，无 c 文件依赖；</li>
+<li>表驱动配置解析参数，明确各个参数类型和特性；</li>
+<li>支持参数重复，也就是同个参数传递多个值；</li>
+<li>支持短参数和长参数，支持 literal/int/float/string 这样简单的参数类型；</li>
+<li>尽量少依赖，不依赖动态内存分配，只适用少量 std 库和 getopt;</li>
+<li>无全局状态，支持多实例；</li>
+</ol>
+<p>考虑到实现复杂度，不依赖 std 库和 getopt 则会代码量巨大且不可维护，基本上就是需要利用标准库少量函数和getopt，来实现一个类似 <code>argtable</code> 这样的命令行参数解析。</p>
+<h2 id="思路">思路</h2>
+<p>有了目标，就可以考虑如何实现了，本质上，就是如何将一个参数描述表转换为最终的 getopt 调用。</p>
+<p>首先，需要考虑参数原型设计，基于以上，考虑设计4种基本参数类型：</p>
+<ol>
+<li>LIT， 也就是 literial，比如 <code>-h</code> <code>-v</code> 这样的开关参数，在内部应该是个整数表示是否出现及出现次数；</li>
+<li>INT，整数参数，内部用 <code>int</code> 保存即可。</li>
+<li>NUM，浮点参数，内部用 <code>double</code> 保存。</li>
+<li>STR，字符串参数，内部需要用 <code>char *</code>保存指针即可。
+对于同参多值，可以将1个参数的情况作为多参数特例，所以表设计应该如下：</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>类型</strong></td>
+<td>参数类型，宏</td>
+</tr>
+<tr>
+<td><strong>最大数量</strong></td>
+<td>允许的最大数量，<code>0</code> 表示无限制（可以内部预设最大限制）</td>
+</tr>
+<tr>
+<td><strong>名称</strong></td>
+<td>参数在代码中的引用名称，需要符合 token 央视</td>
+</tr>
+<tr>
+<td><strong>短参名</strong></td>
+<td>类似 <code>-t</code> 的短参，用 <code>'c'</code> 这样表示，实际是整数，没有则写<code>0</code></td>
+</tr>
+<tr>
+<td><strong>长参名</strong></td>
+<td>类似<code>--long</code>的长参，用<code>&quot;long&quot;</code>这样的字面量表示，没有则写 <code>&quot;&quot;</code> 空字符串</td>
+</tr>
+<tr>
+<td><strong>参数提示</strong></td>
+<td>类似 <code>&quot;&lt;count&gt;&quot;</code> 这样的字面量，用于帮助中提示带参的类型</td>
+</tr>
+<tr>
+<td><strong>默认值</strong></td>
+<td>参数默认值，对于多参数，只有第一个参数会被设置</td>
+</tr>
+<tr>
+<td><strong>描述</strong></td>
+<td>描述这个参数用来做什么</td>
+</tr>
+</tbody>
+</table>
+<p>使用时，需要用户提供一个 X Macros 列表，我们再基于这个列表，来实现我们的必要拼装：</p>
+<ol>
+<li>利用表生成一个结构体定义，用来存储我们的参数；</li>
+<li>利用表来生成解析函数，用来解析命令行并存储结果；</li>
+<li>利用表明来实现实例唯一，可以保证无全局状态多实例；</li>
+<li>利用表进行约束检查，避免错误使用；</li>
+</ol>
+<h2 id="实现">实现</h2>
+<p>具体实现可以参考代码，其中最重要的就是 <code>_ARG_IF_ELSE</code> 这个编译期条件宏，可以基于条件生成编译期代码，而非运行期：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="cp">#define _ARG_IF_ELSE_0(THEN, ELSE) ELSE
+</span></span></span><span class="line"><span class="cl"><span class="cp">#define _ARG_IF_ELSE_1(THEN, ELSE) THEN
+</span></span></span><span class="line"><span class="cl"><span class="cp">#define _ARG_IF_ELSE_IMPL(CONDITION, THEN, ELSE)    _ARG_CONCAT2(_ARG_IF_ELSE_, CONDITION)(THEN, ELSE)
+</span></span></span><span class="line"><span class="cl"><span class="cp">#define _ARG_IF_ELSE(CONDITION, THEN, ELSE)         _ARG_IF_ELSE_IMPL(CONDITION, THEN, ELSE)
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>宏的实现就是简单的宏拼接，所以其应用很受限，只能基于宏展开时字面量数字来进行条件选择，参数必须是字面量0或1，如果直接使用，会很受限，需要配合<code>_ARG_BOOL</code>宏：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="cp">#define _ARG_CHECK_N(x, n, ...)     n
+</span></span></span><span class="line"><span class="cl"><span class="cp">#define _ARG_PROBE(x)               x, 0,
+</span></span></span><span class="line"><span class="cl"><span class="cp">#define _ARG_PROBE_0                _ARG_PROBE(~)
+</span></span></span><span class="line"><span class="cl"><span class="cp">#define _ARG_CHECK(...)             _ARG_CHECK_N(__VA_ARGS__)
+</span></span></span><span class="line"><span class="cl"><span class="cp">#define _ARG_BOOL(x)                _ARG_CHECK(_ARG_CONCAT2(_ARG_PROBE_, x), 1)
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>这个宏更绕一些，是根据宏字面量的0或非0来条件生成字面量0或1，这里用到了<code>__VA_ARGS__</code> 展开参数数量，具体可以仔细揣摩。</p>
+<p>有了这些宏，在结构体定义、静态检查和函数实现中，可以基于参数最大数量和参数类型来生成不同的编译期代码，避免编译器告警。</p>
+<p>使用时，程序需要提供一个类似如下的参数列表宏，并利用库的宏来生成必要定义：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="cp">#define APP_ARGS_LIST(X) \
+</span></span></span><span class="line"><span class="cl"><span class="cp">    ARG_LITX(X, help,       &#39;h&#39;, &#34;help&#34;,        &#34;show help&#34;) \
+</span></span></span><span class="line"><span class="cl"><span class="cp">    ARG_LIT1(X, print,      &#39;p&#39;, &#34;print&#34;,       &#34;print arg struct&#34;) \
+</span></span></span><span class="line"><span class="cl"><span class="cp">    ARG_LITX(X, verbose,    &#39;v&#39;, &#34;verbose&#34;,     &#34;verbose&#34;) \
+</span></span></span><span class="line"><span class="cl"><span class="cp">    ARG_NUM1(X, timeout,    &#39;t&#39;, &#34;timeout&#34;,     &#34;&lt;secs&gt;&#34;,  0.0,  &#34;timeout in secs&#34;) \
+</span></span></span><span class="line"><span class="cl"><span class="cp">    ARG_LIT1(X, longonly,   0,   &#34;longonly&#34;,    &#34;test long only arg&#34;) \
+</span></span></span><span class="line"><span class="cl"><span class="cp">    ARG_LIT1(X, shortonly,  &#39;s&#39;, &#34;&#34;,            &#34;test short only arg&#34;) \
+</span></span></span><span class="line"><span class="cl"><span class="cp">    ARG_STR1(X, from,       &#39;f&#39;, &#34;from&#34;,        &#34;&lt;file&gt;&#34;,  &#34;1.txt&#34;, &#34;file path&#34;) \
+</span></span></span><span class="line"><span class="cl"><span class="cp">    ARG_STRX(X, token,      &#39;k&#39;, &#34;token&#34;,       &#34;&lt;token&gt;&#34;, &#34;token0&#34;, &#34;process tokens&#34;)
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 2. Generate essential
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nf">ARG_DEFINE</span><span class="p">(</span><span class="n">APP_ARGS_LIST</span><span class="p">);</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>然后在主函数中，可以进行解析：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="c1">// 3. Decleare struct to storage parse result
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nf">ARG_STRUCT_INIT</span><span class="p">(</span><span class="n">APP_ARGS_LIST</span><span class="p">,</span> <span class="n">arg</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 4. Parse argv with struct
+</span></span></span><span class="line"><span class="cl"><span class="c1">// ret &gt; 0 =&gt; optind, &lt; 0 =&gt; error!
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">int</span> <span class="n">ret</span> <span class="o">=</span> <span class="nf">ARG_PARSE</span><span class="p">(</span><span class="n">APP_ARGS_LIST</span><span class="p">,</span> <span class="n">argc</span><span class="p">,</span> <span class="n">argv</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">arg</span><span class="p">);</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>后续就可以利用<code>arg</code>成员，来判断参数，或者使用宏来打印参数帮助信息：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="k">if</span> <span class="p">(</span><span class="n">ret</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">printf</span><span class="p">(</span><span class="s">&#34;Usage: %s&#34;</span><span class="p">,</span> <span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">ARG_PRINT_SYNTAX</span><span class="p">(</span><span class="n">APP_ARGS_LIST</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">printf</span><span class="p">(</span><span class="s">&#34;</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">ret</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// Use struct field to check result
+</span></span></span><span class="line"><span class="cl"><span class="c1">// For LIT, use n_XXX
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">if</span> <span class="p">(</span><span class="n">arg</span><span class="p">.</span><span class="n">n_print</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">printf</span><span class="p">(</span><span class="s">&#34;optind =%d</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span> <span class="n">ret</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">ARG_STRUCT_PRINT</span><span class="p">(</span><span class="n">APP_ARGS_LIST</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">arg</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">printf</span><span class="p">(</span><span class="s">&#34;</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="p">(</span><span class="n">arg</span><span class="p">.</span><span class="n">n_help</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">printf</span><span class="p">(</span><span class="s">&#34;Usage: %s&#34;</span><span class="p">,</span> <span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">ARG_PRINT_SYNTAX</span><span class="p">(</span><span class="n">APP_ARGS_LIST</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">printf</span><span class="p">(</span><span class="s">&#34;</span><span class="se">\n\n</span><span class="s">Example:</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">ARG_PRINT_GLOSSARY</span><span class="p">(</span><span class="n">APP_ARGS_LIST</span><span class="p">,</span> <span class="mi">30</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>因为实现利用了大量宏，所以阅读起来会比较费劲，尤其是琐碎的条件处理。目前仍需要改进的部分就是利用短参字符字面量拼接<code>getopt_long</code>字符串参数时，通过手动去除单引号实现，这里之前考虑使用字面量而不是字符字面量，但是问题在于：</p>
+<ol>
+<li><code>#</code>宏可以方便实现字符串字面量，但是很难基于宏实现字符字面量；</li>
+<li><code>getopt_long</code>中即要字符字面量，也要字符串字面量；</li>
+</ol>
+<p>手动去除虽然拙劣但十分有效。</p>
+
+    </div>
+
+    
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        <a class="prev" href="/post/2026-01-13-rk3506-pwm-oneshot-bug/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">RK3506 PWM oneshot 模式驱动修正</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        <a class="next" href="/post/2025-11-06-adis16505-rk3506/">
+            <span class="next-text nav-default">Linux 接入 ADIS16505 IMU</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="https://github.com/tisyang" class="iconfont icon-github" title="github"></a>
+  <a href="/post/2026-01-13-args-parse-using-x-macros/" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2016 - 
+    2026<span class="heart"><i class="iconfont icon-heart"></i></span><span>TyK</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  <script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  <script type="text/javascript" src="/lib/fancybox/jquery.fancybox-3.1.20.min.js"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

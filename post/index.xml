@@ -16,6 +16,13 @@
       <description>Rockchip RK3506 芯片 的 PWM 控制器支持 oneshot 模式，使用时，可以通过驱动模块、sysfs接口来配置周期、占空比和需要发送的数量（个数和重复次数），激活后硬件自动发</description>
     </item>
     <item>
+      <title>基于 x-macros 的命令行参数解析库实现</title>
+      <link>https://tisyang.github.io/post/2026-01-13-args-parse-using-x-macros/</link>
+      <pubDate>Tue, 13 Jan 2026 00:00:00 +0000</pubDate>
+      <guid>https://tisyang.github.io/post/2026-01-13-args-parse-using-x-macros/</guid>
+      <description>在之前文档讲述了一下 C X-Macros 的特性和一些应用场景，也提到在编译期可以确定的范式基本都可以通过 X-Macros 来辅助实现，比如命令行参数解析，这里就具体讲述如何</description>
+    </item>
+    <item>
       <title>Linux 接入 ADIS16505 IMU</title>
       <link>https://tisyang.github.io/post/2025-11-06-adis16505-rk3506/</link>
       <pubDate>Thu, 06 Nov 2025 00:00:00 +0000</pubDate>
