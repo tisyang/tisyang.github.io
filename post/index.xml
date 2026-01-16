@@ -6,8 +6,15 @@
     <description>Recent content in Posts on 碎片</description>
     <generator>Hugo</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Tue, 13 Jan 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 16 Jan 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://tisyang.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>修改打包好的Alpine文件系统</title>
+      <link>https://tisyang.github.io/post/2026-01-16-modify-alpine-rootfs/</link>
+      <pubDate>Fri, 16 Jan 2026 00:00:00 +0000</pubDate>
+      <guid>https://tisyang.github.io/post/2026-01-16-modify-alpine-rootfs/</guid>
+      <description>之前介绍过嵌入式用的 Alpine Linux 发行版和如何移植，本文主要讲述对于打包好的系统压缩包，如何方便的添加删除软件包。 对于已经打包的 alpine 文件系统，经常需要根</description>
+    </item>
     <item>
       <title>RK3506 PWM oneshot 模式驱动修正</title>
       <link>https://tisyang.github.io/post/2026-01-13-rk3506-pwm-oneshot-bug/</link>
