@@ -3,20 +3,27 @@
   
   <url>
     <loc>https://tisyang.github.io/post/</loc>
-    <lastmod>2026-01-16T00:00:00+00:00</lastmod>
+    <lastmod>2026-03-26T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
-    <loc>https://tisyang.github.io/post/2026-01-16-modify-alpine-rootfs/</loc>
-    <lastmod>2026-01-16T00:00:00+00:00</lastmod>
+    <loc>https://tisyang.github.io/post/2026-03-26-use-safe-rm/</loc>
+    <lastmod>2026-03-26T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
     <loc>https://tisyang.github.io/</loc>
+    <lastmod>2026-03-26T00:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://tisyang.github.io/post/2026-01-16-modify-alpine-rootfs/</loc>
     <lastmod>2026-01-16T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>

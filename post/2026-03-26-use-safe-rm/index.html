@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>使用 safe-rm 避免意外删除 - 碎片</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="TyK" /><meta name="description" content="命令行操作中，难以避免 rm 命令的使用，如果脑袋昏了或者慢摆拍，很容易误删重要的问题，尤其是用户目录下的，不像根目录那样需要权限确认。 这里可以使" /><meta name="keywords" content="程序员, 博客, blog, programming" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.131.0 with theme even" />
+
+
+<link rel="canonical" href="https://tisyang.github.io/post/2026-03-26-use-safe-rm/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link href="/lib/fancybox/jquery.fancybox-3.1.20.min.css" rel="stylesheet">
+
+
+<meta property="og:url" content="https://tisyang.github.io/post/2026-03-26-use-safe-rm/">
+  <meta property="og:site_name" content="碎片">
+  <meta property="og:title" content="使用 safe-rm 避免意外删除">
+  <meta property="og:description" content="命令行操作中，难以避免 rm 命令的使用，如果脑袋昏了或者慢摆拍，很容易误删重要的问题，尤其是用户目录下的，不像根目录那样需要权限确认。 这里可以使">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="post">
+    <meta property="article:published_time" content="2026-03-26T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-03-26T00:00:00+00:00">
+
+  <meta itemprop="name" content="使用 safe-rm 避免意外删除">
+  <meta itemprop="description" content="命令行操作中，难以避免 rm 命令的使用，如果脑袋昏了或者慢摆拍，很容易误删重要的问题，尤其是用户目录下的，不像根目录那样需要权限确认。 这里可以使">
+  <meta itemprop="datePublished" content="2026-03-26T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2026-03-26T00:00:00+00:00">
+  <meta itemprop="wordCount" content="563">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="使用 safe-rm 避免意外删除">
+  <meta name="twitter:description" content="命令行操作中，难以避免 rm 命令的使用，如果脑袋昏了或者慢摆拍，很容易误删重要的问题，尤其是用户目录下的，不像根目录那样需要权限确认。 这里可以使">
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">碎片</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/index.xml">
+        <li class="mobile-menu-item">RSS</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">碎片</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/index.xml">RSS</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">使用 safe-rm 避免意外删除</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2026-03-26 </span>
+        
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#安装及配置">安装及配置</a></li>
+    <li><a href="#应用到-sudo-环境">应用到 sudo 环境</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>命令行操作中，难以避免 rm 命令的使用，如果脑袋昏了或者慢摆拍，很容易误删重要的问题，尤其是用户目录下的，不像根目录那样需要权限确认。</p>
+<!-- raw HTML omitted -->
+<p>这里可以使用 safe-rm 工具来防止这种意外情况，在对被保护的目录/文件进行删除时，会打印提示并忽略。</p>
+<h2 id="安装及配置">安装及配置</h2>
+<p>Debian/Ubuntu 可以通过命令 <code>apt install safe-rm</code> 来安装，这个工具本质是对 rm 的一层包装，加了目标目录的检查。</p>
+<p>安装后当前用户的默认 rm 指令就会指向 safe-rm <code>/usr/share/safe-rm/bin/rm</code> ，这个可以通过 <code>which rm</code> 来确认。接下来，我们可以通过配置
+全局和用户级别的 safe-rm 文件来保护需要的目录和文件：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="c1"># 全局配置文件路径: /etc/safe-rm.conf</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 这里已经有一些预制的目录，主要是重要的系统级别目录</span>
+</span></span><span class="line"><span class="cl"><span class="o">/</span>
+</span></span><span class="line"><span class="cl"><span class="o">/</span><span class="n">bin</span>
+</span></span><span class="line"><span class="cl"><span class="o">/</span><span class="n">boot</span>
+</span></span><span class="line"><span class="cl"><span class="o">/</span><span class="n">dev</span>
+</span></span><span class="line"><span class="cl"><span class="o">/</span><span class="n">etc</span>
+</span></span><span class="line"><span class="cl"><span class="o">/</span><span class="n">home</span>
+</span></span><span class="line"><span class="cl"><span class="o">/</span><span class="n">initrd</span>
+</span></span><span class="line"><span class="cl"><span class="o">/</span><span class="n">lib</span>
+</span></span><span class="line"><span class="cl"><span class="o">/</span><span class="n">proc</span>
+</span></span><span class="line"><span class="cl"><span class="o">/</span><span class="n">root</span>
+</span></span><span class="line"><span class="cl"><span class="o">/</span><span class="n">sbin</span>
+</span></span><span class="line"><span class="cl"><span class="o">/</span><span class="n">sys</span>
+</span></span><span class="line"><span class="cl"><span class="o">/</span><span class="n">usr</span>
+</span></span><span class="line"><span class="cl"><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">bin</span>
+</span></span><span class="line"><span class="cl"><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">include</span>
+</span></span><span class="line"><span class="cl"><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span>
+</span></span><span class="line"><span class="cl"><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span>
+</span></span><span class="line"><span class="cl"><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">bin</span>
+</span></span><span class="line"><span class="cl"><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">include</span>
+</span></span><span class="line"><span class="cl"><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">sbin</span>
+</span></span><span class="line"><span class="cl"><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">share</span>
+</span></span><span class="line"><span class="cl"><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">sbin</span>
+</span></span><span class="line"><span class="cl"><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">share</span>
+</span></span><span class="line"><span class="cl"><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">src</span>
+</span></span><span class="line"><span class="cl"><span class="o">/</span><span class="k">var</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 在下面，我们可以添加自己需要保护的全局目录/文件，可以使用通配符</span>
+</span></span><span class="line"><span class="cl"><span class="o">/</span><span class="n">home</span><span class="o">/*</span>
+</span></span><span class="line"><span class="cl"><span class="o">/</span><span class="n">home</span><span class="o">/*/</span><span class="n">Documents</span>
+</span></span><span class="line"><span class="cl"><span class="o">/</span><span class="n">home</span><span class="o">/*/.</span><span class="n">config</span>
+</span></span><span class="line"><span class="cl"><span class="o">/</span><span class="n">home</span><span class="o">/*/.</span><span class="n">ssh</span>
+</span></span><span class="line"><span class="cl"><span class="o">/</span><span class="n">home</span><span class="o">/*/.</span><span class="n">mozilla</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>用户级别配置文件在 <code>~/.config/safe-rm</code> :</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"># 该配置仅对当前用户有效
+</span></span><span class="line"><span class="cl"># 建议与全局配置一样，用绝对路径配合通配符
+</span></span><span class="line"><span class="cl">/home/*/.local
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>然后在删除时，如果不小心误写，也可以提醒并忽略：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">rm -rf /
+</span></span><span class="line"><span class="cl">safe-rm: Skipping /.
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="应用到-sudo-环境">应用到 sudo 环境</h2>
+<p>以上配置对当前用户有效，但对 root 命令中调用的 rm 却无效，因为 sudo 会使用安全的环境，safe-rm 无法优先于 rm 调用。</p>
+<p>方法是通过命令 <code>sudo visudo</code> 编辑<code>sudoers</code> 文件，找到 <code>Defaults secure_path</code> 行，将 <code>safe-rm</code> 加入：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"># 将 /usr/share/safe-rm/bin 加入 secure_path 中并优先
+</span></span><span class="line"><span class="cl">Defaults    secure_path=&#34;/usr/share/safe-rm/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin&#34;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>然后通过命令 <code>sudo which rm</code> 来确认是否生效：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sudo which rm
+</span></span><span class="line"><span class="cl">/usr/share/safe-rm/bin/rm
+</span></span></code></pre></td></tr></table>
+</div>
+</div>
+    </div>
+
+    
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        
+        <a class="next" href="/post/2026-01-16-modify-alpine-rootfs/">
+            <span class="next-text nav-default">修改打包好的Alpine文件系统</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="https://github.com/tisyang" class="iconfont icon-github" title="github"></a>
+  <a href="/post/2026-03-26-use-safe-rm/" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2016 - 
+    2026<span class="heart"><i class="iconfont icon-heart"></i></span><span>TyK</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  <script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  <script type="text/javascript" src="/lib/fancybox/jquery.fancybox-3.1.20.min.js"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

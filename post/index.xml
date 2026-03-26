@@ -6,8 +6,15 @@
     <description>Recent content in Posts on 碎片</description>
     <generator>Hugo</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Fri, 16 Jan 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 26 Mar 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://tisyang.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>使用 safe-rm 避免意外删除</title>
+      <link>https://tisyang.github.io/post/2026-03-26-use-safe-rm/</link>
+      <pubDate>Thu, 26 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>https://tisyang.github.io/post/2026-03-26-use-safe-rm/</guid>
+      <description>命令行操作中，难以避免 rm 命令的使用，如果脑袋昏了或者慢摆拍，很容易误删重要的问题，尤其是用户目录下的，不像根目录那样需要权限确认。 这里可以使</description>
+    </item>
     <item>
       <title>修改打包好的Alpine文件系统</title>
       <link>https://tisyang.github.io/post/2026-01-16-modify-alpine-rootfs/</link>
